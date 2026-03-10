@@ -1,232 +1,231 @@
 """
 setup-images.py — Staples & Statements image pipeline
+======================================================
 
-Does three things in one pass:
-  1. SCAFFOLD — Creates WebP placeholder files for every image slot the site
-     expects, so the dev server doesn't log 404s and hot-reload works cleanly.
-     Skips files that already exist (safe to re-run at any time).
+DROP-IN WORKFLOW (most common):
+  1. Drop your JPG or PNG into the correct public/images/ subfolder
+     using the exact filename the site expects (e.g. the-muse-1.jpg)
+  2. Run:  python scripts/setup-images.py
+  3. Done — the script converts it to WebP, the placeholder is replaced,
+     and the original JPG/PNG is deleted.
 
-  2. CONVERT — Converts every existing .jpg in public/ to .webp at quality 88,
-     preserving folder structure. Skips files that already have a .webp twin.
+The script does three things:
 
-  3. MANIFEST — Prints a summary table of everything created/converted so you
-     know exactly which files need to be replaced with real assets.
+  CONVERT  — For every .jpg / .png found anywhere in public/images/,
+              convert it to .webp (quality 88) and delete the source.
+              Conversion always overwrites any existing .webp at that path
+              (this is how placeholders get replaced with real images).
+
+  SCAFFOLD — Create .webp placeholder files for any image slot the site
+              expects that does NOT yet have a .webp file. Skips slots
+              that already have a real WebP (safe to re-run anytime).
+
+  REPORT   — Print a table showing which slots still have placeholder
+              files (< 20KB) so you know what still needs real images.
 
 Usage:
-  python scripts/setup-images.py            # scaffold + convert
-  python scripts/setup-images.py --dry-run  # preview without writing
-  python scripts/setup-images.py --convert-only
-  python scripts/setup-images.py --scaffold-only
-
-After running: update HTML references with scripts/update-refs.py (also generated).
+  python scripts/setup-images.py                 # convert + scaffold + report
+  python scripts/setup-images.py --convert-only  # only convert dropped files
+  python scripts/setup-images.py --scaffold-only # only create missing slots
+  python scripts/setup-images.py --report        # only show status table
+  python scripts/setup-images.py --dry-run       # preview without writing
 """
 
-import os
 import sys
-import shutil
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageDraw
 
-# ── Config ─────────────────────────────────────────────────────────────────
-
+# ── Flags ──────────────────────────────────────────────────────────────────
 DRY_RUN       = '--dry-run'       in sys.argv
 CONVERT_ONLY  = '--convert-only'  in sys.argv
 SCAFFOLD_ONLY = '--scaffold-only' in sys.argv
+REPORT_ONLY   = '--report'        in sys.argv
 
 REPO_ROOT = Path(__file__).parent.parent
 PUBLIC    = REPO_ROOT / 'public' / 'images'
-WEBP_Q    = 88   # WebP quality for all conversions
+WEBP_Q    = 88        # WebP quality for all conversions
+REAL_KB   = 20        # files >= this size are considered real (not placeholder)
 
-# Brand placeholder colors — warm charcoal (#1a1613) to match site palette
-PH_BG   = (26,  22,  19)   # --color-primary
-PH_LINE = (46,  40,  36)   # slightly lighter for subtle grid lines
+# Brand placeholder colour — warm charcoal matches site palette
+PH_BG   = (26, 22, 19)
+PH_LINE = (46, 40, 36)
 
-# ── Archetype slugs ────────────────────────────────────────────────────────
-
+# ── Archetype slugs (must match src/content/archetypes/*.md filenames) ─────
 FEMININE_ARCHETYPES = [
-    'the-angelic-one',
-    'the-creator',
-    'the-empress',
-    'the-enchantress',
-    'the-muse',
-    'the-siren',
-    'the-warrior',
+    'the-angelic-one', 'the-creator', 'the-empress',
+    'the-enchantress',  'the-muse',   'the-siren', 'the-warrior',
 ]
-
 MASCULINE_ARCHETYPES = [
-    'the-architect',
-    'the-artisan',
-    'the-classic',
-    'the-explorer',
-    'the-maverick',
+    'the-architect', 'the-artisan', 'the-classic',
+    'the-explorer',  'the-maverick',
 ]
 
-# ── Placeholder factory ────────────────────────────────────────────────────
+# ── Part 1: CONVERT any dropped JPG / PNG → WebP ──────────────────────────
+
+def convert_sources():
+    print('\n-- CONVERT: JPG/PNG -> WebP (q88), delete source after ----------')
+    converted = 0
+
+    source_files = sorted(
+        list(PUBLIC.rglob('*.jpg')) + list(PUBLIC.rglob('*.png'))
+    )
+
+    if not source_files:
+        print('  Nothing to convert — no .jpg or .png files found.')
+        return
+
+    for src in source_files:
+        webp = src.with_suffix('.webp')
+
+        if DRY_RUN:
+            old_kb = src.stat().st_size // 1024
+            print(f'  [dry] would convert {src.relative_to(PUBLIC)}  ({old_kb}KB)')
+            converted += 1
+            continue
+
+        try:
+            img      = Image.open(str(src))
+            img.save(str(webp), 'WebP', quality=WEBP_Q)
+            old_kb   = src.stat().st_size  // 1024
+            new_kb   = webp.stat().st_size // 1024
+            saving   = int((1 - new_kb / max(old_kb, 1)) * 100)
+            print(f'  OK   {src.name:50s}  {old_kb:>5}KB -> {new_kb:>4}KB  (-{saving}%)')
+            src.unlink()   # delete source only after successful conversion
+            converted += 1
+        except Exception as e:
+            print(f'  ERR  {src.name}: {e}')
+
+    print(f'\n  -> {converted} file(s) converted.')
+
+# ── Part 2: SCAFFOLD missing WebP placeholder slots ───────────────────────
 
 def make_placeholder(w: int, h: int) -> Image.Image:
-    """Solid brand-dark rectangle with subtle 1px grid for visual orientation."""
     img = Image.new('RGB', (w, h), PH_BG)
-    # Draw a very subtle cross-hair at centre so it's obvious it's a placeholder
-    from PIL import ImageDraw
-    d = ImageDraw.Draw(img)
+    d   = ImageDraw.Draw(img)
     cx, cy = w // 2, h // 2
     d.line([(cx, cy - 20), (cx, cy + 20)], fill=PH_LINE, width=1)
     d.line([(cx - 20, cy), (cx + 20, cy)], fill=PH_LINE, width=1)
     d.rectangle([cx - 40, cy - 40, cx + 40, cy + 40], outline=PH_LINE, width=1)
     return img
 
-def write_placeholder(path: Path, w: int, h: int):
+def write_placeholder(path: Path, w: int, h: int) -> bool:
+    """Write placeholder only if the slot does not exist at all."""
     if path.exists():
-        return False   # already present — skip
+        return False
     if DRY_RUN:
-        print(f'  [dry] would create {path.relative_to(REPO_ROOT)}')
+        print(f'  [dry] would create {path.relative_to(PUBLIC)}')
         return True
     path.parent.mkdir(parents=True, exist_ok=True)
     make_placeholder(w, h).save(str(path), 'WebP', quality=WEBP_Q)
-    print(f'  ✦ created  {path.relative_to(REPO_ROOT)}')
+    print(f'  new  {path.relative_to(PUBLIC)}')
     return True
 
-# ── Part 1: SCAFFOLD ───────────────────────────────────────────────────────
-
 def scaffold():
-    print('\n── SCAFFOLD: creating placeholder files ──────────────────────────')
+    print('\n-- SCAFFOLD: create missing placeholder slots --------------------')
     created = 0
 
-    # ── Archetype portraits (portrait 2:3)
+    # Archetype portraits — 2:3 portrait
     for slug in FEMININE_ARCHETYPES + MASCULINE_ARCHETYPES:
         for n in [1, 2, 3]:
-            p = PUBLIC / 'archetypes' / f'{slug}-{n}.webp'
-            if write_placeholder(p, 800, 1200): created += 1
+            if write_placeholder(PUBLIC / 'archetypes' / f'{slug}-{n}.webp', 800, 1200):
+                created += 1
 
-    # ── Ensemble hero images — masculine (wide 16:9)
+    # Masculine ensemble hero — 16:9 wide
     for n in [1, 2, 3]:
-        p = PUBLIC / 'archetypes' / f'ensemble-masculine-{n}.webp'
-        if write_placeholder(p, 1920, 1080): created += 1
+        if write_placeholder(PUBLIC / 'archetypes' / f'ensemble-masculine-{n}.webp', 1920, 1080):
+            created += 1
 
-    # ── Quiz video posters (portrait 9:16 — vertical reel format)
+    # Quiz video posters — 9:16 vertical reel
     for name in ['quiz-poster-feminine', 'quiz-poster-masculine']:
-        p = PUBLIC / f'{name}.webp'
-        if write_placeholder(p, 1080, 1920): created += 1
+        if write_placeholder(PUBLIC / f'{name}.webp', 1080, 1920):
+            created += 1
 
-    # ── Hero mosaic (landscape 4:3, 6 slots)
+    # Hero mosaic — 4:3 landscape (6 slots)
     for i in range(1, 7):
-        p = PUBLIC / f'hero-{i}.webp'
-        if write_placeholder(p, 1200, 900): created += 1
+        if write_placeholder(PUBLIC / f'hero-{i}.webp', 1200, 900):
+            created += 1
 
-    # ── Portfolio grid (square 1:1, 6 slots)
+    # Portfolio grid — square (6 slots)
     for i in range(1, 7):
-        p = PUBLIC / f'portfolio-{i}.webp'
-        if write_placeholder(p, 1080, 1080): created += 1
+        if write_placeholder(PUBLIC / f'portfolio-{i}.webp', 1080, 1080):
+            created += 1
 
-    # ── Services (landscape 4:3)
+    # Services — 4:3 landscape
     for slug in [
         'body-analysis', 'color-analysis', 'consultation',
         'master-style-moodboard', 'micro-styling', 'photoshoot-styling',
         'sourcing', 'vip', 'wardrobe-revamp',
     ]:
-        p = PUBLIC / 'services' / f'{slug}.webp'
-        if write_placeholder(p, 1200, 900): created += 1
+        if write_placeholder(PUBLIC / 'services' / f'{slug}.webp', 1200, 900):
+            created += 1
 
-    # ── Guide covers (portrait 3:4)
+    # Guide covers — 3:4 portrait
     for slug in [
         '7-feminine-archetypes-cover', 'maximalist-cover',
         'mens-edition-cover',          'no-overpacking-cover',
         'single-moms-cover',           'ultimate-style-edit-cover',
     ]:
-        p = PUBLIC / 'guides' / f'{slug}.webp'
-        if write_placeholder(p, 900, 1200): created += 1
+        if write_placeholder(PUBLIC / 'guides' / f'{slug}.webp', 900, 1200):
+            created += 1
 
-    # ── Testimonial headshots (square 1:1)
+    # Testimonial headshots — square
     for name in ['gabi', 'janessa', 'maral', 'michael']:
-        p = PUBLIC / 'testimonials' / f'{name}.webp'
-        if write_placeholder(p, 600, 600): created += 1
+        if write_placeholder(PUBLIC / 'testimonials' / f'{name}.webp', 600, 600):
+            created += 1
 
-    # ── Danielle portraits (portrait 2:3)
+    # Danielle portraits — 2:3
     for name in ['danielle-portrait', 'danielle-styling']:
-        p = PUBLIC / f'{name}.webp'
-        if write_placeholder(p, 800, 1200): created += 1
+        if write_placeholder(PUBLIC / f'{name}.webp', 800, 1200):
+            created += 1
 
-    # ── OG / social sharing card (1200×630 — Facebook/Twitter standard)
-    p = PUBLIC / 'og-default.webp'
-    if write_placeholder(p, 1200, 630): created += 1
+    # OG / social card — Facebook/Twitter standard
+    if write_placeholder(PUBLIC / 'og-default.webp', 1200, 630):
+        created += 1
 
-    # ── Brand folder (SVGs go here when ready — just create the dir)
-    brand_dir = PUBLIC / 'brand'
-    if not DRY_RUN:
-        brand_dir.mkdir(parents=True, exist_ok=True)
-        print(f'  ✦ created  public/images/brand/ (ready for SVG logomarks)')
+    # Brand folder (for SVG logomarks when ready)
+    (PUBLIC / 'brand').mkdir(parents=True, exist_ok=True)
 
-    print(f'\n  → {created} placeholder files created.')
+    if created == 0:
+        print('  All expected slots already exist — nothing to scaffold.')
+    else:
+        print(f'\n  -> {created} placeholder(s) created.')
 
-# ── Part 2: CONVERT existing JPEGs ────────────────────────────────────────
+# ── Part 3: REPORT — what still needs real images ─────────────────────────
 
-def convert_jpgs():
-    print('\n── CONVERT: JPG → WebP (quality 88) ─────────────────────────────')
-    converted = 0
-    skipped   = 0
+def report():
+    print('\n-- REPORT: slots still using placeholders (<20KB) ---------------')
+    all_webp  = sorted(PUBLIC.rglob('*.webp'))
+    pending   = [p for p in all_webp if p.stat().st_size // 1024 < REAL_KB]
+    real      = [p for p in all_webp if p.stat().st_size // 1024 >= REAL_KB]
 
-    for jpg_path in sorted(PUBLIC.rglob('*.jpg')):
-        webp_path = jpg_path.with_suffix('.webp')
+    print(f'\n  Real images ({len(real)}):')
+    for p in real:
+        kb = p.stat().st_size // 1024
+        print(f'    {kb:>5}KB  {p.relative_to(PUBLIC)}')
 
-        if webp_path.exists():
-            skipped += 1
-            continue
+    print(f'\n  Pending — still need real images ({len(pending)}):')
+    for p in pending:
+        print(f'             {p.relative_to(PUBLIC)}')
 
-        if DRY_RUN:
-            print(f'  [dry] would convert {jpg_path.relative_to(REPO_ROOT)}')
-            converted += 1
-            continue
-
-        try:
-            img = Image.open(jpg_path)
-            img.save(str(webp_path), 'WebP', quality=WEBP_Q)
-            orig_kb  = jpg_path.stat().st_size  // 1024
-            new_kb   = webp_path.stat().st_size // 1024
-            saving   = int((1 - new_kb / orig_kb) * 100) if orig_kb else 0
-            print(f'  ✦ converted {jpg_path.name}  →  {webp_path.name}  '
-                  f'({orig_kb}KB → {new_kb}KB, -{saving}%)')
-            converted += 1
-        except Exception as e:
-            print(f'  ✗ FAILED {jpg_path.name}: {e}')
-
-    print(f'\n  → {converted} files converted, {skipped} already had WebP twin.')
-
-# ── Part 3: MANIFEST of what still needs real images ──────────────────────
-
-def print_manifest():
-    print('\n── MANIFEST: placeholders still needing real images ──────────────')
-
-    all_webp = sorted(PUBLIC.rglob('*.webp'))
-    placeholder_size_threshold = 50 * 1024  # files < 50KB are likely placeholders
-
-    still_needed = []
-    for p in all_webp:
-        if p.stat().st_size < placeholder_size_threshold:
-            still_needed.append(p.relative_to(PUBLIC))
-
-    if not still_needed:
-        print('  All WebP files look real (> 50KB). Nothing pending.')
-        return
-
-    print(f'  {len(still_needed)} files look like placeholders (< 50KB):\n')
-    for p in still_needed:
-        print(f'    {p}')
-
-# ── Main ───────────────────────────────────────────────────────────────────
+# ── Main ──────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
     print('Staples & Statements — Image Pipeline')
-    print(f'Repo: {REPO_ROOT}')
     if DRY_RUN:
         print('DRY RUN — no files will be written.\n')
 
-    if not CONVERT_ONLY:
-        scaffold()
+    if REPORT_ONLY:
+        report()
+    else:
+        if not SCAFFOLD_ONLY:
+            convert_sources()
+        if not CONVERT_ONLY:
+            scaffold()
+        report()
 
-    if not SCAFFOLD_ONLY:
-        convert_jpgs()
-
-    print_manifest()
-
-    print('\nDone. Next step: run  python scripts/update-refs.py  to switch')
-    print('all HTML/Astro .jpg references to .webp site-wide.\n')
+    print()
+    print('Drop-in workflow:')
+    print('  1. Copy your JPG/PNG into the right public/images/ folder')
+    print('     using the exact filename the site expects')
+    print('  2. Run:  python scripts/setup-images.py')
+    print('  3. Done  (converted to WebP, source deleted, placeholder replaced)')
