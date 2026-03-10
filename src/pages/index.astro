@@ -36,38 +36,38 @@ const calendlyURL = '/contact';
       <div class="order-1 lg:order-none lg:absolute lg:inset-0 grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 lg:w-full lg:h-full">
         <!-- Photo 1: large portrait -->
         <div class="col-span-1 row-span-2 lg:col-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
-          <!-- Add photo: public/images/hero-1.jpg — portrait orientation, Danielle or client -->
-          <img src="/images/hero-1.jpg" alt="Wardrobe styling by Danielle Marie" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="600" height="900" onerror="this.style.display='none'" />
+          <!-- Add photo: public/images/hero-1.webp — portrait orientation, Danielle or client -->
+          <img src="/images/hero-1.webp" alt="Wardrobe styling by Danielle Marie" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="600" height="900" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
         </div>
         <!-- Photo 2 -->
         <div class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <!-- Add photo: public/images/hero-2.jpg — outfit flat lay or styling detail -->
-          <img src="/images/hero-2.jpg" alt="Curated wardrobe" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <!-- Add photo: public/images/hero-2.webp — outfit flat lay or styling detail -->
+          <img src="/images/hero-2.webp" alt="Curated wardrobe" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
         <!-- Photo 3 -->
         <div class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <!-- Add photo: public/images/hero-3.jpg — Danielle or styled client -->
-          <img src="/images/hero-3.jpg" alt="Personal styling session" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <!-- Add photo: public/images/hero-3.webp — Danielle or styled client -->
+          <img src="/images/hero-3.webp" alt="Personal styling session" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
         <!-- Photo 4 (desktop only) -->
         <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
-          <!-- Add photo: public/images/hero-4.jpg -->
-          <img src="/images/hero-4.jpg" alt="Style archetype inspiration" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <!-- Add photo: public/images/hero-4.webp -->
+          <img src="/images/hero-4.webp" alt="Style archetype inspiration" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
         <!-- Photo 5 (desktop only) -->
         <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <!-- Add photo: public/images/hero-5.jpg -->
-          <img src="/images/hero-5.jpg" alt="Editorial wardrobe styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <!-- Add photo: public/images/hero-5.webp -->
+          <img src="/images/hero-5.webp" alt="Editorial wardrobe styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
         <!-- Photo 6 (desktop only) -->
         <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <!-- Add photo: public/images/hero-6.jpg -->
-          <img src="/images/hero-6.jpg" alt="Luxury personal styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <!-- Add photo: public/images/hero-6.webp -->
+          <img src="/images/hero-6.webp" alt="Luxury personal styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
       </div>
@@ -252,7 +252,7 @@ const calendlyURL = '/contact';
         </a>
       </div>
       <!-- Portfolio grid — 6 image slots
-           Add photos to public/images/portfolio-1.jpg through portfolio-6.jpg -->
+           Add photos to public/images/portfolio-1.webp through portfolio-6.jpg -->
       <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <a
@@ -263,7 +263,7 @@ const calendlyURL = '/contact';
             aria-label={`View Instagram portfolio image ${i}`}
           >
             <img
-              src={`/images/portfolio-${i}.jpg`}
+              src={`/images/portfolio-${i}.webp`}
               alt={`Styling portfolio image ${i}`}
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
@@ -302,7 +302,7 @@ const calendlyURL = '/contact';
           <div class="bg-surface p-7 flex flex-col group">
             <div class="aspect-[3/4] bg-surface-dark mb-6 overflow-hidden relative">
               <img
-                src={`/images/guides/${guide.slug}-cover.jpg`}
+                src={`/images/guides/${guide.slug}-cover.webp`}
                 alt={`${guide.title} — digital style guide by Danielle Marie`}
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"

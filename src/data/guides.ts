@@ -11,7 +11,7 @@
 export const BEACONS_SHOP = 'https://shop.beacons.ai/staplesandstatementsss';
 
 export interface Guide {
-  /** Matches public/images/guides/{slug}-cover.jpg */
+  /** Matches public/images/guides/{slug}-cover.webp */
   slug: string;
   title: string;
   price: string;
