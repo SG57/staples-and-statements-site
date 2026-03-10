@@ -130,9 +130,10 @@ def scaffold():
             if write_placeholder(PUBLIC / 'archetypes' / f'{slug}-{n}.webp', 800, 1200):
                 created += 1
 
-    # Masculine ensemble hero — 16:9 wide
-    for n in [1, 2, 3]:
-        if write_placeholder(PUBLIC / 'archetypes' / f'ensemble-masculine-{n}.webp', 1920, 1080):
+    # Ensemble hero + cards backgrounds — 2 slots per gender, 16:9 wide
+    for name in ['ensemble-feminine-hero', 'ensemble-feminine-cards',
+                 'ensemble-masculine-hero', 'ensemble-masculine-cards']:
+        if write_placeholder(PUBLIC / 'archetypes' / f'{name}.webp', 1920, 1080):
             created += 1
 
     # Quiz video posters — 9:16 vertical reel
