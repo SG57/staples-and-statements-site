@@ -1,0 +1,369 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Formspree endpoint — confirmed in TRACK1-MANUAL-SETUP.md Step 7
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xwvrvgky';
+
+// Calendly scheduling URL — update with actual URL from TRACK1 Step 6
+const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
+---
+
+<BaseLayout
+  title="Contact & Book — Staples & Statements"
+  description="Book a free consultation with wardrobe stylist Danielle Marie. Available in San Diego and virtually nationwide."
+>
+
+  <!-- ── PAGE HEADER ────────────────────────────────────── -->
+  <section class="pt-16 pb-14 px-6 bg-primary" aria-label="Contact header">
+    <div class="mx-auto max-w-7xl">
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Get in Touch</p>
+      <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold max-w-xl leading-tight">
+        Let's Connect.
+      </h1>
+      <p class="mt-5 font-body text-white/60 text-lg max-w-lg leading-relaxed">
+        Ready to start? Book directly below. Prefer to ask a question first? Send a message — Danielle reads every one.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── MAIN CONTENT ──────────────────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="Booking and contact">
+    <div class="mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-14 lg:gap-20">
+
+        <!-- Calendly embed — primary (takes 3 of 5 columns) -->
+        <div class="lg:col-span-3">
+          <div class="mb-8">
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Book Your Free Consultation</p>
+            <h2 class="font-heading text-primary text-3xl font-semibold">
+              Schedule a 20-Minute Call
+            </h2>
+            <p class="mt-3 font-body text-text-muted text-sm leading-relaxed max-w-md">
+              Select a day and time that works for you. Available via Zoom or FaceTime. No preparation required — just show up.
+            </p>
+          </div>
+
+          <!-- Calendly inline widget
+               data-resize="true" — Calendly posts its own height via postMessage;
+               the widget script listens and removes the fixed height so the iframe
+               grows naturally and the PAGE scrolls (no nested scrollbar).
+               No fixed height is set here intentionally. -->
+          <div
+            id="calendly-widget"
+            class="calendly-inline-widget border border-surface-dark"
+            data-url={CALENDLY_URL}
+            data-resize="true"
+            style="min-width:320px; min-height:200px;"
+          ></div>
+          <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+          <!-- Fallback: shown if Calendly fails to load (ad blocker, slow network, CDN issue).
+               The MutationObserver + timeout below detects this and reveals the fallback. -->
+          <div
+            id="calendly-fallback"
+            class="hidden border border-surface-dark bg-surface p-8 text-center"
+            role="alert"
+            aria-live="polite"
+          >
+            <div class="w-8 h-px bg-accent mx-auto mb-5"></div>
+            <p class="font-heading text-primary text-xl font-semibold mb-2">
+              Calendar not loading?
+            </p>
+            <p class="font-body text-text-muted text-sm leading-relaxed mb-6 max-w-xs mx-auto">
+              This sometimes happens with ad blockers or slow connections.
+              You can book directly on Calendly — same availability, same booking.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+              <a
+                href={CALENDLY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center px-8 py-3.5 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+              >
+                Book on Calendly →
+              </a>
+              <button
+                id="calendly-retry"
+                type="button"
+                class="inline-flex items-center justify-center px-8 py-3.5 border border-surface-dark text-text-muted font-body text-xs tracking-widest uppercase hover:border-primary hover:text-primary transition-colors duration-200"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact form + info (takes 2 of 5 columns) -->
+        <div class="lg:col-span-2 space-y-12">
+
+          <!-- Quick info -->
+          <div>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-5">Contact Info</h3>
+            <ul class="space-y-4">
+              <li>
+                <p class="font-body text-xs tracking-widest uppercase text-accent mb-1">Email</p>
+                <a
+                  href="mailto:hello@staplesandstatements.com"
+                  class="font-body text-sm text-text-muted hover:text-primary transition-colors"
+                >
+                  hello@staplesandstatements.com
+                </a>
+              </li>
+              <li>
+                <p class="font-body text-xs tracking-widest uppercase text-accent mb-1">Location</p>
+                <p class="font-body text-sm text-text-muted">San Diego, CA — also available virtually nationwide</p>
+              </li>
+              <li class="flex gap-5 pt-2">
+                <a
+                  href="https://instagram.com/littledanniii"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-body text-xs tracking-widest uppercase text-text-muted hover:text-primary transition-colors"
+                >
+                  Instagram →
+                </a>
+                <a
+                  href="https://tiktok.com/@staplesandstatementsss"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-body text-xs tracking-widest uppercase text-text-muted hover:text-primary transition-colors"
+                >
+                  TikTok →
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Contact form -->
+          <div>
+            <div class="mb-6">
+              <h3 class="font-heading text-xl font-semibold text-primary mb-2">Send a Message</h3>
+              <p class="font-body text-sm text-text-muted leading-relaxed">
+                Have a question before booking? Or not quite ready to schedule? Send a note — Danielle responds personally.
+              </p>
+            </div>
+
+            <form
+              action={FORMSPREE_ENDPOINT}
+              method="POST"
+              class="space-y-4"
+              aria-label="Contact form"
+            >
+              <!-- Honeypot spam protection -->
+              <input type="text" name="_gotcha" style="display:none" />
+              <!-- Redirect after submit (optional) -->
+              <input type="hidden" name="_next" value="https://staplesandstatements.com/contact?success=true" />
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="name" class="block font-body text-xs tracking-widest uppercase text-text-muted mb-2">
+                    Name <span class="text-accent">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="w-full px-4 py-3 bg-surface border border-surface-dark text-primary font-body text-sm focus:outline-none focus:border-accent transition-colors placeholder:text-text-light"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="block font-body text-xs tracking-widest uppercase text-text-muted mb-2">
+                    Email <span class="text-accent">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="w-full px-4 py-3 bg-surface border border-surface-dark text-primary font-body text-sm focus:outline-none focus:border-accent transition-colors placeholder:text-text-light"
+                    placeholder="your@email.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="phone" class="block font-body text-xs tracking-widest uppercase text-text-muted mb-2">
+                  Phone <span class="text-text-light text-xs normal-case tracking-normal">(optional)</span>
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="w-full px-4 py-3 bg-surface border border-surface-dark text-primary font-body text-sm focus:outline-none focus:border-accent transition-colors placeholder:text-text-light"
+                  placeholder="(555) 000-0000"
+                />
+              </div>
+
+              <div>
+                <label for="how-heard" class="block font-body text-xs tracking-widest uppercase text-text-muted mb-2">
+                  How did you hear about Staples & Statements?
+                </label>
+                <select
+                  id="how-heard"
+                  name="how_heard"
+                  class="w-full px-4 py-3 bg-surface border border-surface-dark text-primary font-body text-sm focus:outline-none focus:border-accent transition-colors appearance-none"
+                >
+                  <option value="">Select an option</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="tiktok">TikTok</option>
+                  <option value="friend-referral">Friend / Referral</option>
+                  <option value="google">Google Search</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="message" class="block font-body text-xs tracking-widest uppercase text-text-muted mb-2">
+                  Message <span class="text-accent">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows="5"
+                  class="w-full px-4 py-3 bg-surface border border-surface-dark text-primary font-body text-sm focus:outline-none focus:border-accent transition-colors resize-y placeholder:text-text-light"
+                  placeholder="Tell Danielle what's on your mind — style goals, questions about services, anything at all."
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full px-8 py-4 bg-primary text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+              >
+                Send Message
+              </button>
+            </form>
+
+            <!-- Success message (shown when ?success=true in URL) -->
+            <div id="form-success" class="hidden mt-4 p-4 bg-surface border border-accent/30 text-center">
+              <p class="font-body text-sm text-text-muted">
+                Message received. Danielle will be in touch within 1-2 business days.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  // ── Calendly load detection ────────────────────────────────────────────
+  // Calendly's widget.js inserts an <iframe> into .calendly-inline-widget.
+  // We watch for that insertion. If no iframe appears within 12 seconds
+  // (ad blocker, CDN down, slow network), we show an elegant fallback
+  // with a direct booking link and a retry button.
+  //
+  // Why 12s? Calendly can be slow on first load. 8s was too aggressive
+  // and showed false-positive fallbacks on legitimate slow connections.
+
+  (function initCalendlyGuard() {
+    const widget   = document.getElementById('calendly-widget');
+    const fallback = document.getElementById('calendly-fallback');
+    const retryBtn = document.getElementById('calendly-retry');
+
+    if (!widget || !fallback) return;
+
+    const TIMEOUT_MS = 12_000;
+    let timer: ReturnType<typeof setTimeout>;
+
+    function showFallback() {
+      widget.style.display   = 'none';
+      fallback.classList.remove('hidden');
+    }
+
+    function hideFallback() {
+      widget.style.display = '';
+      fallback.classList.add('hidden');
+    }
+
+    // MutationObserver watches for Calendly's iframe being inserted
+    const observer = new MutationObserver(() => {
+      if (widget.querySelector('iframe')) {
+        observer.disconnect();
+        clearTimeout(timer);
+        hideFallback(); // in case it was briefly shown
+      }
+    });
+
+    observer.observe(widget, { childList: true, subtree: true });
+
+    // Timer: if no iframe after TIMEOUT_MS, declare failure
+    timer = setTimeout(() => {
+      observer.disconnect();
+      if (!widget.querySelector('iframe')) {
+        showFallback();
+      }
+    }, TIMEOUT_MS);
+
+    // Retry button — reloads the Calendly widget script
+    retryBtn?.addEventListener('click', () => {
+      hideFallback();
+
+      // Re-initialize via Calendly's API if available
+      if (typeof (window as any).Calendly !== 'undefined') {
+        try {
+          (window as any).Calendly.initInlineWidgets();
+
+          // Re-arm the observer and timer
+          observer.observe(widget, { childList: true, subtree: true });
+          timer = setTimeout(() => {
+            observer.disconnect();
+            if (!widget.querySelector('iframe')) showFallback();
+          }, TIMEOUT_MS);
+
+          return;
+        } catch {}
+      }
+
+      // Calendly script itself failed to load — reload the page
+      window.location.reload();
+    });
+  })();
+
+  // Show Formspree success message if redirected back with ?success=true
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('success') === 'true') {
+    const msg = document.getElementById('form-success');
+    if (msg) msg.classList.remove('hidden');
+    window.history.replaceState({}, '', '/contact');
+  }
+
+  // Intercept Calendly's post-booking redirect so we navigate ourselves.
+  // This avoids Calendly's "You are leaving Calendly" warning page entirely.
+  //
+  // REQUIRED CALENDLY SETTING: In the event's Confirmation Page settings,
+  // change "Redirect to external page" back to "Calendly's confirmation page"
+  // (i.e. turn OFF the redirect). This script handles navigation instead.
+  //
+  // Calendly fires `calendly.event_scheduled` via postMessage immediately
+  // after a booking is confirmed — before any redirect happens.
+  function isCalendlyEvent(e: MessageEvent): boolean {
+    return (
+      e.origin === 'https://calendly.com' &&
+      typeof e.data === 'object' &&
+      typeof e.data.event === 'string' &&
+      e.data.event.startsWith('calendly.')
+    );
+  }
+
+  window.addEventListener('message', (e: MessageEvent) => {
+    if (!isCalendlyEvent(e) || e.data.event !== 'calendly.event_scheduled') return;
+
+    const payload = e.data.payload ?? {};
+    const invitee = payload.invitee ?? {};
+    const scheduledEvent = payload.event ?? {};
+
+    // Build query string from whatever Calendly gives us in the postMessage payload
+    const qs = new URLSearchParams();
+    if (invitee.full_name)      qs.set('invitee_full_name', invitee.full_name);
+    if (invitee.email)          qs.set('invitee_email', invitee.email);
+    if (scheduledEvent.start_time) qs.set('event_start_time', scheduledEvent.start_time);
+    if (scheduledEvent.end_time)   qs.set('event_end_time', scheduledEvent.end_time);
+
+    window.location.href = '/booking-confirmed' + (qs.toString() ? '?' + qs.toString() : '');
+  });
+</script>

@@ -1,0 +1,391 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Marquee from '../components/Marquee.astro';
+import { getCollection } from 'astro:content';
+import { featuredGuides } from '../data/guides';
+
+const allServices = await getCollection('services', ({ data }) => data.status === 'active');
+const featuredServices = allServices
+  .sort((a, b) => a.data.order - b.data.order)
+  .filter(s => s.data.featured)
+  .slice(0, 4);
+
+const allTestimonials = await getCollection('testimonials');
+const featuredTestimonials = allTestimonials
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 2);
+
+const allArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'feminine');
+const featuredArchetypes = allArchetypes
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const calendlyURL = '/contact';
+---
+
+<BaseLayout
+  title="Staples & Statements — Wardrobe Styling by Danielle Marie"
+  description="Expert wardrobe styling and archetype-based personal style guidance by Danielle Marie. Book a free consultation in San Diego or virtually."
+>
+
+  <!-- ── HERO ────────────────────────────────────────────── -->
+  <section class="relative overflow-hidden bg-primary" aria-label="Hero">
+    <div class="relative min-h-[90vh] lg:min-h-screen flex flex-col lg:flex-row">
+
+      <!-- Mosaic grid — left side on desktop -->
+      <div class="order-1 lg:order-none lg:absolute lg:inset-0 grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 lg:w-full lg:h-full">
+        <!-- Photo 1: large portrait -->
+        <div class="col-span-1 row-span-2 lg:col-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
+          <!-- Add photo: public/images/hero-1.jpg — portrait orientation, Danielle or client -->
+          <img src="/images/hero-1.jpg" alt="Wardrobe styling by Danielle Marie" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="600" height="900" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
+        </div>
+        <!-- Photo 2 -->
+        <div class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+          <!-- Add photo: public/images/hero-2.jpg — outfit flat lay or styling detail -->
+          <img src="/images/hero-2.jpg" alt="Curated wardrobe" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+        </div>
+        <!-- Photo 3 -->
+        <div class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+          <!-- Add photo: public/images/hero-3.jpg — Danielle or styled client -->
+          <img src="/images/hero-3.jpg" alt="Personal styling session" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+        </div>
+        <!-- Photo 4 (desktop only) -->
+        <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
+          <!-- Add photo: public/images/hero-4.jpg -->
+          <img src="/images/hero-4.jpg" alt="Style archetype inspiration" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+        </div>
+        <!-- Photo 5 (desktop only) -->
+        <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+          <!-- Add photo: public/images/hero-5.jpg -->
+          <img src="/images/hero-5.jpg" alt="Editorial wardrobe styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+        </div>
+        <!-- Photo 6 (desktop only) -->
+        <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+          <!-- Add photo: public/images/hero-6.jpg -->
+          <img src="/images/hero-6.jpg" alt="Luxury personal styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+        </div>
+      </div>
+
+      <!-- Hero text overlay -->
+      <div class="order-2 lg:order-none lg:absolute lg:inset-0 flex items-end lg:items-center justify-start p-8 lg:px-20 pb-16 lg:pb-0 z-10">
+        <div class="max-w-lg">
+          <div class="w-8 h-px bg-accent mb-6"></div>
+          <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight">
+            Your wardrobe,<br /><em class="not-italic text-accent">elevated.</em>
+          </h1>
+          <p class="mt-6 font-body text-white/70 text-lg leading-relaxed max-w-sm">
+            Expert wardrobe styling and archetype-based personal style guidance by Danielle Marie.
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row gap-3">
+            <a
+              href={calendlyURL}
+              class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+            >
+              Book Free Consultation
+            </a>
+            <a
+              href="/services"
+              class="inline-flex items-center justify-center px-8 py-4 border border-white/40 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/10 transition-colors duration-200"
+            >
+              Explore Services
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MARQUEE — brand identity band ────────────────── -->
+  <Marquee variant="dark" />
+
+  <!-- ── SERVICES PREVIEW ──────────────────────────────── -->
+  <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Services preview">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+        <div>
+          <div class="w-8 h-px bg-accent mb-4"></div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-secondary mr-2">01 /</span>What We Offer</p>
+          <h2 class="font-heading text-primary">Styling Services</h2>
+        </div>
+        <a
+          href="/services"
+          class="font-body text-sm tracking-widest uppercase text-text-muted hover:text-primary transition-colors border-b border-current pb-0.5 self-start md:self-auto"
+        >
+          View All Services →
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {featuredServices.map((service) => (
+          <a
+            href={`/services/${service.data.slug}`}
+            class="group block bg-surface p-7 hover:bg-surface-dark transition-colors duration-200"
+          >
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">{service.data.price}</p>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-3 group-hover:text-accent transition-colors">
+              {service.data.title}
+            </h3>
+            <p class="font-body text-sm text-text-muted leading-relaxed">
+              {service.data.shortDescription ?? service.data.perfectFor}
+            </p>
+            <div class="mt-5 flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent">
+              <span>Learn More</span>
+              <span class="group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ARCHETYPE TEASE ───────────────────────────────── -->
+  <section class="py-24 lg:py-32 px-6 bg-primary" aria-label="Style archetypes">
+    <div class="mx-auto max-w-7xl">
+      <div class="text-center mb-14">
+        <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-accent/40 mr-2">02 /</span>The Framework</p>
+        <h2 class="font-heading text-white text-4xl lg:text-5xl">Discover Your Style Archetype</h2>
+        <p class="mt-5 font-body text-white/60 text-lg max-w-xl mx-auto leading-relaxed">
+          Every great wardrobe starts with knowing who you are. Danielle's 7 Feminine Archetypes framework is the foundation of every styling engagement.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+        {featuredArchetypes.map((archetype) => (
+          <a
+            href="/archetypes"
+            class="group flex flex-col bg-primary-light p-8 hover:bg-accent/10 border border-white/5 hover:border-accent/30 transition-colors duration-300"
+          >
+            <!-- Icon + name on same line -->
+            <div class="flex items-center gap-3 mb-5">
+              <span class="text-2xl text-accent/60 group-hover:text-accent transition-colors duration-300">
+                {archetype.data.icon ?? '✦'}
+              </span>
+              <h3 class="font-heading text-white text-xl font-semibold group-hover:text-accent transition-colors duration-300">
+                {archetype.data.name}
+              </h3>
+            </div>
+            <!-- Description -->
+            <p class="font-body text-white/60 text-sm leading-relaxed flex-1 mb-6">
+              {archetype.data.description}
+            </p>
+            <!-- CTA -->
+            <div class="flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent/60 group-hover:text-accent transition-colors duration-300">
+              <span>Discover Your Type</span>
+              <span class="group-hover:translate-x-1 transition-transform duration-300">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div class="text-center">
+        <a
+          href="/archetypes"
+          class="inline-flex items-center justify-center px-10 py-4 border border-accent text-accent font-body text-sm tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+        >
+          Explore the Archetypes →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ──────────────────────────────────── -->
+  <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Client testimonials">
+    <div class="mx-auto max-w-5xl">
+      <div class="text-center mb-14">
+        <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-secondary mr-2">03 /</span>Client Stories</p>
+        <h2 class="font-heading text-primary">Real Transformations</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {featuredTestimonials.map((testimonial) => (
+          <div class="bg-surface p-8 md:p-10">
+            <div class="font-heading text-5xl text-accent/30 leading-none mb-4">"</div>
+            <p class="font-body text-text-muted text-base leading-relaxed italic">
+              {testimonial.body.trim().replace(/^"|"$/g, '')}
+            </p>
+            <div class="mt-6 pt-6 border-t border-surface-dark flex items-center justify-between">
+              <p class="font-heading text-xl font-semibold text-primary">{testimonial.data.name}</p>
+              {testimonial.data.service && (
+                <a
+                  href={`/services/${testimonial.data.service}`}
+                  class="font-body text-xs tracking-widest uppercase text-accent hover:text-primary transition-colors"
+                >
+                  {testimonial.data.service.replace(/-/g, ' ')}
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="mt-10 text-center">
+        <a
+          href="/clients"
+          class="font-body text-sm tracking-widest uppercase text-text-muted hover:text-primary transition-colors border-b border-current pb-0.5"
+        >
+          Read All Client Stories →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INSTAGRAM GRID ────────────────────────────────── -->
+  <section class="py-24 lg:py-32 px-6 bg-surface" aria-label="Instagram portfolio">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-4">
+        <div>
+          <div class="w-8 h-px bg-accent mb-4"></div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Portfolio</p>
+          <h2 class="font-heading text-primary">From the Feed</h2>
+          <p class="mt-2 font-body text-text-muted text-sm">52,000+ followers • @littledanniii</p>
+        </div>
+        <a
+          href="https://instagram.com/littledanniii"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-body text-sm tracking-widest uppercase text-text-muted hover:text-primary transition-colors border-b border-current pb-0.5 self-start md:self-auto"
+        >
+          Follow on Instagram →
+        </a>
+      </div>
+      <!-- Portfolio grid — 6 image slots
+           Add photos to public/images/portfolio-1.jpg through portfolio-6.jpg -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <a
+            href="https://instagram.com/littledanniii"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative overflow-hidden aspect-square bg-surface-dark group img-frame-grid"
+            aria-label={`View Instagram portfolio image ${i}`}
+          >
+            <img
+              src={`/images/portfolio-${i}.jpg`}
+              alt={`Styling portfolio image ${i}`}
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+              width="400"
+              height="400"
+              onerror="this.style.display='none'"
+            />
+            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-300 pointer-events-none"></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SHOP PREVIEW ──────────────────────────────────── -->
+  <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Style guides preview">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+        <div>
+          <div class="w-8 h-px bg-accent mb-4"></div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-secondary mr-2">04 /</span>Digital Products</p>
+          <h2 class="font-heading text-primary">Style Guides</h2>
+          <p class="mt-2 font-body text-text-muted text-base max-w-md">
+            Expert style knowledge you can reference any time — from $15.
+          </p>
+        </div>
+        <a
+          href="/shop"
+          class="font-body text-sm tracking-widest uppercase text-text-muted hover:text-primary transition-colors border-b border-current pb-0.5 self-start md:self-auto"
+        >
+          Shop All Guides →
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {featuredGuides.map((guide) => (
+          <div class="bg-surface p-7 flex flex-col group">
+            <div class="aspect-[3/4] bg-surface-dark mb-6 overflow-hidden relative">
+              <img
+                src={`/images/guides/${guide.slug}-cover.jpg`}
+                alt={`${guide.title} — digital style guide by Danielle Marie`}
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+                width="300"
+                height="400"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+              />
+              <!-- Fallback: hidden until image fails to load -->
+              <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/40 items-center justify-center" style="display:none">
+                <span class="font-heading text-white/30 text-4xl text-center px-4 leading-tight">{guide.title}</span>
+              </div>
+            </div>
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-2">{guide.price}</p>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-3 flex-1">{guide.title}</h3>
+            <p class="font-body text-sm text-text-muted leading-relaxed mb-5">{guide.description}</p>
+            <a
+              href={guide.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+            >
+              Get This Guide
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WAITLIST ───────────────────────────────────────── -->
+  <section class="py-24 lg:py-28 px-6 bg-primary" aria-label="Waitlist">
+    <div class="mx-auto max-w-2xl text-center">
+      <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
+      <p class="font-body text-xs tracking-widest uppercase text-accent/60 mb-4">Coming Soon</p>
+      <h2 class="font-heading text-white text-4xl lg:text-5xl leading-tight">
+        Something new is coming.
+      </h2>
+      <p class="mt-5 font-body text-white/60 text-lg leading-relaxed">
+        We're building something for your wardrobe that doesn't exist yet. Be the first to know when it's ready.
+      </p>
+      <!-- Brevo waitlist embed
+           TODO: Replace this form with the actual Brevo embed code from TRACK1-MANUAL-SETUP.md Section 14
+           The Brevo form should submit to the "Product Waitlist" contact list -->
+      <form
+        action="https://app.brevo.com/contact/index?api_key=TODO"
+        method="POST"
+        class="mt-10 flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+        data-todo="Replace with actual Brevo embedded form code"
+      >
+        <input
+          type="email"
+          name="EMAIL"
+          placeholder="Your email address"
+          required
+          class="flex-1 px-5 py-4 bg-white/10 border border-white/20 text-white placeholder:text-white/40 font-body text-sm focus:outline-none focus:border-accent"
+        />
+        <button
+          type="submit"
+          class="px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200 shrink-0"
+        >
+          Notify Me
+        </button>
+      </form>
+      <p class="mt-4 font-body text-xs text-white/30">No spam. Ever. Unsubscribe any time.</p>
+    </div>
+  </section>
+
+  <!-- ── FINAL CTA ─────────────────────────────────────── -->
+  <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Book consultation">
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Start Here</p>
+      <h2 class="font-heading text-primary text-4xl lg:text-5xl">Ready to elevate your wardrobe?</h2>
+      <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
+        Every journey starts with a free 20-minute consultation. No commitment. Just a conversation about where you are and where you want to go.
+      </p>
+      <a
+        href={calendlyURL}
+        class="mt-10 inline-flex items-center justify-center px-10 py-5 bg-primary text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+      >
+        Book Your Free Consultation
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

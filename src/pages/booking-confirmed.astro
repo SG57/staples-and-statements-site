@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+// This page is reached via Calendly redirect after a successful booking.
+// Calendly appends query params: invitee_name, event_start_time, event_end_time, invitee_email
+---
+
+<BaseLayout
+  title="You're Booked! — Staples & Statements"
+  description="Your consultation with Danielle Marie is confirmed. Here's what to expect next."
+>
+
+  <!-- ── CONFIRMATION HERO ─────────────────────────────── -->
+  <section class="py-20 lg:py-28 px-6 bg-primary min-h-[50vh] flex items-center" aria-label="Booking confirmation">
+    <div class="mx-auto max-w-3xl text-center w-full">
+      <div class="w-16 h-16 border-2 border-accent rounded-full flex items-center justify-center mx-auto mb-8">
+        <span class="text-accent text-2xl">✓</span>
+      </div>
+
+      <!-- Personalized heading — populated via client-side JS from Calendly query params -->
+      <h1 id="confirm-heading" class="font-heading text-white text-5xl md:text-6xl font-semibold leading-tight">
+        You're booked.
+      </h1>
+      <p id="confirm-details" class="mt-4 font-body text-white/60 text-xl"></p>
+
+      <div class="mt-6 w-8 h-px bg-accent mx-auto"></div>
+
+      <p class="mt-8 font-body text-white/70 text-lg leading-relaxed max-w-xl mx-auto">
+        Danielle will send a calendar invite with the meeting link shortly. In the meantime — there's plenty to explore.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── WHILE YOU WAIT ────────────────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="Next steps">
+    <div class="mx-auto max-w-5xl">
+      <div class="text-center mb-14">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">While You Wait</p>
+        <h2 class="font-heading text-primary text-4xl">Make the Most of Your Consultation</h2>
+        <p class="mt-4 font-body text-text-muted text-base max-w-lg mx-auto leading-relaxed">
+          The more Danielle knows about your style before the call, the more value you'll get from your 20 minutes together. Here are two great ways to prepare.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Style Quiz upsell -->
+        <div class="bg-surface p-10 flex flex-col">
+          <div class="text-3xl text-accent mb-5">✦</div>
+          <h3 class="font-heading text-2xl font-semibold text-primary mb-3">
+            Discover Your Style Archetype
+          </h3>
+          <p class="font-body text-text-muted text-sm leading-relaxed flex-1 mb-7">
+            Danielle's 7 Feminine Archetypes framework is the foundation of every styling engagement. Identify your dominant archetype before the call and Danielle can get straight to building your wardrobe strategy — no time wasted figuring out who you are.
+          </p>
+          <a
+            href="/archetypes"
+            class="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+          >
+            Explore the Archetypes →
+          </a>
+        </div>
+
+        <!-- Shop upsell -->
+        <div class="bg-primary p-10 flex flex-col">
+          <div class="text-3xl text-accent mb-5">♛</div>
+          <h3 class="font-heading text-2xl font-semibold text-white mb-3">
+            Explore Danielle's Curated Picks
+          </h3>
+          <p class="font-body text-white/70 text-sm leading-relaxed flex-1 mb-7">
+            Browse the style guides and LTK collections to get a feel for Danielle's aesthetic eye. See something you love? Save it — it's a great conversation starter for your call.
+          </p>
+          <a
+            href="/shop"
+            class="inline-flex items-center justify-center px-8 py-4 border border-accent text-accent font-body text-sm font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+          >
+            Shop My Picks →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REASSURANCE ───────────────────────────────────── -->
+  <section class="py-16 px-6 bg-surface" aria-label="What to expect">
+    <div class="mx-auto max-w-3xl">
+      <div class="text-center mb-10">
+        <h2 class="font-heading text-primary text-3xl">What to Expect</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+        {[
+          {
+            step: "Before",
+            body: "No prep required. Just show up as you are. If you want to have your closet nearby or a few inspiration images, great — but it's not necessary.",
+          },
+          {
+            step: "During",
+            body: "A relaxed, focused conversation. Danielle will ask about your lifestyle, your goals, and your current relationship with your wardrobe. Zero judgment.",
+          },
+          {
+            step: "After",
+            body: "Danielle will recommend next steps based on what she learned. If a paid service makes sense, she'll explain why. If it doesn't, she'll tell you that too.",
+          },
+        ].map(({ step, body }) => (
+          <div class="p-6 bg-background">
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">{step} the Call</p>
+            <p class="font-body text-sm text-text-muted leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER CTA ────────────────────────────────────── -->
+  <section class="py-16 px-6 bg-background border-t border-surface-dark">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="font-body text-text-muted text-base leading-relaxed">
+        Questions before the call? Reach out at{' '}
+        <a
+          href="mailto:hello@staplesandstatements.com"
+          class="text-accent hover:text-primary transition-colors"
+        >
+          hello@staplesandstatements.com
+        </a>
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  // Personalize heading from params forwarded by contact.astro's postMessage interceptor.
+  // Calendly's actual param name is invitee_full_name (not invitee_name).
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get('invitee_full_name') ?? params.get('invitee_name'); // fallback for any old links
+  const eventTime = params.get('event_start_time');
+
+  const heading = document.getElementById('confirm-heading');
+  const details = document.getElementById('confirm-details');
+
+  if (heading && name) {
+    heading.textContent = `You're booked, ${name.split(' ')[0]}.`;
+  }
+
+  if (details && eventTime) {
+    try {
+      const date = new Date(eventTime);
+      const formatted = date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short',
+      });
+      details.textContent = `Danielle will see you on ${formatted}.`;
+    } catch {
+      // Silently ignore if date parsing fails
+    }
+  }
+</script>

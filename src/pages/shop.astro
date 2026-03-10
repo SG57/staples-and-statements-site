@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { guides, BEACONS_SHOP } from '../data/guides';
+
+const calendlyURL = '/contact';
+const ltkProfileURL = 'https://shopltk.com/explore/Staplesandstatementsss';
+const beaconsShopURL = BEACONS_SHOP;
+
+// LTK collections by archetype
+const ltkCollections = [
+  {
+    name: "The Muse",
+    description: "Romantic, flowing, ethereal. Curated for the woman who dresses like poetry.",
+    link: ltkProfileURL,
+    icon: "✦",
+  },
+  {
+    name: "The Empress",
+    description: "Rich fabrics, jewel tones, structured power dressing. Every piece commands the room.",
+    link: ltkProfileURL,
+    icon: "♛",
+  },
+  {
+    name: "The Enchantress",
+    description: "Dark romance and magnetic mystery. Moody, unexpected, unforgettable.",
+    link: ltkProfileURL,
+    icon: "◈",
+  },
+  {
+    name: "The Warrior",
+    description: "Sharp tailoring and high-contrast neutrals. Strong, intentional, unapologetic.",
+    link: ltkProfileURL,
+    icon: "▲",
+  },
+  {
+    name: "The Siren",
+    description: "Body-celebrating silhouettes and rich materials. Sensual, confident, irresistible.",
+    link: ltkProfileURL,
+    icon: "◉",
+  },
+  {
+    name: "All Collections",
+    description: "Explore the full LTK profile — 500+ curated products across every archetype and occasion.",
+    link: ltkProfileURL,
+    icon: "◐",
+  },
+];
+---
+
+<BaseLayout
+  title="Shop Style Guides & LTK Picks — Staples & Statements"
+  description="Shop Danielle Marie's curated style guides and LTK product collections, organized by archetype. Instant digital downloads from $15."
+>
+
+  <!-- ── PAGE HEADER ────────────────────────────────────── -->
+  <section class="pt-16 pb-14 px-6 bg-primary" aria-label="Shop header">
+    <div class="mx-auto max-w-7xl">
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Curated for You</p>
+      <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold max-w-2xl leading-tight">
+        Shop My Picks
+      </h1>
+      <p class="mt-5 font-body text-white/60 text-lg max-w-xl leading-relaxed">
+        Digital style guides you can reference forever, and a curated LTK product library organized by archetype. Everything here is Danielle-approved.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── STYLE GUIDES ──────────────────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="Style guides" id="style-guides">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+        <div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Digital Downloads</p>
+          <h2 class="font-heading text-primary text-4xl">Style Guides</h2>
+          <p class="mt-2 font-body text-text-muted text-base max-w-lg leading-relaxed">
+            Instant download. Read on any device. Reference for life. Each guide is a concentrated dose of Danielle's expertise for a specific style challenge.
+          </p>
+        </div>
+        <a
+          href={beaconsShopURL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-body text-sm tracking-widest uppercase text-text-muted hover:text-primary transition-colors border-b border-current pb-0.5 self-start md:self-auto shrink-0"
+        >
+          View All on Beacons.ai →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {guides.map((guide) => (
+          <div class="bg-surface flex flex-col group img-frame-card">
+            <!-- Guide cover -->
+            <div class="relative aspect-[3/4] bg-surface-dark overflow-hidden">
+              <!-- Add guide cover: public/images/guides/{guide.slug}-cover.jpg -->
+              <img
+                src={`/images/guides/${guide.slug}-cover.jpg`}
+                alt={`${guide.title} — digital style guide by Danielle Marie`}
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+                width="300"
+                height="400"
+                onerror="this.style.display='none'"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent flex items-end p-5">
+                <span class="font-heading text-white text-2xl font-semibold leading-tight">{guide.title}</span>
+              </div>
+              <!-- Tags -->
+              <div class="absolute top-4 left-4 flex flex-wrap gap-1.5">
+                {guide.tags.map((tag) => (
+                  <span class="font-body text-xs tracking-widest uppercase bg-accent/90 text-white px-2 py-0.5">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 flex flex-col flex-1">
+              <p class="font-body text-xs tracking-widest uppercase text-accent mb-2">{guide.price} · Digital PDF</p>
+              <p class="font-body text-sm text-text-muted leading-relaxed flex-1 mb-5">{guide.description}</p>
+              <a
+                href={guide.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block w-full text-center px-6 py-3 bg-primary text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+              >
+                Get This Guide
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LTK COLLECTIONS ───────────────────────────────── -->
+  <section class="py-20 px-6 bg-primary" aria-label="LTK curated picks" id="ltk-picks">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+        <div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">LTK Collections</p>
+          <h2 class="font-heading text-white text-4xl">Shop My Curated Picks</h2>
+          <p class="mt-2 font-body text-white/60 text-base max-w-lg leading-relaxed">
+            500+ hand-selected products, organized by archetype. Click any collection to shop on LTK.
+          </p>
+        </div>
+        <a
+          href={ltkProfileURL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-body text-sm tracking-widest uppercase text-accent hover:text-accent-light transition-colors border-b border-accent pb-0.5 self-start md:self-auto shrink-0"
+        >
+          View Full LTK Profile →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {ltkCollections.map((collection) => (
+          <a
+            href={collection.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex flex-col bg-primary-light p-7 hover:bg-accent/20 border border-white/5 hover:border-accent/30 transition-colors duration-300"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-2xl text-accent/60 group-hover:text-accent transition-colors">{collection.icon}</span>
+              <h3 class="font-heading text-white text-xl font-semibold group-hover:text-accent transition-colors">
+                {collection.name}
+              </h3>
+            </div>
+            <p class="font-body text-white/60 text-sm leading-relaxed flex-1 mb-4">{collection.description}</p>
+            <div class="flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent">
+              <span>Shop This Collection</span>
+              <span class="group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PERSONALIZED CTA ──────────────────────────────── -->
+  <section class="py-20 lg:py-28 px-6 bg-surface" aria-label="Personalized styling">
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="w-8 h-px bg-accent mx-auto mb-8"></div>
+      <h2 class="font-heading text-primary text-4xl lg:text-5xl">
+        Want a wardrobe curated just for you?
+      </h2>
+      <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
+        Style guides and LTK collections are a great starting point — but nothing compares to a wardrobe built specifically around your body, your colors, your life, and your archetype.
+      </p>
+      <a
+        href={calendlyURL}
+        class="mt-10 inline-flex items-center justify-center px-10 py-5 bg-primary text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+      >
+        Book Your Free Consultation
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

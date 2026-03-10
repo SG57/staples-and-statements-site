@@ -1,0 +1,150 @@
+---
+/**
+ * Marquee — continuously scrolling brand identity band.
+ *
+ * Variants:
+ *   "dark"  (default) — bg-primary, white text. Bridges dark hero → light content.
+ *   "light"           — bg-surface, muted text. Subtle rhythm strip.
+ *
+ * Edge fade mask gives the text an infinite-horizon feel (emerges from nothing,
+ * recedes to nothing). Hover pauses. prefers-reduced-motion stops the animation.
+ */
+
+interface Props {
+  variant?: 'dark' | 'light';
+}
+
+const { variant = 'dark' } = Astro.props;
+
+const items = [
+  'Staples & Statements',
+  'Wardrobe Styling',
+  'Style Archetypes',
+  'Personal Color Analysis',
+  'San Diego · Virtual',
+];
+---
+
+<div
+  class:list={[
+    'marquee-band overflow-hidden select-none',
+    variant === 'dark'
+      ? 'bg-primary border-y border-white/[0.07] py-3.5'
+      : 'bg-surface border-y border-surface-dark py-3',
+  ]}
+  aria-hidden="true"
+>
+  <!-- Edge fade mask — text appears to emerge from and disappear into infinity -->
+  <div class="marquee-fade-mask">
+    <!-- The track contains 2× the content. Animating to -50% = exactly one loop. -->
+    <div class="marquee-track">
+
+      <!-- Copy 1 -->
+      {items.map((item) => (
+        <>
+          <span
+            class:list={[
+              'marquee-item font-body text-[0.65rem] tracking-[0.2em] uppercase',
+              variant === 'dark' ? 'text-white/38' : 'text-text-light',
+            ]}
+          >
+            {item}
+          </span>
+          <span
+            class:list={[
+              'marquee-sep',
+              variant === 'dark' ? 'text-accent/60' : 'text-accent/50',
+            ]}
+            aria-hidden="true"
+          >
+            ✦
+          </span>
+        </>
+      ))}
+
+      <!-- Copy 2 — identical, creates the seamless loop -->
+      {items.map((item) => (
+        <>
+          <span
+            class:list={[
+              'marquee-item font-body text-[0.65rem] tracking-[0.2em] uppercase',
+              variant === 'dark' ? 'text-white/38' : 'text-text-light',
+            ]}
+          >
+            {item}
+          </span>
+          <span
+            class:list={[
+              'marquee-sep',
+              variant === 'dark' ? 'text-accent/60' : 'text-accent/50',
+            ]}
+            aria-hidden="true"
+          >
+            ✦
+          </span>
+        </>
+      ))}
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Fade mask: text fades at both horizontal edges */
+  .marquee-fade-mask {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    overflow: hidden;
+  }
+
+  /* Track: flex row, no wrap, width is the sum of both content copies */
+  .marquee-track {
+    display: flex;
+    flex-wrap: nowrap;
+    width: max-content;
+    align-items: center;
+    gap: 0;
+    /* Scroll: 0% → -50% = exactly one content-width = seamless loop */
+    animation: marquee-scroll 36s linear infinite;
+    will-change: transform;
+  }
+
+  /* Pause on hover — editorial convention, respects the viewer */
+  .marquee-band:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee-item {
+    padding: 0 1.75rem;
+    white-space: nowrap;
+  }
+
+  .marquee-sep {
+    font-size: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* Reduced motion: stop scrolling entirely */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

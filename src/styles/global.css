@@ -1,0 +1,447 @@
+@import "tailwindcss";
+
+/*
+ * Staples & Statements — Design System
+ * Typography: Cormorant Garamond (headings) + DM Sans (body)
+ * Palette: Warm neutrals, editorial luxury
+ */
+
+/* ── CSS Custom Properties ─────────────────────────────── */
+@theme {
+  /* Color palette — warm, editorial, luxury */
+  --color-primary: #1a1613;          /* warm charcoal / near-black */
+  --color-primary-light: #2d2926;    /* slightly lighter charcoal */
+  --color-secondary: #8c7e72;        /* warm taupe / stone */
+  --color-secondary-light: #a89b8f;  /* lighter taupe */
+  --color-accent: #b8977e;           /* muted warm gold — elevated, understated */
+  --color-accent-light: #cdb5a0;     /* lighter gold for hover states */
+  --color-background: #faf7f4;       /* warm off-white / cream */
+  --color-surface: #f2ede8;          /* slightly darker cream for cards */
+  --color-surface-dark: #e8e0d8;     /* darker surface for borders/dividers */
+  --color-text: #1a1613;             /* primary text — warm charcoal */
+  --color-text-muted: #6b5e53;       /* muted text — warm brown-grey */
+  --color-text-light: #9c8e82;       /* light text — warm stone */
+  --color-white: #ffffff;
+
+  /* Font families */
+  --font-heading: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body: 'DM Sans', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+/* ── Base styles ───────────────────────────────────────────
+   IMPORTANT: Everything here is in @layer base so that Tailwind
+   utility classes (text-white, text-accent, etc.) in @layer utilities
+   can properly override these defaults on specific elements.
+   Unlayered CSS would win over all Tailwind utilities — breaking
+   text-white on dark backgrounds and color overrides on <a> tags.
+   ─────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    line-height: 1.6;
+  }
+
+  /* Typography — color: primary is the DEFAULT for light sections.
+     On dark sections, utility classes (text-white, etc.) override this
+     correctly because @layer utilities > @layer base. */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-primary);
+  }
+
+  h1 { font-size: clamp(2.25rem, 5vw, 3.75rem); }
+  h2 { font-size: clamp(1.75rem, 4vw, 2.75rem); }
+  h3 { font-size: clamp(1.375rem, 3vw, 1.875rem); }
+  h4 { font-size: clamp(1.125rem, 2.5vw, 1.375rem); }
+
+  p {
+    max-width: 65ch;
+  }
+
+  /* Link defaults — overridden by text-white, text-accent, etc. utilities */
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-primary);
+  }
+
+  /* Selection highlight */
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION SYSTEM
+   Single master speed knob: change --dur, everything scales.
+   Ease curves tuned for editorial / luxury feel.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --dur:        0.75s;                          /* ← global speed knob */
+  --ease:       cubic-bezier(0.16, 1, 0.3, 1); /* expo-out — snappy settle */
+  --ease-exit:  cubic-bezier(0.5, 0, 0.85, 0); /* ease-in  — decisive exit */
+  --ease-mid:   cubic-bezier(0.45, 0, 0.55, 1);/* in-out   — balanced */
+}
+
+/* ── Page transitions (Astro ViewTransitions) ──────────── */
+@keyframes s-page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes s-page-out {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+
+::view-transition-old(root) {
+  animation: s-page-out calc(var(--dur) * 0.65) var(--ease-exit) both;
+}
+::view-transition-new(root) {
+  animation: s-page-in  calc(var(--dur) * 1.3)  var(--ease)      both;
+}
+
+/* ── Scroll-reveal: fade + rise ────────────────────────── */
+/* JS adds .s-r to off-screen elements; .s-on triggers it   */
+.s-r {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity   calc(var(--dur) * 1.4) var(--ease) calc(var(--dur) * var(--d, 0)),
+    transform calc(var(--dur) * 1.4) var(--ease) calc(var(--dur) * var(--d, 0));
+}
+.s-r.s-on {
+  opacity: 1;
+  transform: none;
+}
+
+/* Image variant: subtle zoom-out on entry */
+.s-r-img {
+  opacity: 0;
+  transform: scale(1.05);
+  transition:
+    opacity   calc(var(--dur) * 1.8) var(--ease) calc(var(--dur) * var(--d, 0)),
+    transform calc(var(--dur) * 2.4) var(--ease) calc(var(--dur) * var(--d, 0)),
+    /* scale (CSS property, separate from transform) — used by group-hover:scale-105.
+       No delay here: this transition applies to hover interactions, not the entrance. */
+    scale     calc(var(--dur) * 0.67) var(--ease);
+}
+.s-r-img.s-on {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Heading variant: tighter reveal */
+.s-r-h {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity   calc(var(--dur) * 1.1) var(--ease) calc(var(--dur) * var(--d, 0)),
+    transform calc(var(--dur) * 1.1) var(--ease) calc(var(--dur) * var(--d, 0));
+}
+.s-r-h.s-on {
+  opacity: 1;
+  transform: none;
+}
+
+/* Accent line / ornament: width reveal */
+.s-r-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition:
+    transform calc(var(--dur) * 1.2) var(--ease) calc(var(--dur) * var(--d, 0));
+}
+.s-r-line.s-on {
+  transform: scaleX(1);
+}
+
+/* ── Skeleton shimmer ──────────────────────────────────── */
+@keyframes s-shimmer {
+  0%   { background-position:  200% center; }
+  100% { background-position: -200% center; }
+}
+.s-sk {
+  position: relative;
+  overflow: hidden;
+}
+.s-sk::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent        0%,
+    rgba(255,255,255,0.09) 40%,
+    rgba(255,255,255,0.17) 50%,
+    rgba(255,255,255,0.09) 60%,
+    transparent        100%
+  );
+  background-size: 200% 100%;
+  animation: s-shimmer calc(var(--dur) * 4) ease-in-out infinite;
+  pointer-events: none;
+}
+/* Dark-background shimmer variant (on .bg-primary / charcoal sections) */
+.bg-primary .s-sk::after,
+.bg-primary-light .s-sk::after {
+  background: linear-gradient(
+    110deg,
+    transparent       0%,
+    rgba(255,255,255,0.04) 40%,
+    rgba(255,255,255,0.09) 50%,
+    rgba(255,255,255,0.04) 60%,
+    transparent       100%
+  );
+  background-size: 200% 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   IMAGE ELEVATION SYSTEM
+   Single knob: --img-elev  0 = flat · 1 = whisper · 2 = subtle
+                             3 = present · 4 = bold
+   All shadows, borders, and vignette scale from this one value.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --img-elev: 2;   /* ← image elevation knob */
+}
+
+/* ── img-frame: standalone portrait / hero images ─────────
+   Outer drop shadow + hairline inset border + edge vignette.
+   The ::before vignette darkens image corners from within.   */
+.img-frame {
+  box-shadow:
+    0  calc(var(--img-elev) * 5px)  calc(var(--img-elev) * 26px) rgba(26, 22, 19, calc(var(--img-elev) * 0.07)),
+    0  calc(var(--img-elev) * 2px)  calc(var(--img-elev) * 7px)  rgba(26, 22, 19, calc(var(--img-elev) * 0.05)),
+    inset 0 0 0 1px                                               rgba(26, 22, 19, calc(var(--img-elev) * 0.07));
+}
+.img-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 38%,
+    rgba(26, 22, 19, calc(var(--img-elev) * 0.055)) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* On dark (charcoal) section backgrounds: dark shadow is invisible,
+   swap to a warm accent glow so the image reads off the page.      */
+.bg-primary .img-frame,
+.bg-primary-light .img-frame {
+  box-shadow:
+    0  calc(var(--img-elev) * 5px)  calc(var(--img-elev) * 30px) rgba(184, 151, 126, calc(var(--img-elev) * 0.11)),
+    0  0                            calc(var(--img-elev) * 10px)  rgba(184, 151, 126, calc(var(--img-elev) * 0.07)),
+    inset 0 0 0 1px                                               rgba(255, 255, 255, calc(var(--img-elev) * 0.07));
+}
+
+/* ── img-frame-grid: tight mosaic / portfolio grid cells ───
+   No outer shadow (cells are edge-to-edge — shadows fight).
+   Inset border + inner corner darkening only.               */
+.img-frame-grid {
+  box-shadow:
+    inset 0 0 0                     1px rgba(26, 22, 19, calc(var(--img-elev) * 0.10)),
+    inset 0 0 calc(var(--img-elev) * 6px)  rgba(26, 22, 19, calc(var(--img-elev) * 0.04));
+}
+
+/* ── img-frame-card: product/guide card outer wrappers ─────
+   Applied to the full card so the shadow wraps image + text. */
+.img-frame-card {
+  box-shadow:
+    0  calc(var(--img-elev) * 4px)  calc(var(--img-elev) * 20px) rgba(26, 22, 19, calc(var(--img-elev) * 0.07)),
+    0  calc(var(--img-elev) * 1px)  calc(var(--img-elev) * 4px)  rgba(26, 22, 19, calc(var(--img-elev) * 0.05));
+}
+
+/* ── img-frame-circle: circular avatar headshots ───────────
+   Soft ring + directional shadow to lift off any background. */
+.img-frame-circle {
+  box-shadow:
+    0 0 0 calc(max(1px, calc(var(--img-elev) * 1px))) rgba(26, 22, 19, calc(var(--img-elev) * 0.10)),
+    0 calc(var(--img-elev) * 2px) calc(var(--img-elev) * 8px)   rgba(26, 22, 19, calc(var(--img-elev) * 0.12));
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAV SYSTEM
+   Centered brand mark · animated underline links · hide/show · shadow
+   Transparent-overlay hero mode · smooth scroll-restore to solid.
+
+   Color system: all link/brand/bar colors handled via CSS only —
+   no Tailwind color utilities on .nav-link / .nav-brand / .nav-bar elements.
+   This lets the transparent ↔ scrolled transition work via class toggling
+   without JS needing to touch individual element colors.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Master nav transition — transform (hide/show) + background (transparent restore) */
+#site-nav {
+  transition:
+    transform        280ms cubic-bezier(0.4, 0, 0.6, 1),
+    background-color calc(var(--dur) * 0.65) var(--ease),
+    border-color     calc(var(--dur) * 0.65) var(--ease),
+    box-shadow       calc(var(--dur) * 0.9)  var(--ease),
+    backdrop-filter  calc(var(--dur) * 0.65) var(--ease);
+}
+
+/* Smart hide — added by JS when scrolling down past threshold */
+#site-nav.nav-hidden {
+  transform: translateY(-100%);
+}
+
+/* Scrolled shadow — warm barely-there lift on both solid + scrolled-transparent nav */
+#site-nav.nav-scrolled {
+  box-shadow:
+    0 1px 0   var(--color-surface-dark),
+    0 6px 40px rgba(26, 22, 19, 0.06),
+    0 1px 8px  rgba(26, 22, 19, 0.03);
+}
+
+/* ── Nav link: color + sliding underline ────────────────── */
+/* transform-origin trick: exit from right, enter from left  */
+.nav-link {
+  position: relative;
+  padding-bottom: 3px;
+  color: var(--color-text-muted);
+  transition: color calc(var(--dur) * 0.45) var(--ease);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right;   /* exit direction: shrinks toward right */
+  transition:
+    transform        calc(var(--dur) * 0.45) var(--ease),
+    background-color calc(var(--dur) * 0.65) var(--ease);
+}
+
+.nav-link:hover {
+  color: var(--color-primary);
+}
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;    /* enter direction: grows from left */
+}
+
+/* Active page indicator: always visible, no entry animation */
+.nav-link[aria-current="page"] {
+  color: var(--color-accent);
+}
+.nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+  transition: background-color calc(var(--dur) * 0.65) var(--ease); /* color only — no scale flash */
+}
+
+/* ── Transparent nav: white text on hero images ──────────── */
+.nav-transparent .nav-link {
+  color: rgba(255, 255, 255, 0.62);
+}
+.nav-transparent .nav-link:hover {
+  color: rgba(255, 255, 255, 1);
+}
+.nav-transparent .nav-link[aria-current="page"] {
+  color: rgba(255, 255, 255, 0.95);
+}
+.nav-transparent .nav-link::after {
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+/* ── Transparent → solid (scrolled): revert to brand colors  */
+.nav-transparent.nav-scrolled .nav-link {
+  color: var(--color-text-muted);
+}
+.nav-transparent.nav-scrolled .nav-link:hover {
+  color: var(--color-primary);
+}
+.nav-transparent.nav-scrolled .nav-link[aria-current="page"] {
+  color: var(--color-accent);
+}
+.nav-transparent.nav-scrolled .nav-link::after {
+  background-color: var(--color-accent);
+}
+
+/* ── Nav brand mark ──────────────────────────────────────── */
+.nav-brand {
+  color: var(--color-primary);
+  transition: color calc(var(--dur) * 0.45) var(--ease);
+}
+.nav-brand:hover {
+  color: var(--color-accent);
+}
+.nav-transparent .nav-brand {
+  color: rgba(255, 255, 255, 1);
+}
+.nav-transparent .nav-brand:hover {
+  color: rgba(255, 255, 255, 0.72);
+}
+.nav-transparent.nav-scrolled .nav-brand {
+  color: var(--color-primary);
+}
+.nav-transparent.nav-scrolled .nav-brand:hover {
+  color: var(--color-accent);
+}
+
+/* ── Hamburger bars ──────────────────────────────────────── */
+.nav-bar {
+  background-color: var(--color-primary);
+  transition: background-color calc(var(--dur) * 0.45) var(--ease);
+}
+.nav-transparent .nav-bar {
+  background-color: rgba(255, 255, 255, 1);
+}
+.nav-transparent.nav-scrolled .nav-bar {
+  background-color: var(--color-primary);
+}
+
+/* ── Transparent nav background/border restore ───────────── */
+/* .nav-scrolled class added by JS at scrollY > 80px          */
+.nav-transparent {
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.nav-transparent.nav-scrolled {
+  background: color-mix(in srgb, var(--color-background) 95%, transparent) !important;
+  border-bottom-color: var(--color-surface-dark) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* ── Respect prefers-reduced-motion ────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: 0.01s; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+  .s-r, .s-r-img, .s-r-h {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .s-r-line {
+    transform: none !important;
+    transition: none !important;
+  }
+  .s-sk::after { animation: none; }
+}

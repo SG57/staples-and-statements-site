@@ -1,0 +1,122 @@
+---
+const quickLinks = [
+  { label: 'Services', href: '/services' },
+  { label: 'Archetypes', href: '/archetypes' },
+  { label: 'Shop', href: '/shop' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Clients', href: '/clients' },
+];
+
+const socialLinks = [
+  {
+    label: 'Instagram',
+    href: 'https://instagram.com/littledanniii',
+    handle: '@littledanniii',
+  },
+  {
+    label: 'TikTok',
+    href: 'https://tiktok.com/@staplesandstatementsss',
+    handle: '@staplesandstatementsss',
+  },
+];
+---
+
+<footer class="bg-primary text-white/80">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+      <!-- Brand -->
+      <div class="lg:col-span-1">
+        <a
+          href="/"
+          class="font-heading text-2xl font-semibold text-white hover:text-accent-light transition-colors"
+        >
+          Staples & Statements
+        </a>
+        <p class="mt-4 text-sm leading-relaxed text-white/60 max-w-xs">
+          Your wardrobe, elevated. Expert styling services and archetype-based
+          personal style guidance.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3
+          class="font-heading text-lg font-semibold text-white tracking-wide mb-4"
+        >
+          Quick Links
+        </h3>
+        <ul class="space-y-2.5">
+          {quickLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-sm text-white/60 hover:text-accent-light transition-colors duration-200"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Social -->
+      <div>
+        <h3
+          class="font-heading text-lg font-semibold text-white tracking-wide mb-4"
+        >
+          Follow Along
+        </h3>
+        <ul class="space-y-2.5">
+          {socialLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-white/60 hover:text-accent-light transition-colors duration-200"
+              >
+                {link.label}
+                <span class="ml-1 text-white/40">{link.handle}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h3
+          class="font-heading text-lg font-semibold text-white tracking-wide mb-4"
+        >
+          Get in Touch
+        </h3>
+        <a
+          href="mailto:hello@staplesandstatements.com"
+          class="text-sm text-white/60 hover:text-accent-light transition-colors duration-200"
+        >
+          hello@staplesandstatements.com
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div
+      class="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
+    >
+      <p class="text-xs text-white/40">
+        &copy; 2026 Staples & Statements. All rights reserved.
+      </p>
+      <p class="text-xs text-white/30">
+        Built by{' '}
+        <a
+          href="https://sg57.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-white/40 hover:text-accent-light transition-colors duration-200"
+        >
+          SG57 Labs
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>

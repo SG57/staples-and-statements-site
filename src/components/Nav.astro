@@ -1,0 +1,244 @@
+---
+interface Props {
+  transparentNav?: boolean;
+}
+
+const { transparentNav = false } = Astro.props;
+
+// Three-column centered layout: [left] [brand mark] [right]
+// "Home" removed — logo IS the home link.
+const leftItems = [
+  { label: 'About',    href: '/about'    },
+  { label: 'Services', href: '/services' },
+];
+
+const rightItems = [
+  { label: 'Archetypes', href: '/archetypes' },
+  { label: 'Shop',       href: '/shop'       },
+  { label: 'Contact',    href: '/contact'    },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  id="site-nav"
+  class:list={[
+    'fixed top-0 left-0 right-0 z-50 border-b',
+    transparentNav
+      ? 'nav-transparent border-transparent'
+      : 'bg-background/95 backdrop-blur-sm border-surface-dark',
+  ]}
+>
+  <nav class="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Primary navigation">
+
+    <!-- ── Desktop: three-column centered layout ─────────── -->
+    <!-- grid-cols-[1fr_auto_1fr]: equal wings, brand mark naturally centered -->
+    <div class="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] items-center h-20">
+
+      <!-- Left items -->
+      <ul class="flex items-center gap-8">
+        {leftItems.map((item) => {
+          const isActive = currentPath.startsWith(item.href);
+          return (
+            <li>
+              <a
+                href={item.href}
+                class="nav-link font-body text-xs tracking-widest uppercase"
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <!-- Center: brand mark -->
+      <a
+        href="/"
+        class="nav-brand font-heading text-2xl font-semibold tracking-wide px-10 whitespace-nowrap"
+        aria-label="Staples & Statements — Home"
+      >
+        Staples & Statements
+      </a>
+
+      <!-- Right items -->
+      <ul class="flex items-center gap-8 justify-end">
+        {rightItems.map((item) => {
+          const isActive = currentPath.startsWith(item.href);
+          return (
+            <li>
+              <a
+                href={item.href}
+                class="nav-link font-body text-xs tracking-widest uppercase"
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+    </div>
+
+    <!-- ── Mobile: logo left, hamburger right ─────────────── -->
+    <div class="flex items-center justify-between h-16 lg:hidden">
+      <a
+        href="/"
+        class="nav-brand font-heading text-xl font-semibold tracking-wide"
+        aria-label="Staples & Statements — Home"
+      >
+        Staples & Statements
+      </a>
+
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span id="bar-top"    class="nav-bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
+        <span id="bar-mid"    class="nav-bar block w-6 h-0.5 transition-all duration-300"></span>
+        <span id="bar-bottom" class="nav-bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
+      </button>
+    </div>
+
+    <!-- ── Mobile menu ─────────────────────────────────────── -->
+    <div id="mobile-menu" class="lg:hidden hidden">
+      <ul class="flex flex-col pb-6 pt-2 gap-1">
+        {[...leftItems, ...rightItems].map((item) => {
+          const isActive = currentPath.startsWith(item.href);
+          return (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'block py-3 px-2 font-body text-sm tracking-widest uppercase transition-colors duration-200 border-l-2',
+                  isActive
+                    ? 'text-accent font-medium border-accent bg-surface/50'
+                    : 'text-text-muted hover:text-primary border-transparent hover:border-secondary-light hover:bg-surface/30',
+                ]}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+
+  </nav>
+</header>
+
+<!-- Spacer: omitted when transparentNav=true — the hero uses min-h-screen -->
+{!transparentNav && <div class="h-16 lg:h-20" aria-hidden="true"></div>}
+
+<script>
+  // ── Mobile menu ─────────────────────────────────────────────────────────
+  // Uses astro:page-load so this re-runs after every ViewTransitions navigation.
+  // dataset.menuInitialized guards against duplicate listeners on the persistent
+  // nav element (layout components are not re-rendered, just script-re-run).
+
+  function initMobileMenu(): void {
+    const menuBtn    = document.getElementById('mobile-menu-btn') as HTMLButtonElement | null;
+    const mobileMenu = document.getElementById('mobile-menu')    as HTMLElement | null;
+    const barTop     = document.getElementById('bar-top')        as HTMLElement | null;
+    const barMid     = document.getElementById('bar-mid')        as HTMLElement | null;
+    const barBottom  = document.getElementById('bar-bottom')     as HTMLElement | null;
+
+    if (!menuBtn || !mobileMenu) return;
+
+    // Prevent duplicate listeners on the persistent nav element
+    if (menuBtn.dataset.menuInitialized === 'true') return;
+    menuBtn.dataset.menuInitialized = 'true';
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
+      const willOpen = !isOpen;
+
+      menuBtn.setAttribute('aria-expanded', String(willOpen));
+      mobileMenu.classList.toggle('hidden', !willOpen);
+
+      // Animate hamburger → X and back with explicit CSS
+      if (barTop && barMid && barBottom) {
+        if (willOpen) {
+          barTop.style.transform    = 'translateY(8px) rotate(45deg)';
+          barMid.style.opacity      = '0';
+          barBottom.style.transform = 'translateY(-8px) rotate(-45deg)';
+        } else {
+          barTop.style.transform    = '';
+          barMid.style.opacity      = '';
+          barBottom.style.transform = '';
+        }
+      }
+    });
+  }
+
+  // ── Scroll behavior: hide/show + transparent-to-solid restore ───────────
+  // Single rAF-throttled scroll listener handles:
+  //   1. nav-scrolled  — warm drop shadow + background restore on transparent pages
+  //   2. nav-hidden    — hides on scroll-down, reveals on scroll-up
+  //
+  // Uses AbortController so the listener is cleanly replaced on re-init
+  // (important if this somehow runs more than once via page-load).
+
+  let scrollController: AbortController | null = null;
+
+  function initScrollBehavior(): void {
+    const nav = document.getElementById('site-nav') as HTMLElement | null;
+    const menuBtn = document.getElementById('mobile-menu-btn') as HTMLButtonElement | null;
+    if (!nav) return;
+
+    // Tear down previous scroll listener if re-running
+    scrollController?.abort();
+    scrollController = new AbortController();
+
+    const HIDE_THRESHOLD = 100;
+    const DELTA_MIN      = 4;
+    let lastY   = window.scrollY;
+    let ticking = false;
+
+    function updateNav(): void {
+      const y     = window.scrollY;
+      const delta = y - lastY;
+      const menuOpen = menuBtn?.getAttribute('aria-expanded') === 'true';
+
+      // 1. Scrolled state: shadow + transparent-nav background restore
+      nav.classList.toggle('nav-scrolled', y > 80);
+
+      // 2. Smart hide/show — suppressed while mobile menu is open
+      if (!menuOpen) {
+        if (y < HIDE_THRESHOLD) {
+          nav.classList.remove('nav-hidden');
+        } else if (delta > DELTA_MIN) {
+          nav.classList.add('nav-hidden');
+        } else if (delta < -DELTA_MIN) {
+          nav.classList.remove('nav-hidden');
+        }
+      }
+
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateNav);
+        ticking = true;
+      }
+    }, { passive: true, signal: scrollController.signal });
+
+    updateNav(); // Initialize on load (handles pre-scrolled state)
+  }
+
+  // Run on every page load (initial + ViewTransitions navigations)
+  document.addEventListener('astro:page-load', () => {
+    initMobileMenu();
+    initScrollBehavior();
+  });
+</script>

@@ -1,0 +1,260 @@
+---
+interface Props {
+  id: string;
+  src: string;
+  poster: string;
+  fallbackId: string;
+  fallbackUrl: string;
+  title: string;
+  handle?: string;
+  preload?: 'none' | 'metadata' | 'auto';
+}
+
+const {
+  id,
+  src,
+  poster,
+  fallbackId,
+  fallbackUrl,
+  title,
+  handle = '@littledanniii',
+  preload = 'metadata',
+} = Astro.props;
+---
+
+<!--
+  Branded reel player: 9:16 aspect ratio, no native controls, tap to play/pause.
+  An explicit <img> poster layer (not the native poster attr) gives us a smooth
+  fade transition instead of the browser's instant snap on play/pause.
+  Subtle volume + fullscreen controls appear in the overlay.
+  Error fallback swaps in the link card if the MP4 is missing.
+-->
+<div
+  class="reel-player relative overflow-hidden bg-black w-full"
+  style="aspect-ratio: 9/16;"
+  data-fallback={fallbackId}
+  data-poster={poster}
+>
+  <!-- Video — no poster attr; we control the poster layer ourselves -->
+  <video
+    id={id}
+    class="absolute inset-0 w-full h-full object-cover"
+    playsinline
+    preload={preload}
+    aria-label={title}
+    tabindex="-1"
+  >
+    <source src={src} type="video/mp4" />
+  </video>
+
+  <!--
+    Explicit poster layer — sits above the video, below the overlay.
+    We fade this in/out via JS so the transition is smooth instead of a jump.
+  -->
+  <img
+    class="reel-poster absolute inset-0 w-full h-full object-cover pointer-events-none"
+    src={poster}
+    alt=""
+    aria-hidden="true"
+  />
+
+  <!-- Full-bleed overlay — always pointer-events:auto so pause always works -->
+  <div
+    class="reel-overlay absolute inset-0 cursor-pointer select-none"
+    style="transition: opacity calc(var(--dur, 0.55s) * 0.9) var(--ease-mid, ease);"
+  >
+
+    <!-- Centred play/pause button -->
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="reel-play-btn w-14 h-14 rounded-full bg-black/30 backdrop-blur-sm border border-white/35 flex items-center justify-center transition-all duration-200 hover:scale-110 hover:bg-black/50 hover:border-white/60">
+        <svg class="reel-icon-play w-5 h-5 text-white ml-0.5 pointer-events-none" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="reel-icon-pause w-5 h-5 text-white hidden pointer-events-none" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Bottom bar: caption left, controls right -->
+    <div class="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-20 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-between gap-3">
+
+      <!-- Caption -->
+      <div class="pointer-events-none min-w-0">
+        <p class="font-body text-white/55 text-[10px] tracking-widest uppercase mb-0.5">{handle}</p>
+        <p class="font-heading text-white text-base font-semibold leading-snug">{title}</p>
+      </div>
+
+      <!-- Volume + fullscreen -->
+      <div class="flex items-center gap-1.5 shrink-0 pb-0.5">
+        <button
+          class="reel-btn-vol w-8 h-8 rounded-full bg-black/25 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/45 hover:border-white/45 transition-all duration-150"
+          aria-label="Toggle mute" title="Toggle mute"
+        >
+          <svg class="reel-icon-vol-on w-3.5 h-3.5 text-white pointer-events-none" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+          </svg>
+          <svg class="reel-icon-vol-off w-3.5 h-3.5 text-white/50 hidden pointer-events-none" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 4v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+          </svg>
+        </button>
+
+        <button
+          class="reel-btn-fs w-8 h-8 rounded-full bg-black/25 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/45 hover:border-white/45 transition-all duration-150"
+          aria-label="Toggle fullscreen" title="Toggle fullscreen"
+        >
+          <svg class="reel-icon-fs-enter w-3.5 h-3.5 text-white pointer-events-none" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+          </svg>
+          <svg class="reel-icon-fs-exit w-3.5 h-3.5 text-white hidden pointer-events-none" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Read --dur from the root element (respects the global animation knob)
+  function dur(multiplier = 1): number {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue('--dur').trim();
+    const ms  = parseFloat(raw) * (raw.endsWith('ms') ? 1 : 1000);
+    return ms * multiplier;
+  }
+
+  document.querySelectorAll<HTMLElement>('.reel-player').forEach((container) => {
+    const video      = container.querySelector<HTMLVideoElement>('video');
+    const posterEl   = container.querySelector<HTMLImageElement>('.reel-poster');
+    const overlay    = container.querySelector<HTMLElement>('.reel-overlay');
+    const playIcon   = container.querySelector<SVGElement>('.reel-icon-play');
+    const pauseIcon  = container.querySelector<SVGElement>('.reel-icon-pause');
+    const btnVol     = container.querySelector<HTMLButtonElement>('.reel-btn-vol');
+    const iconVolOn  = container.querySelector<SVGElement>('.reel-icon-vol-on');
+    const iconVolOff = container.querySelector<SVGElement>('.reel-icon-vol-off');
+    const btnFs      = container.querySelector<HTMLButtonElement>('.reel-btn-fs');
+    const iconFsIn   = container.querySelector<SVGElement>('.reel-icon-fs-enter');
+    const iconFsOut  = container.querySelector<SVGElement>('.reel-icon-fs-exit');
+
+    if (!video || !overlay) return;
+
+    let hideTimer: ReturnType<typeof setTimeout>;
+
+    // ── Poster fade helpers ───────────────────────────────────
+    // We control poster opacity via JS so we get a smooth CSS transition
+    // instead of the browser's instant native poster snap on play/pause.
+    if (posterEl) {
+      // Start fully visible (poster shown before any interaction)
+      posterEl.style.opacity = '1';
+    }
+
+    function fadePosterOut() {
+      if (!posterEl) return;
+      posterEl.style.transition = `opacity ${dur(0.65)}ms var(--ease-exit, ease-in)`;
+      posterEl.style.opacity = '0';
+    }
+
+    function fadePosterIn() {
+      if (!posterEl) return;
+      posterEl.style.transition = `opacity ${dur(1.1)}ms var(--ease, ease)`;
+      posterEl.style.opacity = '1';
+    }
+
+    // ── Play state ────────────────────────────────────────────
+    function setPlaying(playing: boolean) {
+      if (playing) {
+        fadePosterOut();
+        playIcon?.classList.add('hidden');
+        pauseIcon?.classList.remove('hidden');
+        scheduleHide();
+      } else {
+        clearTimeout(hideTimer);
+        showOverlay();
+        fadePosterIn();
+        playIcon?.classList.remove('hidden');
+        pauseIcon?.classList.add('hidden');
+      }
+    }
+
+    function showOverlay() {
+      overlay.style.opacity = '1';
+    }
+
+    function scheduleHide() {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        if (!video.paused) overlay.style.opacity = '0';
+      }, 2000);
+    }
+
+    function revealOverlay() {
+      if (video.paused) return;
+      showOverlay();
+      scheduleHide();
+    }
+
+    overlay.addEventListener('mousemove', revealOverlay);
+    overlay.addEventListener('touchstart', revealOverlay, { passive: true });
+
+    overlay.addEventListener('click', () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+
+    video.addEventListener('play',  () => setPlaying(true));
+    video.addEventListener('pause', () => setPlaying(false));
+    video.addEventListener('ended', () => setPlaying(false));
+
+    // ── Volume ────────────────────────────────────────────────
+    function syncVolIcon() {
+      const muted = video.muted || video.volume === 0;
+      iconVolOn?.classList.toggle('hidden', muted);
+      iconVolOff?.classList.toggle('hidden', !muted);
+    }
+
+    btnVol?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      video.muted = !video.muted;
+      syncVolIcon();
+      revealOverlay();
+    });
+
+    video.addEventListener('volumechange', syncVolIcon);
+    syncVolIcon();
+
+    // ── Fullscreen ────────────────────────────────────────────
+    function syncFsIcon() {
+      const inFs = !!document.fullscreenElement;
+      iconFsIn?.classList.toggle('hidden', inFs);
+      iconFsOut?.classList.toggle('hidden', !inFs);
+    }
+
+    btnFs?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!document.fullscreenElement) {
+        (container.requestFullscreen?.() ?? video.requestFullscreen?.())?.catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+      revealOverlay();
+    });
+
+    document.addEventListener('fullscreenchange', syncFsIcon);
+    syncFsIcon();
+
+    // ── Error fallback ────────────────────────────────────────
+    video.addEventListener('error', () => {
+      container.style.display = 'none';
+      const fid = container.dataset.fallback;
+      if (!fid) return;
+      const fallback = document.getElementById(fid);
+      if (fallback) {
+        fallback.classList.remove('hidden');
+        fallback.classList.add('flex');
+      }
+    });
+  });
+</script>

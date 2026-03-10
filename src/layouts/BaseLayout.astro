@@ -1,0 +1,195 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { ViewTransitions } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  transparentNav?: boolean;
+}
+
+const {
+  title,
+  description = 'Staples & Statements — Wardrobe styling by Danielle Marie. Elevate your personal style with expert archetype-based styling services.',
+  ogImage = '/images/og-default.jpg',
+  transparentNav = false,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+
+// GA4 Measurement ID — replace with actual ID from Google Analytics
+// See TRACK1-MANUAL-SETUP.md Step 8 for setup instructions
+const GA4_ID = 'G-XXXXXXXXXX';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:site_name" content="Staples & Statements" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Google Fonts: Cormorant Garamond + DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Page transitions (SPA-like cross-fades between all pages) -->
+    <ViewTransitions />
+
+    <!-- Google Analytics 4
+         TODO: Replace G-XXXXXXXXXX with actual Measurement ID from GA4
+         See TRACK1-MANUAL-SETUP.md Step 8 -->
+    {GA4_ID !== 'G-XXXXXXXXXX' && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+        <script define:vars={{ GA4_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', GA4_ID);
+        </script>
+      </>
+    )}
+  </head>
+  <body class="min-h-screen flex flex-col bg-background text-text">
+    <Nav transparentNav={transparentNav} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<!--
+  ── Animation Engine ──────────────────────────────────────────
+  Runs on every page (initial load + ViewTransitions navigations).
+  Speed: change --dur in global.css to rescale the whole system.
+  ──────────────────────────────────────────────────────────────
+-->
+<script>
+  function initAnimations() {
+    // ── IntersectionObserver ───────────────────────────────────
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('s-on');
+          io.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px 0px 0px' }
+    );
+
+    // Returns true if the element is already visible in the viewport.
+    // Elements in the viewport on load get no entrance animation — show immediately.
+    // Must be at least as inclusive as the observer's threshold to prevent gap zones
+    // where an element gets opacity:0 but the observer never fires.
+    function inViewport(el: Element): boolean {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    }
+
+    function observe(el: Element, cls: string, delay = 0) {
+      if (inViewport(el)) return; // already visible — skip
+      el.classList.add(cls);
+      if (delay > 0) (el as HTMLElement).style.setProperty('--d', String(delay));
+      io.observe(el);
+    }
+
+    // ── Section headings: fade + rise ─────────────────────────
+    // Skip the first section (hero) — it animates via view-transition.
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('section'));
+    sections.forEach((section, si) => {
+      if (si === 0) return;
+
+      // Heading group (eyebrow + h2 + subtitle)
+      section.querySelectorAll<HTMLElement>('h1, h2, h3').forEach((h, hi) => {
+        observe(h, 's-r-h', hi * 0.12);
+      });
+
+      // Accent lines / ornaments
+      section.querySelectorAll<HTMLElement>('.w-8.h-px, .w-8.h-0\\.5').forEach((line) => {
+        observe(line, 's-r-line', 0);
+      });
+
+      // Body text blocks directly under .text-center (section intro paragraphs)
+      section.querySelectorAll<HTMLElement>('.text-center > p').forEach((p, pi) => {
+        observe(p, 's-r', (pi + 0.5) * 0.12);
+      });
+    });
+
+    // ── Grid children: staggered cascade reveal ───────────────
+    // Delay per card: 0.13 × --dur ≈ 98ms at the default 0.75s speed.
+    // Capped at index 7 so large grids (portfolio, archetype grid) don't
+    // make the last cards feel abandoned — they catch up and finish together.
+    document.querySelectorAll<HTMLElement>('[class*="grid-cols"]').forEach((grid) => {
+      const items = Array.from(grid.children) as HTMLElement[];
+      if (items.length < 2) return;
+      items.forEach((child, i) => {
+        // Skip if already has a reveal class (heading system got it first)
+        if (child.classList.contains('s-r') || child.classList.contains('s-r-h')) return;
+        observe(child, 's-r', Math.min(i, 7) * 0.13);
+      });
+    });
+
+    // ── Flex row blocks (feature rows, CTA pairs) ─────────────
+    document.querySelectorAll<HTMLElement>('.flex.flex-col.md\\:flex-row, .flex.flex-col.lg\\:flex-row').forEach((row) => {
+      // Only reveal the container, not individual flex children (too noisy)
+      const section = row.closest('section');
+      const si = sections.indexOf(section as HTMLElement);
+      if (si === 0) return;
+      observe(row, 's-r', 0.1);
+    });
+
+    // ── Image skeletons: shimmer until loaded ──────────────────
+    document.querySelectorAll<HTMLImageElement>('img').forEach((img) => {
+      if (img.complete && img.naturalWidth > 0) return; // already loaded
+      const wrap = img.parentElement;
+      if (!wrap) return;
+
+      wrap.classList.add('s-sk');
+      img.classList.add('s-r-img');
+
+      const finish = () => {
+        wrap.classList.remove('s-sk');
+        if (!inViewport(img)) {
+          io.observe(img); // let the scroll-reveal handle it
+        } else {
+          img.classList.add('s-on'); // already visible — just show
+        }
+      };
+      img.addEventListener('load',  finish, { once: true });
+      img.addEventListener('error', () => { wrap.classList.remove('s-sk'); img.classList.remove('s-r-img'); }, { once: true });
+    });
+  }
+
+  // Re-run on every page (initial load + each ViewTransitions navigation)
+  document.addEventListener('astro:page-load', initAnimations);
+</script>

@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const calendlyURL = '/contact';
+---
+
+<BaseLayout
+  title="About Danielle Marie — Staples & Statements"
+  description="Meet Danielle Marie, wardrobe stylist and creative director behind Staples & Statements. Learn about her archetype-based approach to personal style."
+>
+
+  <!-- ── PAGE HEADER ────────────────────────────────────── -->
+  <section class="pt-16 pb-12 px-6 bg-background border-b border-surface-dark">
+    <div class="mx-auto max-w-7xl">
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Woman Behind the Wardrobe</p>
+      <h1 class="font-heading text-primary text-5xl md:text-6xl lg:text-7xl font-semibold max-w-2xl leading-tight">
+        About Danielle Marie
+      </h1>
+    </div>
+  </section>
+
+  <!-- ── PORTRAIT + INTRO ──────────────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="About Danielle">
+    <div class="mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start">
+
+        <!-- Portrait -->
+        <div class="relative">
+          <!-- Add photo: public/images/danielle-portrait.jpg — professional portrait -->
+          <div class="aspect-[3/4] relative overflow-hidden bg-surface-dark img-frame">
+            <img
+              src="/images/danielle-portrait.jpg"
+              alt="Danielle Marie, wardrobe stylist and creative director"
+              class="absolute inset-0 w-full h-full object-cover object-top"
+              loading="eager"
+              width="600"
+              height="800"
+              onerror="this.style.display='none'"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent pointer-events-none"></div>
+          </div>
+          <!-- Credential badge -->
+          <div class="absolute bottom-6 left-6 right-6 bg-primary/90 backdrop-blur-sm p-5">
+            <p class="font-heading text-white text-xl font-semibold">Danielle Marie Holman</p>
+            <p class="font-body text-white/60 text-sm mt-1">Wardrobe Stylist & Creative Director</p>
+            <div class="mt-3 flex items-center gap-4">
+              <div class="text-center">
+                <p class="font-heading text-2xl font-semibold text-accent">52K+</p>
+                <p class="font-body text-xs text-white/50">Instagram</p>
+              </div>
+              <div class="w-px h-8 bg-white/20"></div>
+              <div class="text-center">
+                <p class="font-heading text-2xl font-semibold text-accent">500+</p>
+                <p class="font-body text-xs text-white/50">LTK Products</p>
+              </div>
+              <div class="w-px h-8 bg-white/20"></div>
+              <div class="text-center">
+                <p class="font-heading text-2xl font-semibold text-accent">7</p>
+                <p class="font-body text-xs text-white/50">Archetypes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story text -->
+        <div class="lg:pt-4">
+          <div class="w-8 h-px bg-accent mb-8"></div>
+
+          <h2 class="font-heading text-primary text-3xl lg:text-4xl font-semibold mb-6 leading-tight">
+            Style is a language.<br />Danielle helps you speak it fluently.
+          </h2>
+
+          <div class="space-y-5 font-body text-text-muted text-base leading-relaxed">
+            <p>
+              Danielle Marie has been obsessed with clothes since before she had the vocabulary to explain why. Growing up surrounded by fashion — the editorial spreads, the department store rituals, the way a perfectly chosen outfit could transform how someone carried themselves — she understood intuitively that style wasn't vanity. It was communication.
+            </p>
+            <p>
+              That instinct sharpened through years in high-end retail, where she developed a trained eye for proportion, fabric, and the subtle mechanics of why certain pieces work and others don't. She learned how to read bodies, understand color theory in practice, and — most importantly — how to translate what someone <em>wanted</em> to project into an actual, wearable wardrobe.
+            </p>
+            <p>
+              The launch of Staples & Statements formalized what had always been her natural gift: helping people discover and inhabit their authentic style identity. Not a trend. Not a borrowed aesthetic. Theirs.
+            </p>
+            <p>
+              Today, Danielle works with clients across San Diego and virtually nationwide — from first-time styling clients finding their footing to executives and entrepreneurs who understand that how they show up matters.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PHILOSOPHY ────────────────────────────────────── -->
+  <section class="py-20 px-6 bg-primary" aria-label="Styling philosophy">
+    <div class="mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+        <div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Approach</p>
+          <h2 class="font-heading text-white text-4xl lg:text-5xl font-semibold leading-tight">
+            The Archetype Framework
+          </h2>
+          <p class="mt-6 font-body text-white/70 text-base leading-relaxed">
+            Danielle's signature approach to styling is organized around the 7 Feminine Archetypes — a framework for understanding personal style identity that goes deeper than trends or body types.
+          </p>
+          <p class="mt-4 font-body text-white/70 text-base leading-relaxed">
+            Your archetype is the underlying aesthetic DNA of your personal style. It reflects how you want to feel, how you want to be perceived, and what kind of visual story your wardrobe tells. When you dress in alignment with your archetype, getting dressed becomes effortless rather than exhausting.
+          </p>
+          <p class="mt-4 font-body text-white/70 text-base leading-relaxed">
+            One viral reel about this framework took Danielle from 4,000 to 52,000 Instagram followers — because it resonated with something real. People recognized themselves in it immediately.
+          </p>
+          <div class="mt-8">
+            <a
+              href="/archetypes"
+              class="inline-flex items-center gap-2 font-body text-sm tracking-widest uppercase text-accent hover:text-accent-light transition-colors border-b border-accent pb-0.5"
+            >
+              Discover Your Archetype →
+            </a>
+          </div>
+        </div>
+
+        <!-- Secondary portrait / action shot -->
+        <div class="relative">
+          <!-- Add photo: public/images/danielle-styling.jpg — action shot while styling -->
+          <div class="aspect-square relative overflow-hidden bg-primary-light img-frame">
+            <img
+              src="/images/danielle-styling.jpg"
+              alt="Danielle Marie styling a client wardrobe"
+              class="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              width="600"
+              height="600"
+              onerror="this.style.display='none'"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VALUES ────────────────────────────────────────── -->
+  <section class="py-20 px-6 bg-surface" aria-label="Styling values">
+    <div class="mx-auto max-w-7xl">
+      <div class="text-center mb-14">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">The Principles</p>
+        <h2 class="font-heading text-primary text-4xl">What Danielle Believes</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          {
+            number: "01",
+            heading: "Style is personal, never prescriptive.",
+            body: "There is no universally 'correct' way to dress. Danielle's job is to help you find YOUR style — not impose someone else's aesthetic onto your life.",
+          },
+          {
+            number: "02",
+            heading: "Every body is a good body for great style.",
+            body: "The work is about dressing your actual self with knowledge, intention, and confidence — not dressing for a hypothetical future body or an impossible standard.",
+          },
+          {
+            number: "03",
+            heading: "A great wardrobe is a tool, not a luxury.",
+            body: "How you show up affects your confidence, your credibility, and the opportunities available to you. The investment in your wardrobe is an investment in yourself.",
+          },
+        ].map((value) => (
+          <div class="p-8 bg-background">
+            <p class="font-heading text-5xl font-semibold text-surface-dark mb-4">{value.number}</p>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-3">{value.heading}</h3>
+            <p class="font-body text-text-muted text-sm leading-relaxed">{value.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ───────────────────────────────────────────── -->
+  <section class="py-20 lg:py-28 px-6 bg-background" aria-label="Start your style journey">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The First Step</p>
+      <h2 class="font-heading text-primary text-4xl lg:text-5xl">
+        Ready to start your style journey?
+      </h2>
+      <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
+        Every client engagement begins with a free 20-minute consultation. It's a conversation — no pressure, no commitment — just clarity on where you are and where you want to be.
+      </p>
+      <a
+        href={calendlyURL}
+        class="mt-10 inline-flex items-center justify-center px-10 py-5 bg-primary text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+      >
+        Book Your Free Consultation
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

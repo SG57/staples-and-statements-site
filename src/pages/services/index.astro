@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allServices = await getCollection('services');
+const activeServices = allServices
+  .filter(s => s.data.status === 'active')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const calendlyURL = '/contact';
+---
+
+<BaseLayout
+  title="Styling Services — Staples & Statements"
+  description="Explore Danielle Marie's full range of wardrobe styling services — from free consultations to year-round VIP styling packages. San Diego & virtual."
+>
+
+  <!-- ── PAGE HEADER ────────────────────────────────────── -->
+  <section class="pt-16 pb-16 px-6 bg-primary">
+    <div class="mx-auto max-w-7xl">
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Expert Styling Services</p>
+      <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold max-w-3xl leading-tight">
+        Every wardrobe journey starts here.
+      </h1>
+      <p class="mt-6 font-body text-white/60 text-lg max-w-xl leading-relaxed">
+        Starting a new wardrobe journey can feel daunting. That's why every service begins with a free consultation — so you invest in exactly what you need, nothing more.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── SERVICE CARDS ─────────────────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="All services">
+    <div class="mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {activeServices.map((service) => (
+          <a
+            href={`/services/${service.data.slug}`}
+            class="group flex flex-col bg-surface hover:bg-surface-dark transition-colors duration-200 p-8"
+          >
+            <!-- Price tag -->
+            <div class="flex items-start justify-between mb-5">
+              <span class="font-body text-xs tracking-widest uppercase text-accent font-medium">
+                {service.data.price}
+              </span>
+              {service.data.featured && (
+                <span class="font-body text-xs tracking-widest uppercase text-primary/40 bg-surface-dark px-2 py-1">
+                  Popular
+                </span>
+              )}
+            </div>
+
+            <!-- Service name -->
+            <h2 class="font-heading text-2xl font-semibold text-primary mb-3 group-hover:text-accent transition-colors">
+              {service.data.title}
+            </h2>
+
+            <!-- Duration -->
+            {service.data.duration && (
+              <p class="font-body text-xs text-text-light uppercase tracking-wide mb-4">
+                {service.data.duration}
+              </p>
+            )}
+
+            <!-- Description -->
+            <p class="font-body text-sm text-text-muted leading-relaxed flex-1 mb-6">
+              {service.data.shortDescription ?? service.data.perfectFor}
+            </p>
+
+            <!-- Perfect for -->
+            <div class="border-t border-surface-dark pt-5 mb-5">
+              <p class="font-body text-xs tracking-widest uppercase text-text-light mb-2">Perfect For</p>
+              <p class="font-body text-sm text-text-muted leading-relaxed">{service.data.perfectFor}</p>
+            </div>
+
+            <!-- CTA -->
+            <div class="flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent">
+              <span>Learn More</span>
+              <span class="group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ──────────────────────────────────── -->
+  <section class="py-20 px-6 bg-surface" aria-label="How it works">
+    <div class="mx-auto max-w-5xl">
+      <div class="text-center mb-14">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">The Process</p>
+        <h2 class="font-heading text-primary text-4xl">How It Works</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { step: "01", title: "Book a Free Consultation", body: "A 20-minute call to discuss your goals, challenges, and lifestyle. Danielle will recommend exactly which services make sense for where you are right now." },
+          { step: "02", title: "Your Styling Session", body: "In-person or virtual, depending on the service. Danielle arrives prepared and focused on building something that actually works for your life." },
+          { step: "03", title: "Your Elevated Wardrobe", body: "You leave with a clearer vision, specific next steps, and a wardrobe that works harder for you every single day." },
+        ].map(({ step, title, body }) => (
+          <div class="text-center p-6">
+            <p class="font-heading text-5xl font-semibold text-surface-dark mb-5">{step}</p>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-3">{title}</h3>
+            <p class="font-body text-sm text-text-muted leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NOT SURE CTA ──────────────────────────────────── -->
+  <section class="py-20 lg:py-28 px-6 bg-primary" aria-label="Book consultation">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Not Sure Where to Start?</p>
+      <h2 class="font-heading text-white text-4xl lg:text-5xl">
+        Every journey begins with a conversation.
+      </h2>
+      <p class="mt-5 font-body text-white/60 text-lg leading-relaxed max-w-lg mx-auto">
+        Book a free 20-minute consultation and let Danielle recommend the right path forward for your specific goals, budget, and lifestyle.
+      </p>
+      <a
+        href={calendlyURL}
+        class="mt-10 inline-flex items-center justify-center px-10 py-5 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+      >
+        Book Your Free Consultation
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

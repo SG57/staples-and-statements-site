@@ -1,0 +1,690 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ReelPlayer from '../components/ReelPlayer.astro';
+import { getCollection } from 'astro:content';
+
+const feminineArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'feminine');
+const feminineSorted = feminineArchetypes.sort((a, b) => a.data.order - b.data.order);
+
+const masculineArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'masculine');
+const masculineSorted = masculineArchetypes.sort((a, b) => a.data.order - b.data.order);
+
+const calendlyURL = '/contact';
+
+// Reel shortcodes — used in official Instagram blockquote embeds (see panels below)
+// To upgrade to self-hosted video: download each reel as MP4 from the Instagram app
+// (open reel → ... → Save), then drop into public/videos/ using these names:
+//   public/videos/feminine-archetype-quiz.mp4
+//   public/videos/masculine-archetype-quiz.mp4
+// The <video> elements in each panel will auto-activate once those files exist.
+const reels = {
+  feminine: {
+    shortcode: 'DURBEbyEu3-',
+    url: 'https://www.instagram.com/reel/DURBEbyEu3-/',
+    videoSrc: '/videos/feminine-archetype-quiz.mp4',
+    title: 'The 7 Feminine Archetypes Style Quiz',
+  },
+  masculine: {
+    shortcode: 'DU2AVX5Edqc',
+    url: 'https://www.instagram.com/reel/DU2AVX5Edqc/',
+    videoSrc: '/videos/masculine-archetype-quiz.mp4',
+    title: 'The Masculine Archetype Style Quiz',
+  },
+};
+---
+
+<BaseLayout
+  title="Style Archetypes — Staples & Statements"
+  description="Discover your style archetype with Danielle Marie's framework. Seven distinct aesthetic identities — find yours and transform how you dress."
+  transparentNav={true}
+>
+
+  <!-- ── PAGE WRAPPER — data-active-gender drives CSS visibility ── -->
+  <div id="archetypes-page" data-active-gender="feminine">
+
+    <!-- Gender toggle — absolute overlay, sits in the dead zone between nav and hero headline -->
+    <div id="hero-gender-toggle" class="absolute top-0 left-0 right-0 z-20 pointer-events-none">
+      <div class="mx-auto max-w-7xl px-6 pt-24 lg:pt-28">
+        <div class="inline-flex pointer-events-auto" role="group" aria-label="Select archetype gender">
+          <button
+            id="toggle-feminine"
+            type="button"
+            aria-pressed="true"
+            class="gender-btn font-body text-xs tracking-widest uppercase px-6 py-2.5
+                   transition-all duration-300 text-white bg-white/15 backdrop-blur-sm border border-white/25"
+          >
+            Feminine
+          </button>
+          <button
+            id="toggle-masculine"
+            type="button"
+            aria-pressed="false"
+            class="gender-btn font-body text-xs tracking-widest uppercase px-6 py-2.5
+                   transition-all duration-300 text-white/40 bg-transparent border border-white/15 hover:text-white/70"
+          >
+            Masculine
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         FEMININE CONTENT BLOCKS
+         ═══════════════════════════════════════════ -->
+
+    <!-- FEMININE HERO -->
+    <section
+      data-gender="feminine"
+      class="gender-block relative min-h-screen flex items-center overflow-hidden bg-primary"
+      aria-label="Feminine style archetypes hero"
+    >
+      <!-- Backdrop image -->
+      <img
+        src="/images/archetypes/ensemble-cinematic-2.webp"
+        alt="The 7 Feminine Style Archetypes"
+        class="absolute inset-0 w-full h-full object-cover object-center"
+        loading="eager"
+        width="1376"
+        height="768"
+      />
+      <!-- Gradient overlays: bottom-heavy for text legibility, light veil overall -->
+      <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-primary/20 pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-primary/60 via-transparent to-transparent pointer-events-none"></div>
+
+      <!-- Content -->
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
+        <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl">
+          Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
+        </h1>
+        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed">
+          Seven distinct aesthetic identities. One is yours. Understanding it changes how you shop, how you dress, and how you feel every single morning.
+        </p>
+        <div class="mt-10 flex flex-col sm:flex-row items-start gap-4">
+          <a
+            href="#archetypes"
+            class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+          >
+            Explore the Archetypes ↓
+          </a>
+          <a
+            href="#quiz-video"
+            class="inline-flex items-center justify-center px-10 py-4 border border-white/30 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/10 transition-colors duration-200"
+          >
+            Find Your Type ↓
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEMININE VIDEO SECTION -->
+    <section
+      id="quiz-video"
+      data-gender="feminine"
+      class="gender-block py-20 px-6 bg-background"
+      aria-label="Feminine archetype quiz video"
+    >
+      <div class="mx-auto max-w-5xl">
+        <div class="text-center mb-12">
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Watch the Reel</p>
+          <h2 class="font-heading text-primary text-4xl">Find Yourself in the Quiz</h2>
+          <p class="mt-4 font-body text-text-muted text-base max-w-lg mx-auto leading-relaxed">
+            Danielle's archetype quiz reel walks you through the 7 types with visual examples. Watch it — you'll recognize yourself.
+          </p>
+        </div>
+
+        <div class="flex justify-center">
+          <div class="w-full max-w-[400px] flex flex-col gap-4">
+
+            <!-- Branded reel player: no native controls, poster when paused, overlay fades when playing -->
+            <ReelPlayer
+              id="video-feminine"
+              src={reels.feminine.videoSrc}
+              poster="/images/quiz-poster-feminine.jpg"
+              fallbackId="fallback-feminine"
+              fallbackUrl={reels.feminine.url}
+              title={reels.feminine.title}
+              preload="metadata"
+            />
+
+            <!-- Error fallback: hidden until video fails to load -->
+            <div
+              id="fallback-feminine"
+              class="hidden w-full bg-primary-light border border-white/10 flex flex-col items-center justify-center p-10 text-center"
+            >
+              <div class="text-3xl text-accent/60 mb-4">✦</div>
+              <h3 class="font-heading text-white text-xl font-semibold mb-2">{reels.feminine.title}</h3>
+              <p class="font-body text-white/50 text-sm mb-6">Watch the viral quiz reel that took @littledanniii from 4k to 52k followers.</p>
+              <a
+                href={reels.feminine.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-7 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors"
+              >
+                Watch on Instagram →
+              </a>
+            </div>
+
+            <!-- Always-visible link -->
+            <div class="text-center">
+              <a
+                href={reels.feminine.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-body text-xs tracking-widest uppercase text-text-muted hover:text-accent transition-colors"
+              >
+                Open on Instagram →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEMININE ARCHETYPE GRID -->
+    <section
+      id="archetypes"
+      data-gender="feminine"
+      class="gender-block py-20 px-6 bg-surface"
+      aria-label="The 7 feminine archetypes"
+    >
+      <div class="mx-auto max-w-7xl">
+        <div class="text-center mb-14">
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">The Seven Types</p>
+          <h2 class="font-heading text-primary text-4xl lg:text-5xl">The Feminine Archetypes</h2>
+          <p class="mt-4 font-body text-text-muted text-base max-w-xl mx-auto leading-relaxed">
+            Every woman is a blend — but most have one dominant archetype. Which one resonates with you?
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {feminineSorted.map((archetype) => (
+            <div class="group bg-background p-7 hover:bg-primary transition-colors duration-300 cursor-default">
+              <!-- Color accent line -->
+              <div
+                class="w-8 h-0.5 mb-5 transition-colors duration-300"
+                style={`background-color: ${archetype.data.color ?? '#b8977e'}`}
+              ></div>
+
+              <!-- Icon + Name -->
+              <div class="flex items-start gap-3 mb-4">
+                <span class="text-2xl opacity-50 group-hover:opacity-80 transition-opacity">
+                  {archetype.data.icon ?? '✦'}
+                </span>
+                <h3 class="font-heading text-xl font-semibold text-primary group-hover:text-white transition-colors">
+                  {archetype.data.name}
+                </h3>
+              </div>
+
+              <!-- Description -->
+              <p class="font-body text-sm text-text-muted group-hover:text-white/70 transition-colors leading-relaxed mb-6">
+                {archetype.data.description}
+              </p>
+
+              <!-- Links -->
+              <div class="flex flex-col gap-2 border-t border-surface-dark group-hover:border-white/10 pt-5 transition-colors">
+                {archetype.data.guideLink && (
+                  <a
+                    href={archetype.data.guideLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors"
+                  >
+                    Get the Style Guide →
+                  </a>
+                )}
+                {archetype.data.ltkLink && (
+                  <a
+                    href={archetype.data.ltkLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-body text-xs tracking-widest uppercase text-text-light group-hover:text-white/50 hover:text-accent transition-colors"
+                  >
+                    Shop This Look →
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+
+          <!-- "Not sure?" card -->
+          <div class="bg-primary p-7 flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-0.5 bg-accent mb-5"></div>
+              <h3 class="font-heading text-xl font-semibold text-white mb-4">Still Not Sure?</h3>
+              <p class="font-body text-sm text-white/60 leading-relaxed">
+                Most women are a blend of two or three archetypes — and that's completely normal. Work through the quiz above to find your dominant type. Once you know it, bring that clarity to a consultation with Danielle and she can build your wardrobe strategy around it from the very first minute.
+              </p>
+            </div>
+            <a
+              href={calendlyURL}
+              class="mt-8 inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+            >
+              Book a Consultation
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         MASCULINE CONTENT BLOCKS
+         ═══════════════════════════════════════════ -->
+
+    <!-- MASCULINE HERO -->
+    <section
+      data-gender="masculine"
+      class="gender-block relative min-h-screen flex items-center overflow-hidden bg-primary"
+      aria-label="Masculine style archetypes hero"
+    >
+      <!-- Backdrop image — placeholder until masculine ensemble image is provided -->
+      <img
+        src="/images/archetypes/ensemble-cinematic-2.webp"
+        alt="The Masculine Style Archetypes"
+        class="absolute inset-0 w-full h-full object-cover object-center"
+        loading="lazy"
+        width="1376"
+        height="768"
+      />
+      <!-- Gradient overlays -->
+      <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-primary/20 pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-primary/60 via-transparent to-transparent pointer-events-none"></div>
+
+      <!-- Content -->
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
+        <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl">
+          Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
+        </h1>
+        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed">
+          Distinct aesthetic identities for the modern man. Understanding yours changes how you dress, how you present, and how the world reads you.
+        </p>
+        <div class="mt-10 flex flex-col sm:flex-row items-start gap-4">
+          <a
+            href="#masculine-archetypes"
+            class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+          >
+            Explore the Archetypes ↓
+          </a>
+          <a
+            href="#masculine-video"
+            class="inline-flex items-center justify-center px-10 py-4 border border-white/30 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/10 transition-colors duration-200"
+          >
+            Find Your Type ↓
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MASCULINE VIDEO SECTION -->
+    <section
+      id="masculine-video"
+      data-gender="masculine"
+      class="gender-block py-20 px-6 bg-background"
+      aria-label="Masculine archetype quiz video"
+    >
+      <div class="mx-auto max-w-5xl">
+        <div class="text-center mb-12">
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Watch the Reel</p>
+          <h2 class="font-heading text-primary text-4xl">Find Yourself in the Quiz</h2>
+          <p class="mt-4 font-body text-text-muted text-base max-w-lg mx-auto leading-relaxed">
+            Danielle's masculine archetype quiz reel walks you through each type with visual examples. Watch it — you'll recognize yourself.
+          </p>
+        </div>
+
+        <div class="flex justify-center">
+          <div class="w-full max-w-[400px] flex flex-col gap-4">
+
+            <ReelPlayer
+              id="video-masculine"
+              src={reels.masculine.videoSrc}
+              poster="/images/quiz-poster-masculine.jpg"
+              fallbackId="fallback-masculine"
+              fallbackUrl={reels.masculine.url}
+              title={reels.masculine.title}
+              preload="none"
+            />
+
+            <div
+              id="fallback-masculine"
+              class="hidden w-full bg-primary-light border border-white/10 flex flex-col items-center justify-center p-10 text-center"
+            >
+              <div class="text-3xl text-accent/60 mb-4">▲</div>
+              <h3 class="font-heading text-white text-xl font-semibold mb-2">{reels.masculine.title}</h3>
+              <p class="font-body text-white/50 text-sm mb-6">Discover the masculine archetype framework — the system behind effortless men's style.</p>
+              <a
+                href={reels.masculine.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-7 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors"
+              >
+                Watch on Instagram →
+              </a>
+            </div>
+
+            <div class="text-center">
+              <a
+                href={reels.masculine.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-body text-xs tracking-widest uppercase text-text-muted hover:text-accent transition-colors"
+              >
+                Open on Instagram →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MASCULINE ARCHETYPE GRID -->
+    <section
+      id="masculine-archetypes"
+      data-gender="masculine"
+      class="gender-block py-20 px-6 bg-surface"
+      aria-label="The masculine archetypes"
+    >
+      <div class="mx-auto max-w-7xl">
+        <div class="text-center mb-14">
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">The Archetypes</p>
+          <h2 class="font-heading text-primary text-4xl lg:text-5xl">The Masculine Archetypes</h2>
+          <p class="mt-4 font-body text-text-muted text-base max-w-xl mx-auto leading-relaxed">
+            Every man's style is rooted in an archetype. Find the one that captures how you move through the world.
+          </p>
+        </div>
+
+        {masculineSorted.length > 0 ? (
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {masculineSorted.map((archetype) => (
+              <div class="group bg-background p-7 hover:bg-primary transition-colors duration-300 cursor-default">
+                <!-- Color accent line -->
+                <div
+                  class="w-8 h-0.5 mb-5 transition-colors duration-300"
+                  style={`background-color: ${archetype.data.color ?? '#b8977e'}`}
+                ></div>
+
+                <!-- Icon + Name -->
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="text-2xl opacity-50 group-hover:opacity-80 transition-opacity">
+                    {archetype.data.icon ?? '▲'}
+                  </span>
+                  <h3 class="font-heading text-xl font-semibold text-primary group-hover:text-white transition-colors">
+                    {archetype.data.name}
+                  </h3>
+                </div>
+
+                <!-- Description -->
+                <p class="font-body text-sm text-text-muted group-hover:text-white/70 transition-colors leading-relaxed mb-6">
+                  {archetype.data.description}
+                </p>
+
+                <!-- Links -->
+                <div class="flex flex-col gap-2 border-t border-surface-dark group-hover:border-white/10 pt-5 transition-colors">
+                  {archetype.data.guideLink && (
+                    <a
+                      href={archetype.data.guideLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors"
+                    >
+                      Get the Style Guide →
+                    </a>
+                  )}
+                  {archetype.data.ltkLink && (
+                    <a
+                      href={archetype.data.ltkLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-body text-xs tracking-widest uppercase text-text-light group-hover:text-white/50 hover:text-accent transition-colors"
+                    >
+                      Shop This Look →
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            <!-- "Not sure?" card -->
+            <div class="bg-primary p-7 flex flex-col justify-between">
+              <div>
+                <div class="w-8 h-0.5 bg-accent mb-5"></div>
+                <h3 class="font-heading text-xl font-semibold text-white mb-4">Still Not Sure?</h3>
+                <p class="font-body text-sm text-white/60 leading-relaxed">
+                  Most men lean into one dominant archetype. Watch the quiz reel above, then bring that clarity to a consultation with Danielle — she'll build your wardrobe strategy around it from minute one.
+                </p>
+              </div>
+              <a
+                href={calendlyURL}
+                class="mt-8 inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+              >
+                Book a Consultation
+              </a>
+            </div>
+          </div>
+        ) : (
+          <!-- Coming Soon state — no masculine archetypes published yet -->
+          <div class="flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-8 h-0.5 bg-accent mx-auto mb-8"></div>
+            <h3 class="font-heading text-primary text-3xl font-semibold mb-4">Coming Soon</h3>
+            <p class="font-body text-text-muted text-base max-w-md leading-relaxed mb-10">
+              The masculine archetype framework is being developed. Check back soon — or book a consultation and Danielle will walk you through it personally.
+            </p>
+            <a
+              href={calendlyURL}
+              class="inline-flex items-center justify-center px-10 py-4 border border-accent text-accent font-body text-sm font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+            >
+              Book a Consultation
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+
+  </div><!-- /archetypes-page -->
+
+  <!-- ── STYLE GUIDES CTA ──────────────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="Style guides">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 py-10 border-t border-b border-surface-dark">
+        <div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-2">Digital Guides</p>
+          <h2 class="font-heading text-primary text-3xl font-semibold">Take Your Archetype Home</h2>
+          <p class="mt-2 font-body text-text-muted text-base max-w-md leading-relaxed">
+            In-depth style guides for your archetype — from $15. Instant download.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+          <a
+            href="/shop"
+            class="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+          >
+            Shop Style Guides
+          </a>
+          <a
+            href={calendlyURL}
+            class="inline-flex items-center justify-center px-8 py-4 border border-primary text-primary font-body text-sm font-medium tracking-widest uppercase hover:bg-surface transition-colors duration-200"
+          >
+            Book Personalized Styling
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /*
+   * Gender toggle visibility system
+   * Default: feminine shown, masculine hidden.
+   * JS sets data-active-gender on #archetypes-page.
+   *
+   * Inactive blocks are moved off-screen with position:absolute + left:-9999px
+   * so they take up no space in the layout. Active blocks are position:static.
+   * Opacity + transform transitions are applied via the Web Animations API in JS
+   * to allow async await on their completion (display/position can't be transitioned).
+   */
+
+  /* Active blocks: normal flow */
+  #archetypes-page[data-active-gender="feminine"] .gender-block[data-gender="feminine"],
+  #archetypes-page[data-active-gender="masculine"] .gender-block[data-gender="masculine"] {
+    position: static;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Inactive blocks: out of layout, invisible, not interactive */
+  #archetypes-page[data-active-gender="feminine"] .gender-block[data-gender="masculine"],
+  #archetypes-page[data-active-gender="masculine"] .gender-block[data-gender="feminine"] {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  /* Ensure the wrapper can contain the absolutely-positioned off-screen blocks */
+  #archetypes-page {
+    position: relative;
+  }
+</style>
+
+<script>
+  // ── Gender Toggle ────────────────────────────────────────────
+  // Reads/writes localStorage for persistence across page visits.
+  // Animates out the old gender set, swaps data-active-gender,
+  // then animates in the new gender set.
+  // All durations derived from --dur so the global knob controls everything.
+
+  const STORAGE_KEY = 'archetypes-gender';
+  const DEFAULT_GENDER = 'feminine';
+
+  const page   = document.getElementById('archetypes-page') as HTMLElement | null;
+  const btnFem = document.getElementById('toggle-feminine')  as HTMLButtonElement | null;
+  const btnMas = document.getElementById('toggle-masculine') as HTMLButtonElement | null;
+
+  if (!page || !btnFem || !btnMas) throw new Error('Archetypes toggle: required elements not found');
+
+  function getDur(mult = 1): number {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue('--dur').trim();
+    return parseFloat(raw) * (raw.endsWith('ms') ? 1 : 1000) * mult;
+  }
+
+  const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  const EASE_IN  = 'cubic-bezier(0.5, 0, 0.85, 0)';
+
+  let switching = false;
+
+  function getBlocks(gender: string): HTMLElement[] {
+    return Array.from(
+      page!.querySelectorAll<HTMLElement>(`.gender-block[data-gender="${gender}"]`)
+    );
+  }
+
+  function setButtonState(btn: HTMLButtonElement, active: boolean) {
+    btn.setAttribute('aria-pressed', String(active));
+    if (active) {
+      btn.classList.add('bg-white/15', 'backdrop-blur-sm', 'border-white/25', 'text-white');
+      btn.classList.remove('bg-transparent', 'border-white/15', 'text-white/40', 'hover:text-white/70');
+    } else {
+      btn.classList.remove('bg-white/15', 'backdrop-blur-sm', 'border-white/25', 'text-white');
+      btn.classList.add('bg-transparent', 'border-white/15', 'text-white/40', 'hover:text-white/70');
+    }
+  }
+
+  async function switchGender(targetGender: string) {
+    if (switching) return;
+    const current = page!.getAttribute('data-active-gender') ?? DEFAULT_GENDER;
+    if (current === targetGender) return;
+    switching = true;
+
+    // Update button states immediately (feels responsive)
+    setButtonState(targetGender === 'feminine' ? btnFem! : btnMas!, true);
+    setButtonState(targetGender === 'feminine' ? btnMas! : btnFem!, false);
+
+    // Animate OUT the currently-active blocks (they are in static flow right now)
+    const outBlocks = getBlocks(current);
+    await Promise.all(
+      outBlocks.map(el =>
+        el.animate(
+          [
+            { opacity: 1, transform: 'translateY(0)'    },
+            { opacity: 0, transform: 'translateY(12px)' },
+          ],
+          { duration: getDur(0.5), easing: EASE_IN, fill: 'forwards' }
+        ).finished
+      )
+    );
+    // Cancel fill-forwards — CSS will immediately take over and clip them off-screen
+    outBlocks.forEach(el => el.getAnimations().forEach(a => a.cancel()));
+
+    // Swap the data attribute — CSS moves inactive blocks off-screen, active into flow
+    page!.setAttribute('data-active-gender', targetGender);
+
+    // Lazy-load masculine video on first reveal
+    if (targetGender === 'masculine') {
+      const vid = document.getElementById('video-masculine') as HTMLVideoElement | null;
+      if (vid && vid.readyState === 0) vid.load();
+    }
+
+    // Scroll to the top of the page so the hero + toggle are visible after switching
+    if (window.scrollY > window.innerHeight * 0.5) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Animate IN the incoming blocks with a light stagger (magazine reveal feel)
+    const inBlocks = getBlocks(targetGender);
+    await Promise.all(
+      inBlocks.map((el, i) =>
+        el.animate(
+          [
+            { opacity: 0, transform: 'translateY(18px)' },
+            { opacity: 1, transform: 'translateY(0)'    },
+          ],
+          {
+            duration: getDur(1.25),
+            easing: EASE_OUT,
+            fill: 'forwards',
+            delay: i * getDur(0.06),
+          }
+        ).finished
+      )
+    );
+    inBlocks.forEach(el => el.getAnimations().forEach(a => a.cancel()));
+
+    // Persist preference
+    try { localStorage.setItem(STORAGE_KEY, targetGender); } catch {}
+
+    switching = false;
+  }
+
+  // ── Restore saved preference on load ──────────────────────
+  // Applied synchronously before first paint to avoid a flash of wrong gender.
+  function restorePreference() {
+    let saved: string | null = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch {}
+    const gender = (saved === 'masculine' || saved === 'feminine') ? saved : DEFAULT_GENDER;
+
+    // Set attribute directly — no animation needed for initial load
+    page!.setAttribute('data-active-gender', gender);
+
+    if (gender === 'masculine') {
+      setButtonState(btnMas!, true);
+      setButtonState(btnFem!, false);
+    }
+    // Feminine is the HTML default — no changes needed if gender === 'feminine'
+  }
+
+  restorePreference();
+
+  btnFem!.addEventListener('click', () => switchGender('feminine'));
+  btnMas!.addEventListener('click', () => switchGender('masculine'));
+</script>

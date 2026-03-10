@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://staplesandstatements.com/sitemap-index.xml
