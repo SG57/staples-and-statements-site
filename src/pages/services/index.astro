@@ -97,7 +97,7 @@ const calendlyURL = '/contact';
       <!-- COMPACT sticky header -->
       <div class="section-header-compact sticky top-16 lg:top-20 z-30
                   bg-surface/85 backdrop-blur-md border-b border-surface-dark/40
-                  -mx-6 px-6 py-3 mb-4
+                  px-6 py-3 mb-4
                   opacity-0 pointer-events-none
                   transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
            data-section-compact="services-how">
@@ -137,7 +137,7 @@ const calendlyURL = '/contact';
       <!-- COMPACT sticky header -->
       <div class="section-header-compact sticky top-16 lg:top-20 z-30
                   bg-primary/85 backdrop-blur-md border-b border-white/8
-                  -mx-6 px-6 py-3 mb-4
+                  px-6 py-3 mb-4
                   opacity-0 pointer-events-none
                   transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
                   text-left"
@@ -168,16 +168,22 @@ const calendlyURL = '/contact';
       const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
       if (sentinels.length === 0) return;
 
+      const seenSentinels = new Set<string>();
+
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const section = (entry.target as HTMLElement).dataset.section;
           if (!section) return;
           const compact = document.querySelector<HTMLElement>(`[data-section-compact="${section}"]`);
           if (!compact) return;
-          const aboveViewport = entry.boundingClientRect.top < 0;
-          const shouldShow = !entry.isIntersecting && aboveViewport;
-          compact.style.opacity = shouldShow ? '1' : '0';
-          compact.style.pointerEvents = shouldShow ? 'auto' : 'none';
+          if (entry.isIntersecting) {
+            seenSentinels.add(section);
+            compact.style.opacity = '0';
+            compact.style.pointerEvents = 'none';
+          } else if (seenSentinels.has(section)) {
+            compact.style.opacity = '1';
+            compact.style.pointerEvents = 'auto';
+          }
         });
       }, { threshold: 0, rootMargin: '-30px 0px 0px 0px' });
 

@@ -518,7 +518,9 @@ const genderGuide = isFeminine
     const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
     if (sentinels.length === 0) return;
 
-    const observer = new IntersectionObserver((entries) => {
+    const seenSentinels = new Set<string>();
+
+      const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const section = (entry.target as HTMLElement).dataset.section;
         if (!section) return;

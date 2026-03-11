@@ -36,7 +36,7 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
       <!-- COMPACT sticky header -->
       <div class="section-header-compact sticky top-16 lg:top-20 z-30
                   bg-background/85 backdrop-blur-md border-b border-surface-dark/40
-                  -mx-6 px-6 py-3 mb-4
+                  px-6 py-3 mb-4
                   opacity-0 pointer-events-none
                   transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
            data-section-compact="contact-booking">
@@ -318,7 +318,9 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
     const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
     if (sentinels.length === 0) return;
 
-    const observer = new IntersectionObserver((entries) => {
+    const seenSentinels = new Set<string>();
+
+      const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const section = (entry.target as HTMLElement).dataset.section;
         if (!section) return;
