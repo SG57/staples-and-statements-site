@@ -612,141 +612,23 @@ const calendlyURL = '/contact';
 </style>
 
 <script>
-  // ── Gender Toggle ────────────────────────────────────────────
-  // Reads/writes localStorage for persistence across page visits.
-  // Animates out the old gender set, swaps data-active-gender,
-  // then animates in the new gender set.
-  // All durations derived from --dur so the global knob controls everything.
+  // ── Gender Toggle + Cinematic Hero ────────────────────────────
+  // ViewTransitions-compatible: all init happens inside astro:page-load
+  // so it re-runs on every navigation (initial + soft VT navigations).
+  //
+  // triggerHeroCinematic lives at module scope so both the page-load
+  // handler and the pageshow/IntersectionObserver failsafes can call it.
 
   const STORAGE_KEY = 'archetypes-gender';
   const DEFAULT_GENDER = 'feminine';
 
-  const page   = document.getElementById('archetypes-page') as HTMLElement | null;
-  const btnFem = document.getElementById('toggle-feminine')  as HTMLButtonElement | null;
-  const btnMas = document.getElementById('toggle-masculine') as HTMLButtonElement | null;
-
-  if (!page || !btnFem || !btnMas) throw new Error('Archetypes toggle: required elements not found');
-
-  function getDur(mult = 1): number {
-    const raw = getComputedStyle(document.documentElement).getPropertyValue('--dur').trim();
-    return parseFloat(raw) * (raw.endsWith('ms') ? 1 : 1000) * mult;
-  }
-
-  const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
-  const EASE_IN  = 'cubic-bezier(0.5, 0, 0.85, 0)';
-
-  let switching = false;
-
-  function getBlocks(gender: string): HTMLElement[] {
-    return Array.from(
-      page!.querySelectorAll<HTMLElement>(`.gender-block[data-gender="${gender}"]`)
-    );
-  }
-
-  function setButtonState(btn: HTMLButtonElement, active: boolean) {
-    btn.setAttribute('aria-pressed', String(active));
-    if (active) {
-      btn.classList.add('bg-white/15', 'backdrop-blur-sm', 'border-white/25', 'text-white');
-      btn.classList.remove('bg-transparent', 'border-white/15', 'text-white/40', 'hover:text-white/70');
-    } else {
-      btn.classList.remove('bg-white/15', 'backdrop-blur-sm', 'border-white/25', 'text-white');
-      btn.classList.add('bg-transparent', 'border-white/15', 'text-white/40', 'hover:text-white/70');
-    }
-  }
-
-  async function switchGender(targetGender: string) {
-    if (switching) return;
-    const current = page!.getAttribute('data-active-gender') ?? DEFAULT_GENDER;
-    if (current === targetGender) return;
-    switching = true;
-
-    // Update button states immediately (feels responsive)
-    setButtonState(targetGender === 'feminine' ? btnFem! : btnMas!, true);
-    setButtonState(targetGender === 'feminine' ? btnMas! : btnFem!, false);
-
-    // Animate OUT the currently-active blocks (they are in static flow right now)
-    const outBlocks = getBlocks(current);
-    await Promise.all(
-      outBlocks.map(el =>
-        el.animate(
-          [
-            { opacity: 1, transform: 'translateY(0)'    },
-            { opacity: 0, transform: 'translateY(12px)' },
-          ],
-          { duration: getDur(0.5), easing: EASE_IN, fill: 'forwards' }
-        ).finished
-      )
-    );
-    // Cancel fill-forwards — CSS will immediately take over and clip them off-screen
-    outBlocks.forEach(el => el.getAnimations().forEach(a => a.cancel()));
-
-    // Swap the data attribute — CSS moves inactive blocks off-screen, active into flow
-    page!.setAttribute('data-active-gender', targetGender);
-
-    // Lazy-load masculine video on first reveal
-    if (targetGender === 'masculine') {
-      const vid = document.getElementById('video-masculine') as HTMLVideoElement | null;
-      if (vid && vid.readyState === 0) vid.load();
-    }
-
-    // Scroll to the top of the page so the hero + toggle are visible after switching
-    if (window.scrollY > window.innerHeight * 0.5) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Animate IN the incoming blocks with a light stagger (magazine reveal feel)
-    const inBlocks = getBlocks(targetGender);
-    await Promise.all(
-      inBlocks.map((el, i) =>
-        el.animate(
-          [
-            { opacity: 0, transform: 'translateY(18px)' },
-            { opacity: 1, transform: 'translateY(0)'    },
-          ],
-          {
-            duration: getDur(1.25),
-            easing: EASE_OUT,
-            fill: 'forwards',
-            delay: i * getDur(0.06),
-          }
-        ).finished
-      )
-    );
-    inBlocks.forEach(el => el.getAnimations().forEach(a => a.cancel()));
-
-    // Fire cinematic hero text entrance for the incoming gender
-    triggerHeroCinematic(targetGender);
-
-    // Persist preference
-    try { localStorage.setItem(STORAGE_KEY, targetGender); } catch {}
-
-    switching = false;
-  }
-
-  // ── Restore saved preference on load ──────────────────────
-  // Applied synchronously before first paint to avoid a flash of wrong gender.
-  function restorePreference() {
-    let saved: string | null = null;
-    try { saved = localStorage.getItem(STORAGE_KEY); } catch {}
-    const gender = (saved === 'masculine' || saved === 'feminine') ? saved : DEFAULT_GENDER;
-
-    // Set attribute directly — no animation needed for initial load
-    page!.setAttribute('data-active-gender', gender);
-
-    if (gender === 'masculine') {
-      setButtonState(btnMas!, true);
-      setButtonState(btnFem!, false);
-    }
-    // Feminine is the HTML default — no changes needed if gender === 'feminine'
-  }
-
-  // ── Cinematic hero text entrance ─────────────────────────────
-  // Finds all .hero-cin-line and .hero-cin-item inside the active
-  // hero section, resets them instantly, then on the next rAF
-  // applies .cin-active which triggers the staggered CSS transitions.
+  // ── Module-scope: cinematic hero entrance ─────────────────────
+  // Shared across astro:page-load, pageshow, and IntersectionObserver.
   function triggerHeroCinematic(genderValue: string) {
-    // The hero section is the FIRST gender-block for this gender
-    const heroSection = page!.querySelector<HTMLElement>(
+    const page = document.getElementById('archetypes-page');
+    if (!page) return;
+
+    const heroSection = page.querySelector<HTMLElement>(
       `.gender-block[data-gender="${genderValue}"]`
     );
     if (!heroSection) return;
@@ -756,15 +638,13 @@ const calendlyURL = '/contact';
     );
     if (els.length === 0) return;
 
-    // Step 1 — instant reset: remove cin-active, add cin-reset (no transition)
+    // Step 1: force everything invisible immediately
     els.forEach(el => {
       el.classList.remove('cin-active');
       el.classList.add('cin-reset');
     });
 
-    // Step 2 — on next paint: remove cin-reset (re-enables transitions),
-    //           then add cin-active on the following frame so the browser
-    //           sees a genuine state change and fires the CSS transitions.
+    // Step 2: re-enable transitions and animate in
     requestAnimationFrame(() => {
       els.forEach(el => el.classList.remove('cin-reset'));
       requestAnimationFrame(() => {
@@ -773,31 +653,185 @@ const calendlyURL = '/contact';
     });
   }
 
-  restorePreference();
+  // ── Failsafe: IntersectionObserver ────────────────────────────
+  // If the hero section becomes visible but the animation hasn't fired,
+  // trigger it. Catches bfcache, tab switches, any unknown edge case.
+  let heroAnimationFired = false;
 
-  // Fire the cinematic entrance for the initially-active gender after restore
-  triggerHeroCinematic(page!.getAttribute('data-active-gender') ?? DEFAULT_GENDER);
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !heroAnimationFired) {
+        heroAnimationFired = true;
+        const page = document.getElementById('archetypes-page');
+        if (page) {
+          triggerHeroCinematic(page.getAttribute('data-active-gender') ?? DEFAULT_GENDER);
+        }
+      }
+    });
+  }, { threshold: 0.1 });
 
-  btnFem!.addEventListener('click', () => switchGender('feminine'));
-  btnMas!.addEventListener('click', () => switchGender('masculine'));
+  // ── Failsafe: bfcache restore ────────────────────────────────
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      const page = document.getElementById('archetypes-page');
+      if (!page) return;
+      triggerHeroCinematic(page.getAttribute('data-active-gender') ?? DEFAULT_GENDER);
+    }
+  });
+
+  // ── Main init: runs on every page load (initial + VT nav) ────
+  document.addEventListener('astro:page-load', () => {
+    // Guard: only run on the archetypes page
+    const page = document.getElementById('archetypes-page') as HTMLElement | null;
+    if (!page) return;
+
+    const btnFem = document.getElementById('toggle-feminine')  as HTMLButtonElement | null;
+    const btnMas = document.getElementById('toggle-masculine') as HTMLButtonElement | null;
+    if (!btnFem || !btnMas) return;
+
+    // Reset failsafe observer for this page load
+    heroAnimationFired = false;
+    heroObserver.disconnect();
+    const heroBlock = page.querySelector('.gender-block');
+    if (heroBlock) heroObserver.observe(heroBlock);
+
+    function getDur(mult = 1): number {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue('--dur').trim();
+      return parseFloat(raw) * (raw.endsWith('ms') ? 1 : 1000) * mult;
+    }
+
+    const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const EASE_IN  = 'cubic-bezier(0.5, 0, 0.85, 0)';
+
+    let switching = false;
+
+    function getBlocks(gender: string): HTMLElement[] {
+      return Array.from(
+        page!.querySelectorAll<HTMLElement>(`.gender-block[data-gender="${gender}"]`)
+      );
+    }
+
+    function setButtonState(btn: HTMLButtonElement, active: boolean) {
+      btn.setAttribute('aria-pressed', String(active));
+      if (active) {
+        btn.classList.add('bg-white/15', 'backdrop-blur-sm', 'border-white/25', 'text-white');
+        btn.classList.remove('bg-transparent', 'border-white/15', 'text-white/40', 'hover:text-white/70');
+      } else {
+        btn.classList.remove('bg-white/15', 'backdrop-blur-sm', 'border-white/25', 'text-white');
+        btn.classList.add('bg-transparent', 'border-white/15', 'text-white/40', 'hover:text-white/70');
+      }
+    }
+
+    async function switchGender(targetGender: string) {
+      if (switching) return;
+      const current = page!.getAttribute('data-active-gender') ?? DEFAULT_GENDER;
+      if (current === targetGender) return;
+      switching = true;
+
+      // Update button states immediately (feels responsive)
+      setButtonState(targetGender === 'feminine' ? btnFem! : btnMas!, true);
+      setButtonState(targetGender === 'feminine' ? btnMas! : btnFem!, false);
+
+      // Animate OUT the currently-active blocks
+      const outBlocks = getBlocks(current);
+      await Promise.all(
+        outBlocks.map(el =>
+          el.animate(
+            [
+              { opacity: 1, transform: 'translateY(0)'    },
+              { opacity: 0, transform: 'translateY(12px)' },
+            ],
+            { duration: getDur(0.5), easing: EASE_IN, fill: 'forwards' }
+          ).finished
+        )
+      );
+      outBlocks.forEach(el => el.getAnimations().forEach(a => a.cancel()));
+
+      // Swap the data attribute
+      page!.setAttribute('data-active-gender', targetGender);
+
+      // Lazy-load masculine video on first reveal
+      if (targetGender === 'masculine') {
+        const vid = document.getElementById('video-masculine') as HTMLVideoElement | null;
+        if (vid && vid.readyState === 0) vid.load();
+      }
+
+      // Scroll to the top if user has scrolled past the hero
+      if (window.scrollY > window.innerHeight * 0.5) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Animate IN the incoming blocks
+      const inBlocks = getBlocks(targetGender);
+      await Promise.all(
+        inBlocks.map((el, i) =>
+          el.animate(
+            [
+              { opacity: 0, transform: 'translateY(18px)' },
+              { opacity: 1, transform: 'translateY(0)'    },
+            ],
+            {
+              duration: getDur(1.25),
+              easing: EASE_OUT,
+              fill: 'forwards',
+              delay: i * getDur(0.06),
+            }
+          ).finished
+        )
+      );
+      inBlocks.forEach(el => el.getAnimations().forEach(a => a.cancel()));
+
+      // Fire cinematic hero text entrance for the incoming gender
+      heroAnimationFired = true;
+      triggerHeroCinematic(targetGender);
+
+      // Persist preference
+      try { localStorage.setItem(STORAGE_KEY, targetGender); } catch {}
+
+      switching = false;
+    }
+
+    // ── Restore saved preference ──────────────────────────────
+    function restorePreference() {
+      let saved: string | null = null;
+      try { saved = localStorage.getItem(STORAGE_KEY); } catch {}
+      const gender = (saved === 'masculine' || saved === 'feminine') ? saved : DEFAULT_GENDER;
+
+      page!.setAttribute('data-active-gender', gender);
+
+      if (gender === 'masculine') {
+        setButtonState(btnMas!, true);
+        setButtonState(btnFem!, false);
+      }
+    }
+
+    restorePreference();
+
+    // Fire cinematic entrance for the initially-active gender
+    heroAnimationFired = true;
+    triggerHeroCinematic(page!.getAttribute('data-active-gender') ?? DEFAULT_GENDER);
+
+    // Attach button listeners (fresh DOM elements each VT navigation)
+    btnFem!.addEventListener('click', () => switchGender('feminine'));
+    btnMas!.addEventListener('click', () => switchGender('masculine'));
+  });
 </script>
 
 <script>
-  // ── Archetype card image carousel — bulletproof rewrite ───────
+  // ── Archetype card image carousel ─────────────────────────────
+  // ViewTransitions-compatible: wrapped in astro:page-load so it
+  // re-initializes on fresh DOM elements after every VT navigation.
   //
-  // Fixes vs previous version:
-  //   1. ALL cards (both genders) started on page load — no gender-switch
-  //      re-init needed, no risk of masculine cards missing _advanceCarousel
-  //   2. _carouselStarted guard — startCard() called exactly once per card
-  //   3. Load timeout — transitioning flag can't get permanently stuck if
-  //      an image stalls (no onload/onerror fires)
-  //   4. Ripple effect on click — immediate visual confirmation before fade
-  //   5. Deduplication registry shared across all cards (both genders)
+  // With ViewTransitions, DOM elements are NEW each navigation, so
+  // _carouselStarted is never set on them — carousel naturally
+  // re-initializes on fresh DOM.
 
-  (function initArchetypeCarousel() {
-    const HOLD_MS         = 8_000;  // how long each image shows
-    const FADE_MS         = 1_000;  // crossfade duration (must match img transition)
-    const LOAD_TIMEOUT_MS = 6_000;  // max wait for image load before recovery
+  document.addEventListener('astro:page-load', () => {
+    if (!document.getElementById('archetypes-page')) return;
+
+    const HOLD_MS         = 8_000;
+    const FADE_MS         = 1_000;
+    const LOAD_TIMEOUT_MS = 6_000;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -857,7 +891,6 @@ const calendlyURL = '/contact';
         register(nextSrc);
         back.src = nextSrc;
 
-        // Safety net: if the image never fires onload/onerror, recover after timeout
         const loadTimer = setTimeout(() => {
           back.onload = back.onerror = null;
           unregister(nextSrc);
@@ -903,18 +936,14 @@ const calendlyURL = '/contact';
       ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
     }
 
-    // ── Init ALL cards once — both genders, never repeated ────────
-    // Starting all cards up-front means:
-    //   • masculine cards have _advanceCarousel set before first switch
-    //   • no MutationObserver re-init needed
-    //   • off-screen cards cycle silently — registry stays globally consistent
+    // ── Init ALL cards — fresh DOM each VT navigation ─────────────
     requestAnimationFrame(() => {
       let i = 0;
       document.querySelectorAll<HTMLElement>('.archetype-card').forEach((card) => {
         if ((card as any)._carouselStarted) return;
         (card as any)._carouselStarted = true;
 
-        startCard(card, i * 350);  // 350ms stagger across all cards
+        startCard(card, i * 350);
         i++;
 
         card.addEventListener('click', (e: MouseEvent) => {
@@ -925,18 +954,29 @@ const calendlyURL = '/contact';
         });
       });
     });
-
-  })();
+  });
 </script>
 
 <script>
   // ── Quiz entry/exit animations ──────────────────────────────────
-  // Handles the transition between the archetype card grid and the quiz:
-  //   1. CTA click: stagger-fade cards out, reveal quiz container
-  //   2. "Back to Archetypes": reverse (quiz out, cards back in)
-  //   3. "Switch gender" from quiz results: exit quiz, switch gender, open other quiz
+  // ViewTransitions-compatible: wrapped in astro:page-load so it
+  // re-initializes on fresh DOM elements after every VT navigation.
+  //
+  // Custom events (quiz:exit, quiz:switch-gender) use event delegation
+  // on `document` — these are re-attached each page-load, but since
+  // ViewTransitions replaces DOM, duplicate listeners on OLD documents
+  // are garbage collected. We use an AbortController to be extra safe.
 
-  (function initQuizTransitions() {
+  let quizAbortController: AbortController | null = null;
+
+  document.addEventListener('astro:page-load', () => {
+    if (!document.getElementById('archetypes-page')) return;
+
+    // Tear down previous document-level listeners if re-running
+    quizAbortController?.abort();
+    quizAbortController = new AbortController();
+    const signal = quizAbortController.signal;
+
     const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
     const EASE_IN  = 'cubic-bezier(0.5, 0, 0.85, 0)';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -946,7 +986,6 @@ const calendlyURL = '/contact';
       return parseFloat(raw) * (raw.endsWith('ms') ? 1 : 1000) * mult;
     }
 
-    // Map quiz IDs to their grid + container elements
     const quizConfigs: Record<string, { gridSelector: string; containerId: string }> = {
       fem:  { gridSelector: '#archetypes .grid', containerId: 'fem-quiz-container' },
       masc: { gridSelector: '#masculine-archetypes .grid', containerId: 'masc-quiz-container' },
@@ -960,7 +999,6 @@ const calendlyURL = '/contact';
       const container = document.getElementById(config.containerId);
       if (!grid || !container) return;
 
-      // Stagger fade out each card in the grid
       const cards = Array.from(grid.children) as HTMLElement[];
 
       if (!reducedMotion) {
@@ -982,14 +1020,11 @@ const calendlyURL = '/contact';
         );
       }
 
-      // Hide grid, show quiz
       grid.classList.add('hidden');
       container.classList.remove('hidden');
 
-      // Cancel fill-forwards
       cards.forEach(card => card.getAnimations().forEach(a => a.cancel()));
 
-      // Animate quiz in
       if (!reducedMotion) {
         container.animate(
           [
@@ -1002,7 +1037,6 @@ const calendlyURL = '/contact';
         });
       }
 
-      // Scroll quiz into view
       container.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -1014,7 +1048,6 @@ const calendlyURL = '/contact';
       const container = document.getElementById(config.containerId);
       if (!grid || !container) return;
 
-      // Animate quiz out
       if (!reducedMotion) {
         await container.animate(
           [
@@ -1026,11 +1059,9 @@ const calendlyURL = '/contact';
         container.getAnimations().forEach(a => a.cancel());
       }
 
-      // Hide quiz, show grid
       container.classList.add('hidden');
       grid.classList.remove('hidden');
 
-      // Stagger fade cards back in
       const cards = Array.from(grid.children) as HTMLElement[];
 
       if (!reducedMotion) {
@@ -1053,13 +1084,11 @@ const calendlyURL = '/contact';
         cards.forEach(card => card.getAnimations().forEach(a => a.cancel()));
       }
 
-      // Scroll the section header into view
       const section = grid.closest('section');
       if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // ── CTA click handlers ─────────────────────────────────────────
-    // Both the card itself and the button inside it trigger the quiz
+    // ── CTA click handlers (fresh DOM elements each navigation) ────
     document.querySelectorAll<HTMLElement>('[data-quiz-trigger]').forEach(el => {
       el.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1069,13 +1098,13 @@ const calendlyURL = '/contact';
       });
     });
 
-    // ── Quiz exit event (fired by quiz component) ──────────────────
+    // ── Quiz exit event (document-level — use AbortController) ─────
     document.addEventListener('quiz:exit', (e) => {
       const quizRoot = (e.target as HTMLElement).closest('.quiz-root');
       if (!quizRoot) return;
       const quizId = (quizRoot as HTMLElement).dataset.quizId;
       if (quizId) closeQuiz(quizId);
-    });
+    }, { signal });
 
     // ── Gender switch from quiz results ────────────────────────────
     document.addEventListener('quiz:switch-gender', async (e) => {
@@ -1086,12 +1115,10 @@ const calendlyURL = '/contact';
       if (!quizRoot) return;
       const currentQuizId = (quizRoot as HTMLElement).dataset.quizId;
 
-      // Close the current quiz
       if (currentQuizId) {
         await closeQuiz(currentQuizId);
       }
 
-      // Trigger the gender switch using the existing page-level switchGender
       const targetGender = detail.targetGender;
       const btnFem = document.getElementById('toggle-feminine') as HTMLButtonElement | null;
       const btnMas = document.getElementById('toggle-masculine') as HTMLButtonElement | null;
@@ -1102,16 +1129,13 @@ const calendlyURL = '/contact';
         btnMas?.click();
       }
 
-      // After gender switch settles, open the other quiz
-      // Wait for the gender switch animation to complete
       setTimeout(() => {
         const otherQuizId = targetGender === 'feminine' ? 'fem' : 'masc';
         openQuiz(otherQuizId);
       }, 1500);
-    });
+    }, { signal });
 
     // ── Hash-based auto-open on page load ──────────────────────────
-    // If URL has #quiz/feminine/... or #quiz/masculine/..., auto-open that quiz
     function checkHashOnLoad() {
       const hash = window.location.hash;
       if (!hash) return;
@@ -1122,27 +1146,21 @@ const calendlyURL = '/contact';
       const hashGender = match[1];
       const quizId = hashGender === 'feminine' ? 'fem' : 'masc';
 
-      // Ensure the correct gender is active
       const page = document.getElementById('archetypes-page');
       const activeGender = page?.getAttribute('data-active-gender');
 
       if (activeGender !== hashGender) {
-        // Need to switch gender first
         const btn = hashGender === 'feminine'
           ? document.getElementById('toggle-feminine')
           : document.getElementById('toggle-masculine');
         if (btn) btn.click();
 
-        // Wait for switch, then open quiz
         setTimeout(() => openQuiz(quizId), 1500);
       } else {
-        // Correct gender already active, open quiz directly
         setTimeout(() => openQuiz(quizId), 500);
       }
     }
 
-    // Delay hash check to allow other init scripts to run
     requestAnimationFrame(() => requestAnimationFrame(checkHashOnLoad));
-
-  })();
+  });
 </script>
