@@ -42,7 +42,10 @@ const calendlyURL = '/contact';
 
   <!-- ── HERO ────────────────────────────────────────────── -->
   <section class="relative overflow-hidden bg-primary" aria-label="Hero">
-    <div class="relative min-h-[90vh] lg:min-h-screen flex flex-col lg:flex-row">
+    <!-- lg:min-h-[calc(100vh-3.5rem)]: hero stops 3.5rem (56px) short of full viewport
+         on desktop so the marquee band is guaranteed visible on first paint.
+         Mobile keeps 90vh — marquee is below the fold there intentionally. -->
+    <div class="relative min-h-[90vh] lg:min-h-[calc(100vh-3.5rem)] flex flex-col lg:flex-row">
 
       <!--
         Mosaic hero grid — auto-cycling carousel
