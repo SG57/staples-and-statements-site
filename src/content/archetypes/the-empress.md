@@ -1,8 +1,8 @@
 ---
 name: "The Empress"
 slug: "the-empress"
-description: "Regal, commanding, and unapologetically luxurious. You dress like you own the room — because you do."
-order: 2
+description: "Nurturing, grounding, and abundantly elegant. You dress with quiet confidence — luxe elevated basics and warm neutrals that radiate stability and grace."
+order: 6
 gender: "feminine"
 icon: "♛"
 color: "#8b6b4a"
@@ -10,12 +10,14 @@ guideLink: "https://beacons.ai/staplesandstatementsss"
 ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
-The Empress doesn't enter a room — she arrives. Your style is a declaration of power, confidence, and a refined taste that cannot be faked. You gravitate toward rich fabrics (velvet, silk, structured wool), jewel tones, sculptural silhouettes, and investment pieces built to last decades. You don't follow trends — you set the standard.
+The Empress radiates warmth the moment she enters a room. Your style isn't about commanding attention — it's about creating an atmosphere of grounded abundance. You gravitate toward luxe, elevated basics: pieces that feel as good as they look, built with quality that speaks for itself. Your wardrobe is an extension of your nurturing energy — every piece chosen with care, stability, and timeless intention.
 
-Your style says: *I have arrived. I have always been here.*
+You don't need trends. Your closet is full of high-quality neutrals that layer beautifully, silk that drapes just right, and gold that catches the light. You dress for how you want to feel: warm, capable, and elegantly put together without trying too hard.
 
-**Signature pieces:** Structured blazers, tailored wide-leg trousers, statement coats, bold jewelry, rich jewel-tone dressing, floor-length gowns for occasions.
+Your style says: *I am here, grounded, and abundant.*
 
-**Your palette:** Emerald green, deep burgundy, royal blue, burnt orange, champagne gold, onyx.
+**Signature pieces:** Silk blouses, gold jewelry, tailored trousers, cashmere wraps, elevated knitwear, structured handbags, quality loafers.
 
-**Empress icons:** Cate Blanchett, Viola Davis, Diana Ross.
+**Your palette:** Warm neutrals — camel, ivory, gold, olive, warm taupe, soft champagne, rich cognac.
+
+**Empress icons:** Meghan Markle, Amal Clooney, Oprah Winfrey.
