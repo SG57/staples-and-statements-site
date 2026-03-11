@@ -306,30 +306,26 @@ const GA4_ID = 'G-XXXXXXXXXX';
   // ── Canvas grain texture ───────────────────────────────────────────────────
   // Applies grain as CSS background-image on flat-color background sections.
   //
-  // KEY INSIGHT: background-image renders ABOVE background-color but BELOW
-  // all HTML content. This means:
-  //   ✓ grain appears on solid background-color sections
-  //   ✓ grain is invisible behind <img> elements (img covers bg-image)
-  //   ✓ grain does NOT overlay text or UI (HTML content sits above bg-image)
+  // Navigation fix: Astro ViewTransitions replaces <head> content on soft
+  // navigation — the dynamically-injected #grain-style element is removed.
+  // Solution: generate the canvas ONCE (saved in closure), then use
+  // astro:page-load to re-inject the <style> on every navigation if removed.
   //
-  // Targets: .bg-primary, .bg-primary-light, .bg-background, .bg-surface,
-  //          .bg-surface-dark — all the flat background color classes on site.
-  //
-  // Change --grain in global.css to tune:  0=off  1=whisper  2=subtle  4=bold
+  // Intensity: --grain in global.css. Alpha scale = level * 7 (half of old 15).
+  // Blur: 1.5px (up from 1px) — more frosted, less sharp digital static.
 
-  (function initGrain() {
+  (function() {
     if (window.matchMedia('(prefers-contrast: more)').matches) return;
-    // Only inject once — persists across ViewTransitions navigations
-    if (document.getElementById('grain-style')) return;
 
     const level = Math.max(0, parseFloat(
       getComputedStyle(document.documentElement).getPropertyValue('--grain').trim()
     ) || 1);
     if (level === 0) return;
 
+    // ── Generate grain canvas ONCE ─────────────────────────────────────────
+    // Saved in closure — re-used on every page navigation without re-computing.
     const SIZE = 256;
-    // Max alpha per pixel per intensity unit (level 2 = max 30/255 ≈ 12%)
-    const ALPHA_SCALE = level * 15;
+    const ALPHA_SCALE = level * 7;  // halved: was 15, now 7 per level unit
 
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = SIZE;
@@ -338,49 +334,45 @@ const GA4_ID = 'G-XXXXXXXXXX';
     const data = img.data;
 
     for (let i = 0; i < data.length; i += 4) {
-      // White specks → visible on dark, invisible on light
-      // Black specks → visible on light, invisible on dark
-      const bright = Math.random() > 0.5;
-      data[i]     = bright ? 255 : 0;
-      data[i + 1] = bright ? 255 : 0;
-      data[i + 2] = bright ? 255 : 0;
-      data[i + 3] = Math.random() * ALPHA_SCALE;  // organic density variation
+      const bright    = Math.random() > 0.5;
+      data[i]         = bright ? 255 : 0;
+      data[i + 1]     = bright ? 255 : 0;
+      data[i + 2]     = bright ? 255 : 0;
+      data[i + 3]     = Math.random() * ALPHA_SCALE;
     }
-
     ctx.putImageData(img, 0, 0);
 
-    // Apply sub-pixel blur — softens sharp specks into an organic frosted texture.
-    // 0.6px is barely perceptible as blur but eliminates the "digital pixels" feel.
+    // Soften with 1.5px blur — more frosted, less sharp
     const soft = document.createElement('canvas');
     soft.width = soft.height = SIZE;
     const sCtx = soft.getContext('2d')!;
-    sCtx.filter = 'blur(1px)';
+    sCtx.filter = 'blur(1.5px)';
     sCtx.drawImage(canvas, 0, 0);
-    const url = soft.toDataURL('image/png');
+    const grainUrl = soft.toDataURL('image/png');
 
-    // Grain only on semantic background elements — never on foreground components.
-    // <section> = page-level background blocks (home/about/services/etc sections)
-    // <footer>  = footer background band
-    // .marquee-band = the brand ticker band between hero and content
-    // Deliberately excludes <div> elements so cards, modals, nav, frosted panels
-    // — anything in the foreground — never receive grain texture.
-    const style = document.createElement('style');
-    style.id = 'grain-style';
-    // Only full-width semantic background elements — never foreground components.
-    // <section> and <footer> are always page-level background areas.
-    // Everything else (<div> cards, nav, marquee band, frosted panels) excluded.
+    // Pre-build the CSS string once
     const bg = ['bg-primary','bg-primary-light','bg-background','bg-surface','bg-surface-dark'];
-    const targets = [
-      ...bg.map(c => `section.${c}`),
-      ...bg.map(c => `footer.${c}`),
-    ].join(',');
-    // Also reset background-image on all controls so nothing interactive
-    // accidentally inherits or shows grain through semi-transparent backgrounds
+    const targets = [...bg.map(c => `section.${c}`), ...bg.map(c => `footer.${c}`)].join(',');
     const reset = 'input,textarea,select,button,[role="button"],[role="combobox"]';
-    style.textContent =
-      `${targets}{background-image:url('${url}');background-repeat:repeat;background-size:256px 256px}` +
+    const cssText =
+      `${targets}{background-image:url('${grainUrl}');background-repeat:repeat;background-size:256px 256px}` +
       `${reset}{background-image:none}`;
-    document.head.appendChild(style);
+
+    // ── Inject (or re-inject) the style tag ───────────────────────────────
+    // Called on initial load AND after every ViewTransitions navigation because
+    // Astro's head-swap removes dynamically-injected elements from <head>.
+    function injectGrainStyle() {
+      if (document.getElementById('grain-style')) return;  // already present
+      const style = document.createElement('style');
+      style.id = 'grain-style';
+      style.textContent = cssText;
+      document.head.appendChild(style);
+    }
+
+    // Initial load
+    injectGrainStyle();
+    // Re-inject after every soft navigation (ViewTransitions removes it)
+    document.addEventListener('astro:page-load', injectGrainStyle);
   })();
 </script>
 
