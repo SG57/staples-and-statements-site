@@ -1,0 +1,316 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { getShadesForPrimary } from '../../data/archetype-shades';
+
+export async function getStaticPaths() {
+  const archetypes = await getCollection('archetypes');
+  return archetypes.map((archetype) => ({
+    params: { slug: archetype.data.slug },
+    props: { archetype },
+  }));
+}
+
+const { archetype } = Astro.props;
+const { Content } = await render(archetype);
+const data = archetype.data;
+
+/* Get all archetypes of the same gender for the shades selector */
+const allArchetypes = await getCollection('archetypes', ({ data: d }) => d.gender === data.gender);
+const otherArchetypes = allArchetypes
+  .filter((a) => a.data.slug !== data.slug)
+  .sort((a, b) => a.data.order - b.data.order);
+
+/* Get shade descriptions for this archetype as primary */
+const shades = getShadesForPrimary(data.slug);
+
+/* Hero image: use wallpaper if it exists, fall back to card image */
+const wallpaperSrc = `/images/archetypes/${data.slug}-wallpaper.webp`;
+const fallbackSrc = `/images/archetypes/${data.slug}-1.webp`;
+
+/* Determine gender label for cross-linking */
+const isFeminine = data.gender === 'feminine';
+const otherGenderLabel = isFeminine ? 'Masculine' : 'Feminine';
+---
+
+<BaseLayout
+  title={`${data.name} — Style Archetype | Staples & Statements`}
+  description={data.description}
+  transparentNav={true}
+>
+
+  <!-- ── HERO: Full-viewport wallpaper ────────────────────── -->
+  <section class="relative min-h-screen flex items-end overflow-hidden bg-primary">
+    <!-- Wallpaper image (falls back to card image until AI wallpaper generated) -->
+    <img
+      src={fallbackSrc}
+      alt={`${data.name} archetype atmosphere`}
+      class="absolute inset-0 w-full h-full object-cover object-center"
+      loading="eager"
+    />
+    <!-- Gradient overlays for text legibility -->
+    <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-primary/10 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-primary/40 via-transparent to-transparent pointer-events-none"></div>
+    <!-- Nav-hood scrim -->
+    <div class="absolute top-0 left-0 right-0 h-40 pointer-events-none z-[5]"
+         style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)"></div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-20 pt-36 lg:pt-44 w-full">
+      <!-- Archetype badge -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 flex items-center justify-center rounded-full border border-accent/40 bg-accent/10 backdrop-blur-sm">
+          <span class="text-lg text-accent">{data.icon}</span>
+        </div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent">
+          {isFeminine ? 'Feminine' : 'Masculine'} Archetype
+        </p>
+      </div>
+
+      <!-- Archetype name -->
+      <h1 class="font-heading text-white text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] max-w-3xl mb-6">
+        {data.name}
+      </h1>
+
+      <!-- Accent line in archetype color -->
+      <div class="w-16 h-1 mb-6" style={`background-color: ${data.color}`}></div>
+
+      <!-- One-line description -->
+      <p class="font-body text-white/70 text-lg md:text-xl max-w-xl leading-relaxed mb-10">
+        {data.description}
+      </p>
+
+      <!-- Hero CTAs -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a
+          href="/archetypes#archetypes"
+          class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+        >
+          Find Your Archetype
+        </a>
+        {data.guideLink && (
+          <a
+            href={data.guideLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200"
+          >
+            Shop This Style
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── DEEP DIVE: Archetype content ─────────────────────── -->
+  <section class="py-24 px-6 bg-primary" aria-label={`About ${data.name}`}>
+    <div class="mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24">
+
+        <!-- LEFT: Image triptych -->
+        <div class="grid grid-cols-3 gap-2 h-fit sticky top-24">
+          <div class="aspect-[3/4] overflow-hidden rounded-sm">
+            <img src={`/images/archetypes/${data.slug}-1.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
+          </div>
+          <div class="aspect-[3/4] overflow-hidden rounded-sm scale-[1.05] z-10 shadow-2xl">
+            <img src={`/images/archetypes/${data.slug}-2.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
+          </div>
+          <div class="aspect-[3/4] overflow-hidden rounded-sm">
+            <img src={`/images/archetypes/${data.slug}-3.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
+          </div>
+        </div>
+
+        <!-- RIGHT: Written content -->
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl" style={`color: ${data.color}`}>{data.icon}</span>
+            <h2 class="font-heading text-white text-3xl md:text-4xl font-semibold">{data.name}</h2>
+          </div>
+
+          <!-- Rendered markdown body -->
+          <div class="archetype-prose font-body text-white/75 text-base leading-relaxed space-y-4">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── WITH SHADES OF: Permutation explorer ─────────────── -->
+  {shades.length > 0 && (
+    <section id="shades" class="py-24 px-6 bg-primary border-t border-white/8" aria-label="Explore archetype blends">
+      <div class="mx-auto max-w-4xl">
+        <div class="text-center mb-12">
+          <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Your Unique Blend</p>
+          <h2 class="font-heading text-white text-3xl md:text-4xl font-semibold mb-4">
+            {data.name} <span class="text-white/40">with shades of...</span>
+          </h2>
+          <p class="font-body text-white/55 text-base max-w-lg mx-auto leading-relaxed">
+            Most people are a blend of two archetypes. Select a secondary to explore what your unique combination means.
+          </p>
+        </div>
+
+        <!-- Secondary selector chips -->
+        <div class="flex flex-wrap justify-center gap-3 mb-10" role="radiogroup" aria-label="Select secondary archetype">
+          {otherArchetypes.map((other, i) => (
+            <button
+              type="button"
+              class:list={[
+                'shade-chip font-body text-sm px-5 py-2.5',
+                'border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+                'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
+                'cursor-pointer select-none',
+                i === 0
+                  ? 'bg-accent/15 border-accent/40 text-white'
+                  : 'bg-white/5 border-white/15 text-white/60 hover:bg-white/10 hover:border-white/25 hover:text-white',
+              ]}
+              data-shade-slug={other.data.slug}
+              data-shade-name={other.data.name}
+              role="radio"
+              aria-checked={i === 0 ? 'true' : 'false'}
+            >
+              <span class="mr-1.5" style={`color: ${other.data.color}`}>{other.data.icon}</span>
+              {other.data.name}
+            </button>
+          ))}
+        </div>
+
+        <!-- Shade description display -->
+        <div class="shade-display bg-white/3 border border-white/10 rounded-sm p-8 md:p-10 backdrop-blur-sm">
+          {shades.map((shade, i) => (
+            <div
+              class:list={[
+                'shade-content transition-opacity duration-300',
+                i === 0 ? 'block' : 'hidden',
+              ]}
+              data-shade-for={shade.secondary}
+            >
+              <div class="flex items-center gap-2 mb-4">
+                <span class="text-accent text-lg">{data.icon}</span>
+                <span class="font-heading text-white text-xl font-semibold">{data.name}</span>
+                <span class="text-white/30 mx-1">&times;</span>
+                <span class="font-heading text-white/70 text-xl">{shade.secondaryName}</span>
+              </div>
+              <p class="font-body text-white/70 text-base leading-relaxed italic">
+                {shade.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+
+  <!-- ── EXPLORE MORE ─────────────────────────────────────── -->
+  <section class="py-20 px-6 bg-primary border-t border-white/8" aria-label="Explore more archetypes">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8 py-10">
+        <div>
+          <div class="w-8 h-px bg-accent mb-4"></div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-2">Keep Exploring</p>
+          <h2 class="font-heading text-white text-3xl font-semibold">Discover More Archetypes</h2>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+          <a
+            href="/archetypes"
+            class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+          >
+            All Archetypes
+          </a>
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200"
+          >
+            Book a Consultation
+          </a>
+        </div>
+      </div>
+
+      <!-- Other archetypes from same gender as quick-nav cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-8">
+        {otherArchetypes.map((other) => (
+          <a
+            href={`/archetypes/${other.data.slug}`}
+            class="group relative overflow-hidden aspect-[3/4] block"
+          >
+            <img
+              src={`/images/archetypes/${other.data.slug}-1.webp`}
+              alt={other.data.name}
+              class="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none"></div>
+            <div class="absolute top-0 left-0 right-0 h-0.5" style={`background-color: ${other.data.color}`}></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 z-10">
+              <div class="flex items-center gap-2">
+                <span class="text-accent/70">{other.data.icon}</span>
+                <h3 class="font-heading text-white text-lg font-semibold leading-tight">{other.data.name}</h3>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+
+<style>
+  /* ── Archetype prose styling ─────────────────────────── */
+  .archetype-prose :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .archetype-prose :global(strong) {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+  }
+
+  .archetype-prose :global(em) {
+    color: rgba(184, 151, 126, 0.85);
+    font-style: italic;
+  }
+
+  /* Style for the palette/icons/pieces sections */
+  .archetype-prose :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Active shade chip */
+  .shade-chip[aria-checked="true"] {
+    background: rgba(184, 151, 126, 0.15);
+    border-color: rgba(184, 151, 126, 0.4);
+    color: white;
+  }
+</style>
+
+
+<script>
+  // ── "With Shades Of" selector ─────────────────────────────
+  // Toggles shade descriptions when user clicks a secondary archetype chip.
+
+  document.querySelectorAll<HTMLElement>('.shade-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const slug = chip.dataset.shadeSlug!;
+      const container = chip.closest('section');
+      if (!container) return;
+
+      // Update chip states
+      container.querySelectorAll<HTMLElement>('.shade-chip').forEach((c) => {
+        const isActive = c === chip;
+        c.setAttribute('aria-checked', String(isActive));
+      });
+
+      // Show matching shade description, hide others
+      container.querySelectorAll<HTMLElement>('.shade-content').forEach((content) => {
+        const isMatch = content.dataset.shadeFor === slug;
+        content.classList.toggle('hidden', !isMatch);
+        content.classList.toggle('block', isMatch);
+      });
+    });
+  });
+</script>

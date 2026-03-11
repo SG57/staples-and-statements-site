@@ -196,9 +196,13 @@ const calendlyURL = '/contact';
                   {archetype.data.description}
                 </p>
                 <div class="flex flex-col gap-2">
+                  <a href={`/archetypes/${archetype.data.slug}`}
+                     class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
+                    Deep Dive →
+                  </a>
                   {archetype.data.guideLink && (
                     <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
-                       class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
+                       class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors">
                       Get the Style Guide →
                     </a>
                   )}
