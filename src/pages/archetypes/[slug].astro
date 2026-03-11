@@ -27,6 +27,9 @@ const otherArchetypes = allArchetypes
 /* Get shade descriptions for this archetype as primary */
 const shades = getShadesForPrimary(data.slug);
 
+/* The first "other" archetype is the default shade selection */
+const defaultShadeSlug = otherArchetypes[0]?.data.slug ?? '';
+
 /* Hero image: use wallpaper if it exists, fall back to card image */
 const fallbackSrc = `/images/archetypes/${data.slug}-1.webp`;
 
@@ -261,15 +264,12 @@ const isFeminine = data.gender === 'feminine';
           {otherArchetypes.map((other, i) => (
             <button
               type="button"
-              class:list={[
-                'shade-chip font-body text-sm px-5 py-2.5',
-                'border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
-                'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
-                'cursor-pointer select-none',
-                i === 0
-                  ? 'bg-accent/15 border-accent/40 text-white'
-                  : 'bg-white/5 border-white/15 text-white/60 hover:bg-white/10 hover:border-white/25 hover:text-white',
-              ]}
+              class="shade-chip font-body text-sm px-5 py-2.5
+                     bg-white/5 border border-white/15 text-white/60
+                     hover:bg-white/10 hover:border-white/25 hover:text-white
+                     transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+                     focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
+                     cursor-pointer select-none"
               data-shade-slug={other.data.slug}
               data-shade-name={other.data.name}
               role="radio"
@@ -283,11 +283,11 @@ const isFeminine = data.gender === 'feminine';
 
         <!-- Shade description display -->
         <div class="shade-display bg-white/3 border border-white/10 rounded-sm p-8 md:p-10 backdrop-blur-sm">
-          {shades.map((shade, i) => (
+          {shades.map((shade) => (
             <div
               class:list={[
                 'shade-content transition-opacity duration-300',
-                i === 0 ? 'block' : 'hidden',
+                shade.secondary === defaultShadeSlug ? 'block' : 'hidden',
               ]}
               data-shade-for={shade.secondary}
             >
