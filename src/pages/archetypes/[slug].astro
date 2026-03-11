@@ -526,13 +526,11 @@ const genderGuide = isFeminine
         const compact = document.querySelector<HTMLElement>(`[data-section-compact="${section}"]`);
         if (!compact) return;
 
-        if (entry.isIntersecting) {
-          compact.style.opacity = '0';
-          compact.style.pointerEvents = 'none';
-        } else {
-          compact.style.opacity = '1';
-          compact.style.pointerEvents = 'auto';
-        }
+        // Only show compact when sentinel scrolled ABOVE viewport (not when still below)
+        const aboveViewport = entry.boundingClientRect.top < 0;
+        const shouldShow = !entry.isIntersecting && aboveViewport;
+        compact.style.opacity = shouldShow ? '1' : '0';
+        compact.style.pointerEvents = shouldShow ? 'auto' : 'none';
       });
     }, { threshold: 0, rootMargin: '-30px 0px 0px 0px' });
 
