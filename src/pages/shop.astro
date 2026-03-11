@@ -217,6 +217,22 @@ const ltkCollections = [
       <h2 class="font-heading text-primary text-4xl lg:text-5xl">
         Want a wardrobe curated just for you?
       </h2>
+      <!-- COMPACT sticky header -->
+      <div class="section-header-compact sticky top-16 lg:top-20 z-30
+                  bg-surface/85 backdrop-blur-md border-b border-surface-dark/40
+                  -mx-6 px-6 py-3 mb-4
+                  opacity-0 pointer-events-none
+                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+                  text-left"
+           data-section-compact="shop-cta">
+        <div class="inline-flex items-center gap-3">
+          <div class="w-6 h-px bg-accent"></div>
+          <p class="font-body text-[10px] tracking-widest uppercase text-accent">Personalized</p>
+          <span class="text-primary/20">|</span>
+          <h2 class="font-heading text-primary text-lg font-semibold">Curated Just for You</h2>
+        </div>
+      </div>
+
       <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
         Style guides and LTK collections are a great starting point — but nothing compares to a wardrobe built specifically around your body, your colors, your life, and your archetype.
       </p>
@@ -228,5 +244,26 @@ const ltkCollections = [
       </a>
     </div>
   </section>
+
+  <!-- ── Sticky section header observer ──────────────────── -->
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
+      if (sentinels.length === 0) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const section = (entry.target as HTMLElement).dataset.section;
+          if (!section) return;
+          const compact = document.querySelector<HTMLElement>(`[data-section-compact="${section}"]`);
+          if (!compact) return;
+          compact.style.opacity = entry.isIntersecting ? '0' : '1';
+          compact.style.pointerEvents = entry.isIntersecting ? 'none' : 'auto';
+        });
+      }, { threshold: 0, rootMargin: '-80px 0px 0px 0px' });
+
+      sentinels.forEach(s => observer.observe(s));
+    });
+  </script>
 
 </BaseLayout>
