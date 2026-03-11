@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { getShadesForPrimary } from '../../data/archetype-shades';
+import { getVisualsForSlug, iconPaths } from '../../data/archetype-visuals';
 
 export async function getStaticPaths() {
   const archetypes = await getCollection('archetypes');
@@ -12,8 +13,10 @@ export async function getStaticPaths() {
 }
 
 const { archetype } = Astro.props;
-const { Content } = await render(archetype);
 const data = archetype.data;
+
+/* Visual data for this archetype */
+const visuals = getVisualsForSlug(data.slug);
 
 /* Get all archetypes of the same gender for the shades selector */
 const allArchetypes = await getCollection('archetypes', ({ data: d }) => d.gender === data.gender);
@@ -25,12 +28,10 @@ const otherArchetypes = allArchetypes
 const shades = getShadesForPrimary(data.slug);
 
 /* Hero image: use wallpaper if it exists, fall back to card image */
-const wallpaperSrc = `/images/archetypes/${data.slug}-wallpaper.webp`;
 const fallbackSrc = `/images/archetypes/${data.slug}-1.webp`;
 
 /* Determine gender label for cross-linking */
 const isFeminine = data.gender === 'feminine';
-const otherGenderLabel = isFeminine ? 'Masculine' : 'Feminine';
 ---
 
 <BaseLayout
@@ -67,17 +68,19 @@ const otherGenderLabel = isFeminine ? 'Masculine' : 'Feminine';
       </div>
 
       <!-- Archetype name -->
-      <h1 class="font-heading text-white text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] max-w-3xl mb-6">
+      <h1 class="font-heading text-white text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] max-w-3xl mb-4">
         {data.name}
       </h1>
 
-      <!-- Accent line in archetype color -->
-      <div class="w-16 h-1 mb-6" style={`background-color: ${data.color}`}></div>
+      <!-- Tagline as subtitle -->
+      {visuals && (
+        <p class="font-heading text-white/60 text-xl md:text-2xl italic max-w-xl leading-relaxed mb-6">
+          {visuals.tagline}
+        </p>
+      )}
 
-      <!-- One-line description -->
-      <p class="font-body text-white/70 text-lg md:text-xl max-w-xl leading-relaxed mb-10">
-        {data.description}
-      </p>
+      <!-- Accent line in archetype color -->
+      <div class="w-16 h-1 mb-10" style={`background-color: ${data.color}`}></div>
 
       <!-- Hero CTAs -->
       <div class="flex flex-col sm:flex-row gap-3">
@@ -102,35 +105,136 @@ const otherGenderLabel = isFeminine ? 'Masculine' : 'Feminine';
   </section>
 
 
-  <!-- ── DEEP DIVE: Archetype content ─────────────────────── -->
+  <!-- ── DEEP DIVE: Visual archetype content ─────────────────── -->
   <section class="py-24 px-6 bg-primary" aria-label={`About ${data.name}`}>
     <div class="mx-auto max-w-7xl">
       <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24">
 
-        <!-- LEFT: Image triptych -->
-        <div class="grid grid-cols-3 gap-2 h-fit sticky top-24">
-          <div class="aspect-[3/4] overflow-hidden rounded-sm">
-            <img src={`/images/archetypes/${data.slug}-1.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
+        <!-- LEFT COLUMN: Triptych + Color Palette (sticky) -->
+        <div class="h-fit lg:sticky lg:top-24">
+          <!-- Image triptych -->
+          <div class="grid grid-cols-3 gap-2">
+            <div class="aspect-[3/4] overflow-hidden rounded-sm">
+              <img src={`/images/archetypes/${data.slug}-1.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
+            </div>
+            <div class="aspect-[3/4] overflow-hidden rounded-sm scale-[1.05] z-10 shadow-2xl">
+              <img src={`/images/archetypes/${data.slug}-2.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
+            </div>
+            <div class="aspect-[3/4] overflow-hidden rounded-sm">
+              <img src={`/images/archetypes/${data.slug}-3.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
+            </div>
           </div>
-          <div class="aspect-[3/4] overflow-hidden rounded-sm scale-[1.05] z-10 shadow-2xl">
-            <img src={`/images/archetypes/${data.slug}-2.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
-          </div>
-          <div class="aspect-[3/4] overflow-hidden rounded-sm">
-            <img src={`/images/archetypes/${data.slug}-3.webp`} alt={data.name} class="w-full h-full object-cover object-top" loading="lazy" />
-          </div>
+
+          <!-- Color palette swatches -->
+          {visuals && (
+            <div class="flex flex-wrap gap-2 mt-6 justify-center lg:justify-start">
+              {visuals.palette.map((color) => (
+                <div class="group relative">
+                  <div
+                    class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/15
+                           cursor-default transition-transform duration-200
+                           hover:scale-110"
+                    style={`background-color: ${color.hex};
+                            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3),
+                                        inset 0 -1px 2px rgba(255,255,255,0.1);`}
+                    title={color.name}
+                  />
+                  <span class="absolute -bottom-7 left-1/2 -translate-x-1/2
+                               font-body text-[10px] text-white/60 whitespace-nowrap
+                               opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                               pointer-events-none">
+                    {color.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        <!-- RIGHT: Written content -->
+        <!-- RIGHT COLUMN: Body text + Signature Pieces + Style Icons -->
         <div>
-          <div class="flex items-center gap-3 mb-4">
-            <span class="text-2xl" style={`color: ${data.color}`}>{data.icon}</span>
-            <h2 class="font-heading text-white text-3xl md:text-4xl font-semibold">{data.name}</h2>
-          </div>
+          {visuals ? (
+            <>
+              <!-- Core description -->
+              <div class="font-body text-white/75 text-base md:text-lg leading-relaxed">
+                {visuals.bodyText.split('\n\n').map((paragraph) => (
+                  <p class="mb-4 max-w-none">{paragraph}</p>
+                ))}
+              </div>
 
-          <!-- Rendered markdown body -->
-          <div class="archetype-prose font-body text-white/75 text-base leading-relaxed space-y-4">
-            <Content />
-          </div>
+              <!-- ── Divider ── -->
+              <div class="w-full h-px bg-white/8 my-10"></div>
+
+              <!-- Signature Pieces -->
+              <div>
+                <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-5">
+                  Signature Pieces
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  {visuals.signaturePieces.map((piece) => (
+                    <div class="flex flex-col items-center text-center p-4
+                                bg-white/[0.03] backdrop-blur-sm border border-white/[0.07]
+                                rounded-sm hover:bg-white/[0.06] transition-all duration-200">
+                      <svg
+                        class="w-8 h-8 text-accent/70 mb-2"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d={iconPaths[piece.icon]} />
+                      </svg>
+                      <span class="font-body text-xs text-white/70 leading-snug">{piece.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- ── Divider ── -->
+              <div class="w-full h-px bg-white/8 my-10"></div>
+
+              <!-- Style Icons -->
+              <div>
+                <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-5">
+                  Style Icons
+                </p>
+                <div class="flex flex-wrap gap-6">
+                  {visuals.styleIcons.map((icon) => (
+                    <div class="group flex flex-col items-center">
+                      <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden
+                                  border-2 border-white/15 group-hover:border-accent/50
+                                  transition-all duration-300">
+                        <!-- Actual image (hidden if load fails) -->
+                        <img
+                          src={icon.image}
+                          alt={icon.name}
+                          class="icon-img absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                        <!-- Letter fallback (shown when image fails) -->
+                        <div class="icon-fallback absolute inset-0 w-full h-full bg-white/10
+                                    flex items-center justify-center
+                                    font-heading text-2xl text-white/30">
+                          {icon.name[0]}
+                        </div>
+                      </div>
+                      <span class="mt-2 font-body text-xs text-white/50
+                                   group-hover:text-white/80 transition-colors duration-200">
+                        {icon.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            /* Fallback if no visuals data exists for this archetype */
+            <div class="archetype-prose font-body text-white/75 text-base leading-relaxed space-y-4">
+              <p class="text-white/50 italic">Visual data coming soon.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -260,36 +364,38 @@ const otherGenderLabel = isFeminine ? 'Masculine' : 'Feminine';
 
 
 <style>
-  /* ── Archetype prose styling ─────────────────────────── */
-  .archetype-prose :global(p) {
-    margin-bottom: 1rem;
-  }
-
-  .archetype-prose :global(strong) {
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 600;
-  }
-
-  .archetype-prose :global(em) {
-    color: rgba(184, 151, 126, 0.85);
-    font-style: italic;
-  }
-
-  /* Style for the palette/icons/pieces sections */
-  .archetype-prose :global(p:last-child) {
-    margin-bottom: 0;
-  }
-
-  /* Active shade chip */
+  /* ── Active shade chip ─────────────────────────────────── */
   .shade-chip[aria-checked="true"] {
     background: rgba(184, 151, 126, 0.15);
     border-color: rgba(184, 151, 126, 0.4);
     color: white;
   }
+
+  /* ── Style icon image/fallback layering ────────────────── */
+  /* When the image loads successfully, it covers the fallback letter.
+     When it fails, onerror hides it and the fallback shows through. */
+  .icon-img {
+    z-index: 1;
+  }
+  .icon-fallback {
+    z-index: 0;
+  }
+  .icon-img.is-hidden {
+    display: none;
+  }
 </style>
 
 
 <script>
+  // ── Style icon image fallback ──────────────────────────────
+  // Hide broken images so the letter-initial fallback shows through.
+
+  document.querySelectorAll<HTMLImageElement>('.icon-img').forEach((img) => {
+    img.addEventListener('error', () => {
+      img.classList.add('is-hidden');
+    });
+  });
+
   // ── "With Shades Of" selector ─────────────────────────────
   // Toggles shade descriptions when user clicks a secondary archetype chip.
 
