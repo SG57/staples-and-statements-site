@@ -104,6 +104,15 @@
     user-select: none;
   }
 
+  /* ── Compact section headers: fixed positioning ────────
+     Fixed instead of sticky so they never create gaps or shift
+     content below them. JS controls visibility via opacity. */
+  .section-header-compact {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+  }
+
   a:hover {
     color: var(--color-primary);
   }
