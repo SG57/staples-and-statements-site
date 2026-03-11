@@ -245,7 +245,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 ---
 
 <div
-  class="quiz-root"
+  class="quiz-root overflow-hidden"
   id={`quiz-${quizId}`}
   data-gender={gender}
   data-quiz-id={quizId}
@@ -278,7 +278,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     </div>
 
     <!-- RIGHT: question + answers panel -->
-    <div class="quiz-content-panel relative flex-1 flex flex-col bg-primary/95 backdrop-blur-sm p-4 md:p-8 overflow-y-auto">
+    <div class="quiz-content-panel relative flex-1 flex flex-col bg-primary/95 backdrop-blur-sm p-4 md:p-8 overflow-y-auto overflow-x-hidden quiz-hide-scrollbar">
 
       <!-- Progress: live region -->
       <div class="sr-only" aria-live="polite" id={`quiz-${quizId}-live`}>
@@ -466,7 +466,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   </div>
 
   <!-- ── RESULTS VIEW ──────────────────────────────────────── -->
-  <div class="quiz-results hidden h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto" aria-label="Your style archetype result">
+  <div class="quiz-results hidden h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto overflow-x-hidden quiz-hide-scrollbar" aria-label="Your style archetype result">
     <div class="flex flex-col items-center text-center py-8 md:py-12 px-6">
 
       <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Your Style Archetype</p>
@@ -791,6 +791,15 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     opacity: 1 !important;
     transform: translate(-50%, 0) !important;
     pointer-events: auto !important;
+  }
+
+  /* ── Hide scrollbars while keeping scroll functional ──────── */
+  .quiz-hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  .quiz-hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
   }
 
   /* ── Reduced motion ───────────────────────────────────────── */
