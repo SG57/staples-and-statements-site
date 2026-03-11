@@ -469,7 +469,9 @@ const GA4_ID = 'G-XXXXXXXXXX';
     fabController = new AbortController();
     const signal = fabController.signal;
 
-    const SCROLL_SHOW = 300;
+    // Show FABs once the user has scrolled past the first viewport
+    // (i.e. past the hero / first section)
+    const SCROLL_SHOW = window.innerHeight;
     let fabVisible  = false;
     let menuOpen    = false;
     let ticking     = false;

@@ -124,9 +124,6 @@ const calendlyURL = '/contact';
       <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-primary to-transparent pointer-events-none"></div>
 
       <div class="relative z-10 mx-auto max-w-7xl">
-        <!-- Sentinel: when this leaves viewport, compact header appears -->
-        <div class="section-sentinel" data-section="feminine" aria-hidden="true"></div>
-
         <!-- FULL header (normal flow — the "large and in charge" version) -->
         <div class="section-header-full text-center mb-10 transition-opacity duration-500" data-section-full="feminine">
           <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
@@ -135,29 +132,6 @@ const calendlyURL = '/contact';
           <p class="mt-4 font-body text-white/60 text-base max-w-xl mx-auto leading-relaxed">
             Every woman is a blend — but most have one dominant archetype. Which one resonates with you?
           </p>
-        </div>
-
-        <!-- COMPACT sticky header (hidden until full header scrolls away) -->
-        <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                    bg-primary/85 backdrop-blur-md border-b border-white/8
-                    px-6 py-3 mb-4
-                    opacity-0 pointer-events-none
-                    transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-             data-section-compact="feminine">
-          <div class="group/title inline-flex items-center gap-3 cursor-default">
-            <div class="w-6 h-px bg-accent"></div>
-            <p class="font-body text-[10px] tracking-widest uppercase text-accent">The Seven Types</p>
-            <span class="text-white/20">|</span>
-            <h2 class="font-heading text-white text-lg font-semibold">The Feminine Archetypes</h2>
-          </div>
-          <!-- Description: only expands when hovering over the title text -->
-          <div class="max-h-0 overflow-hidden opacity-0
-                      group-hover/title:max-h-16 group-hover/title:opacity-100
-                      transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            <p class="mt-2 font-body text-white/50 text-sm max-w-xl leading-relaxed">
-              Every woman is a blend — but most have one dominant archetype. Which one resonates with you?
-            </p>
-          </div>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -340,9 +314,6 @@ const calendlyURL = '/contact';
       <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-primary to-transparent pointer-events-none"></div>
 
       <div class="relative z-10 mx-auto max-w-7xl">
-        <!-- Sentinel -->
-        <div class="section-sentinel" data-section="masculine" aria-hidden="true"></div>
-
         <!-- FULL header -->
         <div class="section-header-full text-center mb-10 transition-opacity duration-500" data-section-full="masculine">
           <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
@@ -351,28 +322,6 @@ const calendlyURL = '/contact';
           <p class="mt-4 font-body text-white/60 text-base max-w-xl mx-auto leading-relaxed">
             Every man's style is rooted in an archetype. Find the one that captures how you move through the world.
           </p>
-        </div>
-
-        <!-- COMPACT sticky header -->
-        <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                    bg-primary/85 backdrop-blur-md border-b border-white/8
-                    px-6 py-3 mb-4
-                    opacity-0 pointer-events-none
-                    transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-             data-section-compact="masculine">
-          <div class="group/title inline-flex items-center gap-3 cursor-default">
-            <div class="w-6 h-px bg-accent"></div>
-            <p class="font-body text-[10px] tracking-widest uppercase text-accent">The Archetypes</p>
-            <span class="text-white/20">|</span>
-            <h2 class="font-heading text-white text-lg font-semibold">The Masculine Archetypes</h2>
-          </div>
-          <div class="max-h-0 overflow-hidden opacity-0
-                      group-hover/title:max-h-16 group-hover/title:opacity-100
-                      transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            <p class="mt-2 font-body text-white/50 text-sm max-w-xl leading-relaxed">
-              Every man's style is rooted in an archetype. Find the one that captures how you move through the world.
-            </p>
-          </div>
         </div>
 
         {masculineSorted.length > 0 ? (
@@ -505,9 +454,6 @@ const calendlyURL = '/contact';
   <!-- ── STYLE GUIDES CTA ──────────────────────────────── -->
   <section class="py-20 px-6 bg-primary" aria-label="Style guides">
     <div class="mx-auto max-w-7xl">
-      <!-- Sentinel -->
-      <div class="section-sentinel" data-section="guides" aria-hidden="true"></div>
-
       <!-- FULL header -->
       <div class="section-header-full transition-opacity duration-500" data-section-full="guides">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 py-10 border-t border-b border-white/10">
@@ -519,21 +465,6 @@ const calendlyURL = '/contact';
               In-depth style guides for your archetype — from $15. Instant download.
             </p>
           </div>
-        </div>
-      </div>
-
-      <!-- COMPACT sticky header -->
-      <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                  bg-primary/85 backdrop-blur-md border-b border-white/8
-                  px-6 py-3 mb-4
-                  opacity-0 pointer-events-none
-                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-           data-section-compact="guides">
-        <div class="group/title inline-flex items-center gap-3 cursor-default">
-          <div class="w-6 h-px bg-accent"></div>
-          <p class="font-body text-[10px] tracking-widest uppercase text-accent">Digital Guides</p>
-          <span class="text-white/20">|</span>
-          <h2 class="font-heading text-white text-lg font-semibold">Take Your Archetype Home</h2>
         </div>
       </div>
 
@@ -1243,38 +1174,4 @@ const calendlyURL = '/contact';
 </script>
 
 <script>
-  // ── Sticky section header crossfade ────────────────────────────
-  // Full headers show when in natural flow. Compact sticky headers
-  // fade in when the sentinel (placed before the full header) leaves
-  // the viewport — meaning the full header has scrolled past.
-
-  document.addEventListener('astro:page-load', () => {
-    const page = document.getElementById('archetypes-page');
-    if (!page) return;
-
-    const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
-    if (sentinels.length === 0) return;
-
-    const seenSentinels = new Set<string>();
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const section = (entry.target as HTMLElement).dataset.section;
-        if (!section) return;
-        const compact = document.querySelector<HTMLElement>(`[data-section-compact="${section}"]`);
-        if (!compact) return;
-
-        if (entry.isIntersecting) {
-          seenSentinels.add(section);
-          compact.style.opacity = '0';
-          compact.style.pointerEvents = 'none';
-        } else if (seenSentinels.has(section)) {
-          compact.style.opacity = '1';
-          compact.style.pointerEvents = 'auto';
-        }
-      });
-    }, { threshold: 0, rootMargin: '-30px 0px 0px 0px' });
-
-    sentinels.forEach(s => observer.observe(s));
-  });
 </script>

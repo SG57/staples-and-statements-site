@@ -68,9 +68,6 @@ const ltkCollections = [
   <!-- ── STYLE GUIDES ──────────────────────────────────── -->
   <section class="py-20 px-6 bg-background" aria-label="Style guides" id="style-guides">
     <div class="mx-auto max-w-7xl">
-      <!-- Sentinel -->
-      <div class="section-sentinel" data-section="shop-guides" aria-hidden="true"></div>
-
       <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
         <div>
           <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Digital Downloads</p>
@@ -78,21 +75,6 @@ const ltkCollections = [
           <p class="mt-2 font-body text-text-muted text-base max-w-lg leading-relaxed">
             Instant download. Read on any device. Reference for life. Each guide is a concentrated dose of Danielle's expertise for a specific style challenge.
           </p>
-        </div>
-      </div>
-
-      <!-- COMPACT sticky header -->
-      <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                  bg-background/85 backdrop-blur-md border-b border-surface-dark/40
-                  px-6 py-3 mb-4
-                  opacity-0 pointer-events-none
-                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-           data-section-compact="shop-guides">
-        <div class="inline-flex items-center gap-3">
-          <div class="w-6 h-px bg-accent"></div>
-          <p class="font-body text-[10px] tracking-widest uppercase text-accent">Digital Downloads</p>
-          <span class="text-primary/20">|</span>
-          <h2 class="font-heading text-primary text-lg font-semibold">Style Guides</h2>
         </div>
       </div>
 
@@ -146,9 +128,6 @@ const ltkCollections = [
   <!-- ── LTK COLLECTIONS ───────────────────────────────── -->
   <section class="py-20 px-6 bg-primary" aria-label="LTK curated picks" id="ltk-picks">
     <div class="mx-auto max-w-7xl">
-      <!-- Sentinel -->
-      <div class="section-sentinel" data-section="shop-ltk" aria-hidden="true"></div>
-
       <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
         <div>
           <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">LTK Collections</p>
@@ -165,21 +144,6 @@ const ltkCollections = [
         >
           View Full LTK Profile →
         </a>
-      </div>
-
-      <!-- COMPACT sticky header -->
-      <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                  bg-primary/85 backdrop-blur-md border-b border-white/8
-                  px-6 py-3 mb-4
-                  opacity-0 pointer-events-none
-                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-           data-section-compact="shop-ltk">
-        <div class="inline-flex items-center gap-3">
-          <div class="w-6 h-px bg-accent"></div>
-          <p class="font-body text-[10px] tracking-widest uppercase text-accent">LTK Collections</p>
-          <span class="text-white/20">|</span>
-          <h2 class="font-heading text-white text-lg font-semibold">Shop My Curated Picks</h2>
-        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -210,29 +174,10 @@ const ltkCollections = [
   <!-- ── PERSONALIZED CTA ──────────────────────────────── -->
   <section class="py-20 lg:py-28 px-6 bg-surface" aria-label="Personalized styling">
     <div class="mx-auto max-w-3xl text-center">
-      <!-- Sentinel -->
-      <div class="section-sentinel" data-section="shop-cta" aria-hidden="true"></div>
-
       <div class="w-8 h-px bg-accent mx-auto mb-8"></div>
       <h2 class="font-heading text-primary text-4xl lg:text-5xl">
         Want a wardrobe curated just for you?
       </h2>
-      <!-- COMPACT sticky header -->
-      <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                  bg-surface/85 backdrop-blur-md border-b border-surface-dark/40
-                  px-6 py-3 mb-4
-                  opacity-0 pointer-events-none
-                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
-                  text-left"
-           data-section-compact="shop-cta">
-        <div class="inline-flex items-center gap-3">
-          <div class="w-6 h-px bg-accent"></div>
-          <p class="font-body text-[10px] tracking-widest uppercase text-accent">Personalized</p>
-          <span class="text-primary/20">|</span>
-          <h2 class="font-heading text-primary text-lg font-semibold">Curated Just for You</h2>
-        </div>
-      </div>
-
       <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
         Style guides and LTK collections are a great starting point — but nothing compares to a wardrobe built specifically around your body, your colors, your life, and your archetype.
       </p>
@@ -244,34 +189,5 @@ const ltkCollections = [
       </a>
     </div>
   </section>
-
-  <!-- ── Sticky section header observer ──────────────────── -->
-  <script>
-    document.addEventListener('astro:page-load', () => {
-      const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
-      if (sentinels.length === 0) return;
-
-      const seenSentinels = new Set<string>();
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const section = (entry.target as HTMLElement).dataset.section;
-          if (!section) return;
-          const compact = document.querySelector<HTMLElement>(`[data-section-compact="${section}"]`);
-          if (!compact) return;
-          if (entry.isIntersecting) {
-            seenSentinels.add(section);
-            compact.style.opacity = '0';
-            compact.style.pointerEvents = 'none';
-          } else if (seenSentinels.has(section)) {
-            compact.style.opacity = '1';
-            compact.style.pointerEvents = 'auto';
-          }
-        });
-      }, { threshold: 0, rootMargin: '-30px 0px 0px 0px' });
-
-      sentinels.forEach(s => observer.observe(s));
-    });
-  </script>
 
 </BaseLayout>

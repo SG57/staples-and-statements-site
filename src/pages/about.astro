@@ -107,24 +107,6 @@ const calendlyURL = '/contact';
   <!-- ── PHILOSOPHY ────────────────────────────────────── -->
   <section class="py-20 px-6 bg-primary" aria-label="Styling philosophy">
     <div class="mx-auto max-w-7xl">
-      <!-- Sentinel -->
-      <div class="section-sentinel" data-section="about-philosophy" aria-hidden="true"></div>
-
-      <!-- COMPACT sticky header -->
-      <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                  bg-primary/85 backdrop-blur-md border-b border-white/8
-                  px-6 py-3 mb-4
-                  opacity-0 pointer-events-none
-                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-           data-section-compact="about-philosophy">
-        <div class="inline-flex items-center gap-3">
-          <div class="w-6 h-px bg-accent"></div>
-          <p class="font-body text-[10px] tracking-widest uppercase text-accent">The Approach</p>
-          <span class="text-white/20">|</span>
-          <h2 class="font-heading text-white text-lg font-semibold">The Archetype Framework</h2>
-        </div>
-      </div>
-
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
         <div>
           <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Approach</p>
@@ -172,28 +154,11 @@ const calendlyURL = '/contact';
   <!-- ── VALUES ────────────────────────────────────────── -->
   <section class="py-20 px-6 bg-surface" aria-label="Styling values">
     <div class="mx-auto max-w-7xl">
-      <!-- Sentinel -->
-      <div class="section-sentinel" data-section="about-values" aria-hidden="true"></div>
-
       <div class="text-center mb-14">
         <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">The Principles</p>
         <h2 class="font-heading text-primary text-4xl">What Danielle Believes</h2>
       </div>
 
-      <!-- COMPACT sticky header -->
-      <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                  bg-surface/85 backdrop-blur-md border-b border-surface-dark/40
-                  px-6 py-3 mb-4
-                  opacity-0 pointer-events-none
-                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-           data-section-compact="about-values">
-        <div class="inline-flex items-center gap-3">
-          <div class="w-6 h-px bg-accent"></div>
-          <p class="font-body text-[10px] tracking-widest uppercase text-accent">The Principles</p>
-          <span class="text-primary/20">|</span>
-          <h2 class="font-heading text-primary text-lg font-semibold">What Danielle Believes</h2>
-        </div>
-      </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
           {
@@ -225,29 +190,10 @@ const calendlyURL = '/contact';
   <!-- ── CTA ───────────────────────────────────────────── -->
   <section class="py-20 lg:py-28 px-6 bg-background" aria-label="Start your style journey">
     <div class="mx-auto max-w-3xl text-center">
-      <!-- Sentinel -->
-      <div class="section-sentinel" data-section="about-cta" aria-hidden="true"></div>
-
       <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The First Step</p>
       <h2 class="font-heading text-primary text-4xl lg:text-5xl">
         Ready to start your style journey?
       </h2>
-      <!-- COMPACT sticky header -->
-      <div class="section-header-compact sticky top-16 lg:top-20 z-30
-                  bg-background/85 backdrop-blur-md border-b border-surface-dark/40
-                  px-6 py-3 mb-4
-                  opacity-0 pointer-events-none
-                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
-                  text-left"
-           data-section-compact="about-cta">
-        <div class="inline-flex items-center gap-3">
-          <div class="w-6 h-px bg-accent"></div>
-          <p class="font-body text-[10px] tracking-widest uppercase text-accent">The First Step</p>
-          <span class="text-primary/20">|</span>
-          <h2 class="font-heading text-primary text-lg font-semibold">Ready to Start?</h2>
-        </div>
-      </div>
-
       <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
         Every client engagement begins with a free 20-minute consultation. It's a conversation — no pressure, no commitment — just clarity on where you are and where you want to be.
       </p>
@@ -259,34 +205,5 @@ const calendlyURL = '/contact';
       </a>
     </div>
   </section>
-
-  <!-- ── Sticky section header observer ──────────────────── -->
-  <script>
-    document.addEventListener('astro:page-load', () => {
-      const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
-      if (sentinels.length === 0) return;
-
-      const seenSentinels = new Set<string>();
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const section = (entry.target as HTMLElement).dataset.section;
-          if (!section) return;
-          const compact = document.querySelector<HTMLElement>(`[data-section-compact="${section}"]`);
-          if (!compact) return;
-          if (entry.isIntersecting) {
-            seenSentinels.add(section);
-            compact.style.opacity = '0';
-            compact.style.pointerEvents = 'none';
-          } else if (seenSentinels.has(section)) {
-            compact.style.opacity = '1';
-            compact.style.pointerEvents = 'auto';
-          }
-        });
-      }, { threshold: 0, rootMargin: '-30px 0px 0px 0px' });
-
-      sentinels.forEach(s => observer.observe(s));
-    });
-  </script>
 
 </BaseLayout>

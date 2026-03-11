@@ -27,10 +27,10 @@ const currentPath = Astro.url.pathname;
 <header
   id="site-nav"
   class:list={[
-    'fixed top-0 left-0 right-0 z-50 border-b',
+    'z-50 border-b',
     transparentNav
-      ? 'nav-transparent border-transparent'
-      : 'bg-background/95 backdrop-blur-sm border-surface-dark',
+      ? 'absolute top-0 left-0 right-0 nav-transparent border-transparent'
+      : 'relative bg-background/95 backdrop-blur-sm border-surface-dark',
   ]}
 >
   <nav class="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Primary navigation">
@@ -138,8 +138,8 @@ const currentPath = Astro.url.pathname;
   </nav>
 </header>
 
-<!-- Spacer: omitted when transparentNav=true — the hero uses min-h-screen -->
-{!transparentNav && <div class="h-16 lg:h-20" aria-hidden="true"></div>}
+<!-- No spacer needed — nav is in normal document flow (non-transparent) or
+     absolute-positioned over the hero (transparent). -->
 
 <script>
   // ── Mobile menu ─────────────────────────────────────────────────────────
