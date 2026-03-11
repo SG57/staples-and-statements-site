@@ -311,25 +311,16 @@
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --grain: 4;  /* TEST: set to 4 (max) to preview — dial back to 1 or 2 when done */
+  --grain: 2;  /* 0=off  1=whisper  2=subtle  3=present  4=bold */
 }
 
-/* Grain overlay is created by JS in BaseLayout.astro (canvas-based RGBA noise).
-   CSS controls the intensity level; JS reads it and scales alpha accordingly.
-   The #grain-overlay element is injected once and persists across navigations. */
-#grain-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9000;
-  background-repeat: repeat;
-  background-size: 256px 256px;
-}
-
-/* Disable for users who prefer reduced transparency/contrast */
-@media (prefers-contrast: more) {
-  #grain-overlay { display: none; }
-}
+/* Grain texture — applied as CSS background-image on flat background sections.
+   background-image stacks ABOVE background-color but BELOW all HTML content,
+   so grain appears on solid color backgrounds and is invisible behind <img>
+   elements and does not overlay text.
+   JS in BaseLayout.astro generates the canvas texture and injects a <style>
+   tag targeting these classes. Change --grain to tune intensity:
+     0=off  1=whisper  2=subtle  3=present  4=bold */
 
 /* ═══════════════════════════════════════════════════════════
    TEXT BLOOM SYSTEM
