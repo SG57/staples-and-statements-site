@@ -1,0 +1,1062 @@
+---
+/**
+ * ArchetypeQuiz.astro — Interactive style archetype quiz wizard
+ *
+ * Split-screen editorial layout: mood image left, questions right.
+ * 7 questions per gender, multi-select answer chips, animated transitions,
+ * results view with sharing. Fully self-contained — no external deps.
+ */
+
+interface Props {
+  gender: 'feminine' | 'masculine';
+  quizId: string;
+}
+
+const { gender, quizId } = Astro.props;
+const isFeminine = gender === 'feminine';
+const otherGender = isFeminine ? 'masculine' : 'feminine';
+const questionCount = 7;
+
+/* ── Quiz data ─────────────────────────────────────────────────── */
+
+const feminineQuestions = [
+  {
+    id: 1,
+    text: 'The energy I express most naturally is:',
+    image: '/images/archetypes/the-siren-1.webp',
+    options: [
+      { letter: 'A', text: 'Seductive, bold, captivating' },
+      { letter: 'B', text: 'Soft, dreamy, ethereal' },
+      { letter: 'C', text: 'Driven, powerful, assertive' },
+      { letter: 'D', text: 'Mysterious, alluring, magnetic' },
+      { letter: 'E', text: 'Artistic, expressive, imaginative' },
+      { letter: 'F', text: 'Nurturing, grounding, abundant' },
+      { letter: 'G', text: 'Kind, peaceful, gentle' },
+    ],
+  },
+  {
+    id: 2,
+    text: 'I feel most confident when I wear:',
+    image: '/images/archetypes/the-muse-1.webp',
+    options: [
+      { letter: 'A', text: 'Form-fitted pieces that highlight my curves' },
+      { letter: 'B', text: 'Flowy silhouettes and soft fabrics' },
+      { letter: 'C', text: 'Structured, clean-lined outfits' },
+      { letter: 'D', text: 'Deep colors and intricate details' },
+      { letter: 'E', text: 'Statement pieces or creative combinations' },
+      { letter: 'F', text: 'Luxe, elevated basics' },
+      { letter: 'G', text: 'Light colors and airy fabrics' },
+    ],
+  },
+  {
+    id: 3,
+    text: 'My natural presence feels:',
+    image: '/images/archetypes/the-warrior-1.webp',
+    options: [
+      { letter: 'A', text: 'Fiery' },
+      { letter: 'B', text: 'Soft' },
+      { letter: 'C', text: 'Commanding' },
+      { letter: 'D', text: 'Intense' },
+      { letter: 'E', text: 'Playful' },
+      { letter: 'F', text: 'Warm' },
+      { letter: 'G', text: 'Calm' },
+    ],
+  },
+  {
+    id: 4,
+    text: 'My ideal date-night look is:',
+    image: '/images/archetypes/the-enchantress-1.webp',
+    options: [
+      { letter: 'A', text: 'Red dress, heels, and a bold lip' },
+      { letter: 'B', text: 'Slip dress, soft curls, glowy makeup' },
+      { letter: 'C', text: 'Sleek trousers, blazer, minimal jewelry' },
+      { letter: 'D', text: 'Dark lace, smoky eyes, layered jewelry' },
+      { letter: 'E', text: 'Mixed textures, unexpected pop of color' },
+      { letter: 'F', text: 'Silk blouse, gold jewelry, tailored trousers' },
+      { letter: 'G', text: 'Pastels, dainty jewelry, natural makeup' },
+    ],
+  },
+  {
+    id: 5,
+    text: 'My dream closet is full of:',
+    image: '/images/archetypes/the-creator-1.webp',
+    options: [
+      { letter: 'A', text: 'Sultry silhouettes' },
+      { letter: 'B', text: 'Romantic fabrics' },
+      { letter: 'C', text: 'Power pieces' },
+      { letter: 'D', text: 'Dark glamour' },
+      { letter: 'E', text: 'Creative staples' },
+      { letter: 'F', text: 'High-quality neutrals' },
+      { letter: 'G', text: 'Angelic simplicity' },
+    ],
+  },
+  {
+    id: 6,
+    text: 'I make decisions based on:',
+    image: '/images/archetypes/the-empress-1.webp',
+    options: [
+      { letter: 'A', text: 'Desire' },
+      { letter: 'B', text: 'Emotion' },
+      { letter: 'C', text: 'Logic' },
+      { letter: 'D', text: 'Intuition' },
+      { letter: 'E', text: 'Inspiration' },
+      { letter: 'F', text: 'Stability' },
+      { letter: 'G', text: 'Harmony' },
+    ],
+  },
+  {
+    id: 7,
+    text: 'People often describe my vibe as:',
+    image: '/images/archetypes/the-angelic-one-1.webp',
+    options: [
+      { letter: 'A', text: 'Magnetic' },
+      { letter: 'B', text: 'Dreamy' },
+      { letter: 'C', text: 'Strong' },
+      { letter: 'D', text: 'Intriguing' },
+      { letter: 'E', text: 'Unforgettable' },
+      { letter: 'F', text: 'Elegant' },
+      { letter: 'G', text: 'Sweet' },
+    ],
+  },
+];
+
+const masculineQuestions = [
+  {
+    id: 1,
+    text: 'When you get dressed, what matters most to you beneath the surface? Feeling ...',
+    image: '/images/archetypes/the-protector-1.webp',
+    options: [
+      { letter: 'A', text: 'Grounded, capable and ready for whatever the day brings' },
+      { letter: 'B', text: 'Unrestricted, expressive and able to move freely through the world' },
+      { letter: 'C', text: 'Intentional, composed and like your outer appearance reflects inner clarity' },
+      { letter: 'D', text: 'Emotionally attuned to your current mood, inner shifts or creative state' },
+      { letter: 'E', text: 'Fully aligned \u2014 like your outfit disappears and you just feel like yourself' },
+    ],
+  },
+  {
+    id: 2,
+    text: 'If your style changes often, it\u2019s usually because ...',
+    image: '/images/archetypes/the-maverick-1.webp',
+    options: [
+      { letter: 'A', text: 'You adapt to your environment & dress for reliability + function' },
+      { letter: 'B', text: 'You resist repetition & crave freedom, novelty + movement' },
+      { letter: 'C', text: 'You refine your look over time, adjusting details rather than reinventing yourself' },
+      { letter: 'D', text: 'You experience life in phases & your style evolves alongside your inner world' },
+      { letter: 'E', text: 'Your style integrates many influences & shifts without losing coherence' },
+    ],
+  },
+  {
+    id: 3,
+    text: 'How do people most often experience your presence when you enter a room?',
+    image: '/images/archetypes/the-architect-1.webp',
+    options: [
+      { letter: 'A', text: 'Steady, grounding & reassuring' },
+      { letter: 'B', text: 'Energetic, intriguing & hard to predict' },
+      { letter: 'C', text: 'Focused, sharp & intentional' },
+      { letter: 'D', text: 'Intense, layered & emotionally resonant' },
+      { letter: 'E', text: 'Calm, self-possessed & centered' },
+    ],
+  },
+  {
+    id: 4,
+    text: 'When you shop for clothes, what pulls you in first?',
+    image: '/images/archetypes/the-alchemist-1.webp',
+    options: [
+      { letter: 'A', text: 'Quality, durability & pieces that feel dependable over time' },
+      { letter: 'B', text: 'Unusual details, statement items, or things that feel different from the norm' },
+      { letter: 'C', text: 'Clean lines, thoughtful construction & architectural shapes' },
+      { letter: 'D', text: 'Texture, contrast, mood & depth \u2014 how something feels more than how it looks' },
+      { letter: 'E', text: 'Pieces that immediately feel right, even if you can\u2019t explain why' },
+    ],
+  },
+  {
+    id: 5,
+    text: 'Your relationship to trends can best be described as ...',
+    image: '/images/archetypes/the-sovereign-1.webp',
+    options: [
+      { letter: 'A', text: 'Mostly indifferent \u2014 you prefer timelessness over novelty' },
+      { letter: 'B', text: 'Playful \u2014 you enjoy bending or remixing trends on your own terms' },
+      { letter: 'C', text: 'Strategic \u2014 you adopt trends selectively if they align with your vision' },
+      { letter: 'D', text: 'Curious \u2014 you explore trends as a form of self-expression or experimentation' },
+      { letter: 'E', text: 'Detached \u2014 trends don\u2019t define you, & you don\u2019t react strongly to them' },
+    ],
+  },
+  {
+    id: 6,
+    text: 'You feel most confident when your appearance communicates ...',
+    image: '/images/archetypes/ensemble-masculine-hero.webp',
+    options: [
+      { letter: 'A', text: 'Capability, reliability & quiet strength' },
+      { letter: 'B', text: 'Freedom, individuality & openness' },
+      { letter: 'C', text: 'Competence, intention & clarity' },
+      { letter: 'D', text: 'Emotional depth, creativity or internal movement' },
+      { letter: 'E', text: 'Alignment \u2014 nothing feels forced & everything feels natural' },
+    ],
+  },
+  {
+    id: 7,
+    text: 'When you think about your style identity overall, it feels ...',
+    image: '/images/archetypes/ensemble-masculine-cards.webp',
+    options: [
+      { letter: 'A', text: 'Steady & rooted \u2014 you know what works and return to it' },
+      { letter: 'B', text: 'Versatile & hard to pin down \u2014 labels feel limiting' },
+      { letter: 'C', text: 'Defined & purposeful \u2014 your style has a clear through line' },
+      { letter: 'D', text: 'Fluid & evolving \u2014 your style mirrors your internal transformations' },
+      { letter: 'E', text: 'Integrated & whole \u2014 all parts of you are allowed to coexist' },
+    ],
+  },
+];
+
+const questions = isFeminine ? feminineQuestions : masculineQuestions;
+
+/* Archetype metadata for results display */
+const feminineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string }> = {
+  A: { name: 'The Siren', icon: '\u25C9', color: '#8c4a3e', slug: 'the-siren' },
+  B: { name: 'The Muse', icon: '\u2726', color: '#c9b8d4', slug: 'the-muse' },
+  C: { name: 'The Warrior', icon: '\u25B2', color: '#5a5a5a', slug: 'the-warrior' },
+  D: { name: 'The Enchantress', icon: '\u25C8', color: '#4a3d5c', slug: 'the-enchantress' },
+  E: { name: 'The Creator', icon: '\u25D0', color: '#6b8c6e', slug: 'the-creator' },
+  F: { name: 'The Empress', icon: '\u265B', color: '#8b6b4a', slug: 'the-empress' },
+  G: { name: 'The Angelic One', icon: '\u2727', color: '#e8ddd4', slug: 'the-angelic-one' },
+};
+
+const masculineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string }> = {
+  A: { name: 'The Protector', icon: '\u25C6', color: '#2c3e50', slug: 'the-protector' },
+  B: { name: 'The Maverick', icon: '\u25C7', color: '#2d1b33', slug: 'the-maverick' },
+  C: { name: 'The Architect', icon: '\u25FC', color: '#1a1a2e', slug: 'the-architect' },
+  D: { name: 'The Alchemist', icon: '\u25CE', color: '#4a2d3e', slug: 'the-alchemist' },
+  E: { name: 'The Sovereign', icon: '\u2B21', color: '#1a3a2a', slug: 'the-sovereign' },
+};
+
+const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypesMeta;
+---
+
+<div
+  class="quiz-root"
+  id={`quiz-${quizId}`}
+  data-gender={gender}
+  data-quiz-id={quizId}
+  data-questions={JSON.stringify(questions)}
+  data-archetypes={JSON.stringify(archetypesMeta)}
+>
+  <!-- ── QUIZ BODY: split-screen layout ────────────────────── -->
+  <div class="quiz-body flex flex-col md:flex-row w-full min-h-[600px] md:min-h-[680px] overflow-hidden rounded-sm border border-white/10">
+
+    <!-- LEFT: mood image panel -->
+    <div class="quiz-image-panel relative w-full md:w-[40%] h-[30vh] md:h-auto shrink-0 overflow-hidden bg-primary">
+      {questions.map((q, i) => (
+        <img
+          src={q.image}
+          alt={`Question ${q.id} mood`}
+          class:list={[
+            'quiz-mood-img absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
+            i === 0 ? 'opacity-100' : 'opacity-0',
+          ]}
+          data-q-img={i}
+          loading={i === 0 ? 'eager' : 'lazy'}
+        />
+      ))}
+      <!-- Gradient overlay for image panel -->
+      <div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-primary/30 pointer-events-none"></div>
+      <!-- Question counter overlay on mobile -->
+      <div class="quiz-q-badge absolute top-4 left-4 md:hidden font-body text-xs tracking-widest uppercase text-white/80 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-sm">
+        <span class="quiz-q-current">1</span> / {questionCount}
+      </div>
+    </div>
+
+    <!-- RIGHT: question + answers panel -->
+    <div class="quiz-content-panel relative flex-1 flex flex-col bg-primary/95 backdrop-blur-sm p-6 md:p-10 overflow-hidden">
+
+      <!-- Progress: live region -->
+      <div class="sr-only" aria-live="polite" id={`quiz-${quizId}-live`}>
+        Question 1 of {questionCount}
+      </div>
+
+      <!-- Desktop question counter -->
+      <div class="hidden md:block font-body text-xs tracking-widest uppercase text-white/50 mb-6">
+        Question <span class="quiz-q-current text-accent">1</span> of {questionCount}
+      </div>
+
+      <!-- Question slides container -->
+      <div class="quiz-slides relative flex-1">
+        {questions.map((q, i) => (
+          <div
+            class:list={[
+              'quiz-slide absolute inset-0 flex flex-col',
+              i === 0 ? 'quiz-slide-active' : 'quiz-slide-next',
+            ]}
+            data-slide={i}
+            role="group"
+            aria-label={`Question ${q.id} of ${questionCount}`}
+          >
+            <h3 class="font-heading text-white text-xl md:text-2xl lg:text-3xl font-semibold leading-snug mb-6 md:mb-8 max-w-lg">
+              {q.text}
+            </h3>
+
+            <div
+              class:list={[
+                'quiz-options grid gap-2.5',
+                q.options.length <= 5
+                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2'
+                  : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+              ]}
+              role="group"
+              aria-label={`Answer options for question ${q.id}`}
+            >
+              {q.options.map((opt) => (
+                <button
+                  type="button"
+                  class="quiz-chip group/chip relative flex flex-col items-center justify-center text-center
+                         px-3 py-4 md:px-4 md:py-5 min-h-[68px] md:min-h-[80px]
+                         bg-white/5 backdrop-blur-sm border border-white/10
+                         hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]
+                         transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+                         focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
+                         cursor-pointer select-none"
+                  role="checkbox"
+                  aria-checked="false"
+                  data-letter={opt.letter}
+                  data-q={i}
+                >
+                  <!-- Checkmark indicator (top-right, shown when selected) -->
+                  <span class="quiz-chip-check absolute top-1.5 right-1.5 w-4 h-4 flex items-center justify-center
+                               rounded-full bg-accent/0 text-white/0 text-[10px] leading-none
+                               transition-all duration-200">
+                    &#10003;
+                  </span>
+                  <span class="font-heading text-[1.75rem] leading-none text-accent/70 mb-1.5
+                               group-hover/chip:text-accent transition-colors duration-200">
+                    {opt.letter}
+                  </span>
+                  <span class="font-body text-xs md:text-sm text-white/70 leading-snug
+                               group-hover/chip:text-white/90 transition-colors duration-200">
+                    {opt.text}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Navigation bar -->
+      <div class="quiz-nav flex items-center justify-between mt-6 pt-4 border-t border-white/10">
+        <!-- Back button -->
+        <button
+          type="button"
+          class="quiz-btn-back font-body text-sm text-white/50 hover:text-white
+                 transition-colors duration-200 flex items-center gap-1.5
+                 disabled:opacity-0 disabled:pointer-events-none
+                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          disabled
+          aria-label="Previous question"
+        >
+          <span aria-hidden="true">&larr;</span> Back
+        </button>
+
+        <!-- Progress dots -->
+        <div class="quiz-dots flex items-center gap-2" role="tablist" aria-label="Quiz progress">
+          {Array.from({ length: questionCount }).map((_, i) => (
+            <button
+              type="button"
+              class:list={[
+                'quiz-dot w-2.5 h-2.5 rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+                'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
+                i === 0
+                  ? 'bg-accent scale-125 shadow-[0_0_8px_rgba(184,151,126,0.5)]'
+                  : 'bg-white/20',
+              ]}
+              data-dot={i}
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-label={`Question ${i + 1}`}
+              tabindex={i === 0 ? 0 : -1}
+              disabled={i > 0}
+            />
+          ))}
+        </div>
+
+        <!-- Next / See Results button -->
+        <button
+          type="button"
+          class="quiz-btn-next font-body text-sm text-accent hover:text-accent-light
+                 transition-colors duration-200 flex items-center gap-1.5
+                 disabled:opacity-30 disabled:pointer-events-none
+                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          disabled
+          aria-label="Next question"
+        >
+          <span class="quiz-btn-next-label">Next</span> <span aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RESULTS VIEW ──────────────────────────────────────── -->
+  <div class="quiz-results hidden" aria-label="Your style archetype result">
+    <div class="flex flex-col items-center text-center py-10 md:py-16 px-6">
+
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Your Style Archetype</p>
+      <div class="w-12 h-px bg-accent mb-8"></div>
+
+      <!-- Primary archetype card -->
+      <div class="quiz-result-primary relative w-full max-w-sm aspect-[3/4] overflow-hidden rounded-sm mb-8">
+        <img
+          class="quiz-result-img absolute inset-0 w-full h-full object-cover object-center"
+          src=""
+          alt=""
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+        <!-- Archetype color accent line -->
+        <div class="quiz-result-accent-line absolute top-0 left-0 right-0 h-1"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+          <div class="flex items-center justify-center gap-3 mb-2">
+            <span class="quiz-result-icon text-2xl text-accent"></span>
+            <h3 class="quiz-result-name font-heading text-white text-3xl md:text-4xl font-semibold"></h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary archetype (shown only if strong secondary) -->
+      <div class="quiz-result-secondary hidden mb-8">
+        <p class="font-body text-white/50 text-sm mb-1">with shades of</p>
+        <div class="flex items-center justify-center gap-2">
+          <span class="quiz-result-sec-icon text-lg text-accent/70"></span>
+          <span class="quiz-result-sec-name font-heading text-white/80 text-xl font-semibold"></span>
+        </div>
+      </div>
+
+      <!-- CTA buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-3 mt-2 w-full max-w-md">
+        <button
+          type="button"
+          class="quiz-btn-share w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
+                 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase
+                 hover:bg-accent-light transition-colors duration-200
+                 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+        >
+          Share Your Result
+        </button>
+        <a
+          class="quiz-btn-shop w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
+                 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase
+                 hover:bg-accent hover:text-white transition-colors duration-200
+                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Shop This Style
+        </a>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center gap-3 mt-3 w-full max-w-md">
+        <button
+          type="button"
+          class="quiz-btn-switch w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
+                 border border-white/20 text-white/60 font-body text-xs font-medium tracking-widest uppercase
+                 hover:border-white/40 hover:text-white transition-colors duration-200
+                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+        >
+          Take the {otherGender === 'feminine' ? 'Feminine' : 'Masculine'} Quiz
+        </button>
+        <button
+          type="button"
+          class="quiz-btn-retake w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
+                 border border-white/20 text-white/60 font-body text-xs font-medium tracking-widest uppercase
+                 hover:border-white/40 hover:text-white transition-colors duration-200
+                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+        >
+          Retake Quiz
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="quiz-btn-back-to-cards mt-6 font-body text-xs tracking-widest uppercase text-white/40
+               hover:text-accent transition-colors duration-200
+               focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+      >
+        &larr; Back to Archetypes
+      </button>
+
+      <!-- Share toast notification -->
+      <div class="quiz-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50
+                  bg-accent text-white font-body text-sm px-6 py-3 rounded-sm shadow-lg
+                  opacity-0 translate-y-4 pointer-events-none
+                  transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+        Link copied to clipboard
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Slide states ─────────────────────────────────────────── */
+  .quiz-slide {
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
+  .quiz-slide-active {
+    position: relative;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  /* Off-screen positions for animation origin */
+  .quiz-slide-next {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  .quiz-slide-prev {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  /* ── Chip selected state ──────────────────────────────────── */
+  .quiz-chip[aria-checked="true"] {
+    background: rgba(184, 151, 126, 0.15);
+    border-color: rgba(184, 151, 126, 0.4);
+    transform: scale(1.02);
+    box-shadow: 0 0 16px rgba(184, 151, 126, 0.12);
+  }
+
+  .quiz-chip[aria-checked="true"] .quiz-chip-check {
+    background: rgba(184, 151, 126, 0.85);
+    color: rgba(255, 255, 255, 1);
+  }
+
+  /* ── Results card entrance ────────────────────────────────── */
+  .quiz-result-entering .quiz-result-primary {
+    animation: quiz-result-card-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes quiz-result-card-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .quiz-result-entering .quiz-result-name {
+    animation: quiz-result-name-in 600ms cubic-bezier(0.16, 1, 0.3, 1) 300ms both;
+  }
+
+  @keyframes quiz-result-name-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Toast visible state ──────────────────────────────────── */
+  .quiz-toast-visible {
+    opacity: 1 !important;
+    transform: translate(-50%, 0) !important;
+    pointer-events: auto !important;
+  }
+
+  /* ── Reduced motion ───────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .quiz-slide,
+    .quiz-slide-active,
+    .quiz-slide-next,
+    .quiz-slide-prev {
+      transition: none !important;
+      animation: none !important;
+    }
+
+    .quiz-mood-img {
+      transition: none !important;
+    }
+
+    .quiz-chip {
+      transition: none !important;
+    }
+
+    .quiz-dot {
+      transition: none !important;
+    }
+
+    .quiz-result-entering .quiz-result-primary,
+    .quiz-result-entering .quiz-result-name {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * ArchetypeQuiz runtime — manages question navigation, answer selection,
+   * scoring, results display, URL hash sharing, and all animations.
+   *
+   * Each quiz instance is self-contained, keyed by data-quiz-id.
+   */
+  document.querySelectorAll<HTMLElement>('.quiz-root').forEach((root) => {
+    const quizId = root.dataset.quizId!;
+    const gender = root.dataset.gender as 'feminine' | 'masculine';
+    const questions: Array<{
+      id: number;
+      text: string;
+      image: string;
+      options: Array<{ letter: string; text: string }>;
+    }> = JSON.parse(root.dataset.questions!);
+    const archetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string }> =
+      JSON.parse(root.dataset.archetypes!);
+
+    const TOTAL = questions.length;
+    const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const SLIDE_DURATION = 400;
+    const IMAGE_DURATION = 600;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ── State ─────────────────────────────────────────────── */
+    let currentQ = 0;
+    let animating = false;
+    const answers = new Map<number, Set<string>>();
+    const visited = new Set<number>([0]);
+
+    /* ── DOM refs ──────────────────────────────────────────── */
+    const quizBody     = root.querySelector<HTMLElement>('.quiz-body')!;
+    const resultsView  = root.querySelector<HTMLElement>('.quiz-results')!;
+    const slides       = root.querySelectorAll<HTMLElement>('.quiz-slide');
+    const moodImgs     = root.querySelectorAll<HTMLImageElement>('.quiz-mood-img');
+    const dots         = root.querySelectorAll<HTMLButtonElement>('.quiz-dot');
+    const btnBack      = root.querySelector<HTMLButtonElement>('.quiz-btn-back')!;
+    const btnNext      = root.querySelector<HTMLButtonElement>('.quiz-btn-next')!;
+    const nextLabel    = root.querySelector<HTMLElement>('.quiz-btn-next-label')!;
+    const qCurrentEls  = root.querySelectorAll<HTMLElement>('.quiz-q-current');
+    const liveRegion   = document.getElementById(`quiz-${quizId}-live`)!;
+
+    /* Results refs */
+    const resultImg       = root.querySelector<HTMLImageElement>('.quiz-result-img')!;
+    const resultAccentLine = root.querySelector<HTMLElement>('.quiz-result-accent-line')!;
+    const resultIcon      = root.querySelector<HTMLElement>('.quiz-result-icon')!;
+    const resultName      = root.querySelector<HTMLElement>('.quiz-result-name')!;
+    const resultSecondary = root.querySelector<HTMLElement>('.quiz-result-secondary')!;
+    const resultSecIcon   = root.querySelector<HTMLElement>('.quiz-result-sec-icon')!;
+    const resultSecName   = root.querySelector<HTMLElement>('.quiz-result-sec-name')!;
+    const btnShare        = root.querySelector<HTMLButtonElement>('.quiz-btn-share')!;
+    const btnShop         = root.querySelector<HTMLAnchorElement>('.quiz-btn-shop')!;
+    const btnSwitch       = root.querySelector<HTMLButtonElement>('.quiz-btn-switch')!;
+    const btnRetake       = root.querySelector<HTMLButtonElement>('.quiz-btn-retake')!;
+    const btnBackToCards  = root.querySelector<HTMLButtonElement>('.quiz-btn-back-to-cards')!;
+    const toast           = root.querySelector<HTMLElement>('.quiz-toast')!;
+
+    /* ── Helpers ───────────────────────────────────────────── */
+
+    function updateQCounter() {
+      qCurrentEls.forEach(el => { el.textContent = String(currentQ + 1); });
+      liveRegion.textContent = `Question ${currentQ + 1} of ${TOTAL}`;
+    }
+
+    function updateDots() {
+      dots.forEach((dot, i) => {
+        const isCurrent = i === currentQ;
+        const isVisited = visited.has(i);
+        const hasAnswer = answers.has(i) && answers.get(i)!.size > 0;
+
+        dot.disabled = !isVisited;
+        dot.setAttribute('aria-selected', String(isCurrent));
+        dot.tabIndex = isCurrent ? 0 : -1;
+
+        // Styling
+        dot.className = 'quiz-dot w-2.5 h-2.5 rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2';
+
+        if (isCurrent) {
+          dot.classList.add('bg-accent', 'scale-125');
+          dot.style.boxShadow = '0 0 8px rgba(184,151,126,0.5)';
+        } else if (hasAnswer) {
+          dot.classList.add('bg-accent/60');
+          dot.style.boxShadow = '';
+        } else if (isVisited) {
+          dot.classList.add('bg-white/35');
+          dot.style.boxShadow = '';
+        } else {
+          dot.classList.add('bg-white/20');
+          dot.style.boxShadow = '';
+        }
+      });
+    }
+
+    function updateNav() {
+      btnBack.disabled = currentQ === 0;
+      const hasSelection = answers.has(currentQ) && answers.get(currentQ)!.size > 0;
+      btnNext.disabled = !hasSelection;
+
+      if (currentQ === TOTAL - 1) {
+        nextLabel.textContent = 'See Results';
+        btnNext.setAttribute('aria-label', 'See your results');
+      } else {
+        nextLabel.textContent = 'Next';
+        btnNext.setAttribute('aria-label', 'Next question');
+      }
+    }
+
+    function updateChipStates(slideIndex: number) {
+      const slide = slides[slideIndex];
+      if (!slide) return;
+      const selected = answers.get(slideIndex) ?? new Set<string>();
+      slide.querySelectorAll<HTMLButtonElement>('.quiz-chip').forEach(chip => {
+        const letter = chip.dataset.letter!;
+        const isSelected = selected.has(letter);
+        chip.setAttribute('aria-checked', String(isSelected));
+      });
+    }
+
+    /* ── Slide transition ──────────────────────────────────── */
+
+    async function goToQuestion(target: number, direction: 'forward' | 'back') {
+      if (animating || target === currentQ || target < 0 || target >= TOTAL) return;
+      animating = true;
+
+      const outSlide = slides[currentQ];
+      const inSlide  = slides[target];
+
+      const outX = direction === 'forward' ? '-40px' : '40px';
+      const inX  = direction === 'forward' ? '40px'  : '-40px';
+
+      if (reducedMotion) {
+        outSlide.classList.remove('quiz-slide-active');
+        outSlide.classList.add(direction === 'forward' ? 'quiz-slide-prev' : 'quiz-slide-next');
+        inSlide.classList.remove('quiz-slide-next', 'quiz-slide-prev');
+        inSlide.classList.add('quiz-slide-active');
+      } else {
+        // Animate out current slide
+        const outAnim = outSlide.animate(
+          [
+            { opacity: 1, transform: 'translateX(0)' },
+            { opacity: 0, transform: `translateX(${outX})` },
+          ],
+          { duration: SLIDE_DURATION, easing: EASE_OUT, fill: 'forwards' }
+        );
+
+        // Animate in new slide
+        inSlide.classList.remove('quiz-slide-next', 'quiz-slide-prev');
+        inSlide.style.opacity = '0';
+        inSlide.style.transform = `translateX(${inX})`;
+        inSlide.classList.add('quiz-slide-active');
+
+        // Small stagger for the incoming slide
+        await new Promise(r => setTimeout(r, 80));
+
+        const inAnim = inSlide.animate(
+          [
+            { opacity: 0, transform: `translateX(${inX})` },
+            { opacity: 1, transform: 'translateX(0)' },
+          ],
+          { duration: SLIDE_DURATION, easing: EASE_OUT, fill: 'forwards' }
+        );
+
+        await Promise.all([outAnim.finished, inAnim.finished]);
+
+        // Clean up animation states
+        outAnim.cancel();
+        inAnim.cancel();
+
+        outSlide.classList.remove('quiz-slide-active');
+        outSlide.classList.add(direction === 'forward' ? 'quiz-slide-prev' : 'quiz-slide-next');
+        outSlide.style.opacity = '';
+        outSlide.style.transform = '';
+
+        inSlide.style.opacity = '';
+        inSlide.style.transform = '';
+      }
+
+      // Crossfade mood images
+      moodImgs.forEach((img, i) => {
+        img.style.opacity = i === target ? '1' : '0';
+      });
+
+      currentQ = target;
+      visited.add(currentQ);
+
+      updateQCounter();
+      updateDots();
+      updateNav();
+      updateChipStates(currentQ);
+
+      // Focus first chip in new question for keyboard users
+      const firstChip = inSlide.querySelector<HTMLButtonElement>('.quiz-chip');
+      if (firstChip) {
+        // Delay focus slightly to let transition settle
+        setTimeout(() => firstChip.focus({ preventScroll: true }), reducedMotion ? 0 : 100);
+      }
+
+      animating = false;
+    }
+
+    /* ── Scoring ───────────────────────────────────────────── */
+
+    function calculateResults(): { primary: string; secondary: string | null } {
+      const counts = new Map<string, number>();
+      for (const [, letters] of answers) {
+        for (const letter of letters) {
+          counts.set(letter, (counts.get(letter) ?? 0) + 1);
+        }
+      }
+
+      const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+      const primary = sorted[0]?.[0] ?? 'A';
+      const secondary = sorted.length > 1 && sorted[1][1] >= 2 ? sorted[1][0] : null;
+
+      return { primary, secondary };
+    }
+
+    /* ── Show Results ──────────────────────────────────────── */
+
+    function showResults() {
+      const { primary, secondary } = calculateResults();
+      const pMeta = archetypesMeta[primary];
+      if (!pMeta) return;
+
+      // Populate primary
+      resultImg.src = `/images/archetypes/${pMeta.slug}-1.webp`;
+      resultImg.alt = pMeta.name;
+      resultAccentLine.style.backgroundColor = pMeta.color;
+      resultIcon.textContent = pMeta.icon;
+      resultName.textContent = pMeta.name;
+
+      // Populate secondary
+      if (secondary) {
+        const sMeta = archetypesMeta[secondary];
+        if (sMeta) {
+          resultSecIcon.textContent = sMeta.icon;
+          resultSecName.textContent = sMeta.name;
+          resultSecondary.classList.remove('hidden');
+        }
+      } else {
+        resultSecondary.classList.add('hidden');
+      }
+
+      // Shop link: link to the archetype's guide page on the site
+      btnShop.href = `/archetypes/${pMeta.slug}`;
+
+      // Update URL hash for sharing
+      const hashParts = ['#quiz', gender, pMeta.slug];
+      if (secondary) {
+        const sMeta = archetypesMeta[secondary];
+        if (sMeta) hashParts.push(sMeta.slug);
+      }
+      history.replaceState(null, '', hashParts.join('/'));
+
+      // Show results view, hide quiz body
+      quizBody.classList.add('hidden');
+      resultsView.classList.remove('hidden');
+
+      // Trigger entrance animation
+      resultsView.classList.add('quiz-result-entering');
+      setTimeout(() => resultsView.classList.remove('quiz-result-entering'), 1000);
+
+      // Scroll quiz container into view
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ── Reset Quiz ────────────────────────────────────────── */
+
+    function resetQuiz() {
+      answers.clear();
+      visited.clear();
+      visited.add(0);
+      currentQ = 0;
+      animating = false;
+
+      // Reset all chips
+      root.querySelectorAll<HTMLButtonElement>('.quiz-chip').forEach(chip => {
+        chip.setAttribute('aria-checked', 'false');
+      });
+
+      // Reset slides
+      slides.forEach((slide, i) => {
+        slide.classList.remove('quiz-slide-active', 'quiz-slide-next', 'quiz-slide-prev');
+        slide.classList.add(i === 0 ? 'quiz-slide-active' : 'quiz-slide-next');
+        slide.style.opacity = '';
+        slide.style.transform = '';
+      });
+
+      // Reset images
+      moodImgs.forEach((img, i) => {
+        img.style.opacity = i === 0 ? '1' : '0';
+      });
+
+      // Hide results, show quiz
+      resultsView.classList.add('hidden');
+      quizBody.classList.remove('hidden');
+
+      updateQCounter();
+      updateDots();
+      updateNav();
+
+      // Clear hash
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ── Event bindings ────────────────────────────────────── */
+
+    // Answer chip clicks
+    root.querySelectorAll<HTMLButtonElement>('.quiz-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const qIndex = parseInt(chip.dataset.q!, 10);
+        const letter = chip.dataset.letter!;
+
+        if (!answers.has(qIndex)) answers.set(qIndex, new Set());
+        const selected = answers.get(qIndex)!;
+
+        if (selected.has(letter)) {
+          selected.delete(letter);
+        } else {
+          selected.add(letter);
+        }
+
+        chip.setAttribute('aria-checked', String(selected.has(letter)));
+        updateNav();
+        updateDots();
+      });
+
+      // Keyboard support: Space and Enter to toggle
+      chip.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          chip.click();
+        }
+      });
+    });
+
+    // Next button
+    btnNext.addEventListener('click', () => {
+      if (currentQ === TOTAL - 1) {
+        showResults();
+      } else {
+        goToQuestion(currentQ + 1, 'forward');
+      }
+    });
+
+    // Back button
+    btnBack.addEventListener('click', () => {
+      goToQuestion(currentQ - 1, 'back');
+    });
+
+    // Dot navigation
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        if (!visited.has(i)) return;
+        const dir = i > currentQ ? 'forward' : 'back';
+        goToQuestion(i, dir);
+      });
+    });
+
+    // Share button
+    btnShare.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.classList.add('quiz-toast-visible');
+        setTimeout(() => toast.classList.remove('quiz-toast-visible'), 2500);
+      } catch {
+        // Fallback for older browsers
+        const input = document.createElement('input');
+        input.value = window.location.href;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        toast.classList.add('quiz-toast-visible');
+        setTimeout(() => toast.classList.remove('quiz-toast-visible'), 2500);
+      }
+    });
+
+    // Retake button
+    btnRetake.addEventListener('click', resetQuiz);
+
+    // Back to archetypes button — dispatches event for page-level handler
+    btnBackToCards.addEventListener('click', () => {
+      resetQuiz();
+      root.dispatchEvent(new CustomEvent('quiz:exit', { bubbles: true }));
+    });
+
+    // Switch to other gender quiz
+    btnSwitch.addEventListener('click', () => {
+      const otherGender = gender === 'feminine' ? 'masculine' : 'feminine';
+      // Dispatch event for the page to handle the gender switch
+      root.dispatchEvent(new CustomEvent('quiz:switch-gender', {
+        bubbles: true,
+        detail: { targetGender: otherGender },
+      }));
+    });
+
+    /* ── Hash-based result restore ─────────────────────────── */
+
+    function checkHashResults() {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      // Pattern: #quiz/feminine/the-siren or #quiz/feminine/the-siren/the-muse
+      const match = hash.match(/^#quiz\/(feminine|masculine)\/([\w-]+)(?:\/([\w-]+))?$/);
+      if (!match) return;
+
+      const [, hashGender, primarySlug, secondarySlug] = match;
+      if (hashGender !== gender) return;
+
+      // Find letter for primary slug
+      let primaryLetter: string | null = null;
+      let secondaryLetter: string | null = null;
+
+      for (const [letter, meta] of Object.entries(archetypesMeta)) {
+        if (meta.slug === primarySlug) primaryLetter = letter;
+        if (secondarySlug && meta.slug === secondarySlug) secondaryLetter = letter;
+      }
+
+      if (!primaryLetter) return;
+
+      // Populate the result display directly
+      const pMeta = archetypesMeta[primaryLetter];
+      resultImg.src = `/images/archetypes/${pMeta.slug}-1.webp`;
+      resultImg.alt = pMeta.name;
+      resultAccentLine.style.backgroundColor = pMeta.color;
+      resultIcon.textContent = pMeta.icon;
+      resultName.textContent = pMeta.name;
+
+      if (secondaryLetter) {
+        const sMeta = archetypesMeta[secondaryLetter];
+        if (sMeta) {
+          resultSecIcon.textContent = sMeta.icon;
+          resultSecName.textContent = sMeta.name;
+          resultSecondary.classList.remove('hidden');
+        }
+      }
+
+      btnShop.href = `/archetypes/${pMeta.slug}`;
+
+      quizBody.classList.add('hidden');
+      resultsView.classList.remove('hidden');
+
+      // Make the quiz container visible and scroll to it
+      const container = root.closest('[id$="-quiz-container"]') as HTMLElement | null;
+      if (container) {
+        container.classList.remove('hidden');
+        // Also hide the cards grid
+        const gridSection = container.closest('.relative.z-10')?.querySelector('.grid') as HTMLElement | null;
+        if (gridSection) gridSection.classList.add('hidden');
+      }
+
+      requestAnimationFrame(() => {
+        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    // Check on load
+    checkHashResults();
+
+    /* ── Initialize ────────────────────────────────────────── */
+    updateNav();
+    updateDots();
+  });
+</script>

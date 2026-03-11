@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ArchetypeQuiz from '../components/ArchetypeQuiz.astro';
 import { getCollection } from 'astro:content';
 
 const feminineArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'feminine');
@@ -213,21 +214,29 @@ const calendlyURL = '/contact';
             </div>
           ))}
 
-          <!-- "Still Not Sure?" card — accent-tinted, portrait aspect to match archetype cards -->
-          <div class="relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4]
-                      flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300">
+          <!-- "Find Your Archetype" quiz CTA card -->
+          <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4]
+                      flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
+               data-quiz-trigger="fem">
             <div class="w-8 h-0.5 bg-accent mb-4"></div>
-            <h3 class="font-heading text-xl font-semibold text-white mb-3">Still Not Sure?</h3>
+            <h3 class="font-heading text-xl font-semibold text-white mb-3">Not sure which one is you?</h3>
             <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
-              Most women are a blend of two or three archetypes. Work through the quiz reel to find your dominant type — then bring that clarity to a consultation and Danielle builds your wardrobe strategy from minute one.
+              Find your archetype in under 2 minutes.
             </p>
-            <a
-              href={calendlyURL}
-              class="inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+            <button
+              type="button"
+              class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200
+                     focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+              data-quiz-trigger="fem"
             >
-              Book a Consultation
-            </a>
+              Find Your Archetype &rarr;
+            </button>
           </div>
+        </div>
+
+        <!-- Quiz container (hidden until CTA clicked) -->
+        <div id="fem-quiz-container" class="hidden mt-10">
+          <ArchetypeQuiz gender="feminine" quizId="fem" />
         </div>
       </div>
     </section>
@@ -391,21 +400,29 @@ const calendlyURL = '/contact';
               </div>
             ))}
 
-            <!-- "Still Not Sure?" card — accent-tinted, portrait aspect to match archetype cards -->
-            <div class="relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4]
-                        flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300">
+            <!-- "Find Your Archetype" quiz CTA card -->
+            <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4]
+                        flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
+                 data-quiz-trigger="masc">
               <div class="w-8 h-0.5 bg-accent mb-4"></div>
-              <h3 class="font-heading text-xl font-semibold text-white mb-3">Still Not Sure?</h3>
+              <h3 class="font-heading text-xl font-semibold text-white mb-3">Not sure which one is you?</h3>
               <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
-                Most men lean into one dominant archetype. Watch the quiz reel, then bring that clarity to a consultation — Danielle will build your wardrobe strategy from minute one.
+                Find your archetype in under 2 minutes.
               </p>
-              <a
-                href={calendlyURL}
-                class="inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+              <button
+                type="button"
+                class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200
+                       focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+                data-quiz-trigger="masc"
               >
-                Book a Consultation
-              </a>
+                Find Your Archetype &rarr;
+              </button>
             </div>
+          </div>
+
+          <!-- Quiz container (hidden until CTA clicked) -->
+          <div id="masc-quiz-container" class="hidden mt-10">
+            <ArchetypeQuiz gender="masculine" quizId="masc" />
           </div>
         ) : (
           <div class="flex flex-col items-center justify-center py-20 text-center">
@@ -904,6 +921,224 @@ const calendlyURL = '/contact';
         });
       });
     });
+
+  })();
+</script>
+
+<script>
+  // ── Quiz entry/exit animations ──────────────────────────────────
+  // Handles the transition between the archetype card grid and the quiz:
+  //   1. CTA click: stagger-fade cards out, reveal quiz container
+  //   2. "Back to Archetypes": reverse (quiz out, cards back in)
+  //   3. "Switch gender" from quiz results: exit quiz, switch gender, open other quiz
+
+  (function initQuizTransitions() {
+    const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const EASE_IN  = 'cubic-bezier(0.5, 0, 0.85, 0)';
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function getDur(mult = 1): number {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue('--dur').trim();
+      return parseFloat(raw) * (raw.endsWith('ms') ? 1 : 1000) * mult;
+    }
+
+    // Map quiz IDs to their grid + container elements
+    const quizConfigs: Record<string, { gridSelector: string; containerId: string }> = {
+      fem:  { gridSelector: '#archetypes .grid', containerId: 'fem-quiz-container' },
+      masc: { gridSelector: '#masculine-archetypes .grid', containerId: 'masc-quiz-container' },
+    };
+
+    async function openQuiz(quizId: string) {
+      const config = quizConfigs[quizId];
+      if (!config) return;
+
+      const grid = document.querySelector<HTMLElement>(config.gridSelector);
+      const container = document.getElementById(config.containerId);
+      if (!grid || !container) return;
+
+      // Stagger fade out each card in the grid
+      const cards = Array.from(grid.children) as HTMLElement[];
+
+      if (!reducedMotion) {
+        await Promise.all(
+          cards.map((card, i) =>
+            card.animate(
+              [
+                { opacity: 1, transform: 'translateY(0)' },
+                { opacity: 0, transform: 'translateY(12px)' },
+              ],
+              {
+                duration: getDur(0.5),
+                easing: EASE_IN,
+                fill: 'forwards',
+                delay: i * 50,
+              }
+            ).finished
+          )
+        );
+      }
+
+      // Hide grid, show quiz
+      grid.classList.add('hidden');
+      container.classList.remove('hidden');
+
+      // Cancel fill-forwards
+      cards.forEach(card => card.getAnimations().forEach(a => a.cancel()));
+
+      // Animate quiz in
+      if (!reducedMotion) {
+        container.animate(
+          [
+            { opacity: 0, transform: 'translateY(18px)' },
+            { opacity: 1, transform: 'translateY(0)' },
+          ],
+          { duration: getDur(1), easing: EASE_OUT, fill: 'forwards' }
+        ).finished.then(() => {
+          container.getAnimations().forEach(a => a.cancel());
+        });
+      }
+
+      // Scroll quiz into view
+      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function closeQuiz(quizId: string) {
+      const config = quizConfigs[quizId];
+      if (!config) return;
+
+      const grid = document.querySelector<HTMLElement>(config.gridSelector);
+      const container = document.getElementById(config.containerId);
+      if (!grid || !container) return;
+
+      // Animate quiz out
+      if (!reducedMotion) {
+        await container.animate(
+          [
+            { opacity: 1, transform: 'translateY(0)' },
+            { opacity: 0, transform: 'translateY(12px)' },
+          ],
+          { duration: getDur(0.5), easing: EASE_IN, fill: 'forwards' }
+        ).finished;
+        container.getAnimations().forEach(a => a.cancel());
+      }
+
+      // Hide quiz, show grid
+      container.classList.add('hidden');
+      grid.classList.remove('hidden');
+
+      // Stagger fade cards back in
+      const cards = Array.from(grid.children) as HTMLElement[];
+
+      if (!reducedMotion) {
+        await Promise.all(
+          cards.map((card, i) =>
+            card.animate(
+              [
+                { opacity: 0, transform: 'translateY(18px)' },
+                { opacity: 1, transform: 'translateY(0)' },
+              ],
+              {
+                duration: getDur(1),
+                easing: EASE_OUT,
+                fill: 'forwards',
+                delay: i * 50,
+              }
+            ).finished
+          )
+        );
+        cards.forEach(card => card.getAnimations().forEach(a => a.cancel()));
+      }
+
+      // Scroll the section header into view
+      const section = grid.closest('section');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ── CTA click handlers ─────────────────────────────────────────
+    // Both the card itself and the button inside it trigger the quiz
+    document.querySelectorAll<HTMLElement>('[data-quiz-trigger]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const quizId = el.dataset.quizTrigger!;
+        openQuiz(quizId);
+      });
+    });
+
+    // ── Quiz exit event (fired by quiz component) ──────────────────
+    document.addEventListener('quiz:exit', (e) => {
+      const quizRoot = (e.target as HTMLElement).closest('.quiz-root');
+      if (!quizRoot) return;
+      const quizId = (quizRoot as HTMLElement).dataset.quizId;
+      if (quizId) closeQuiz(quizId);
+    });
+
+    // ── Gender switch from quiz results ────────────────────────────
+    document.addEventListener('quiz:switch-gender', async (e) => {
+      const detail = (e as CustomEvent).detail;
+      if (!detail?.targetGender) return;
+
+      const quizRoot = (e.target as HTMLElement).closest('.quiz-root');
+      if (!quizRoot) return;
+      const currentQuizId = (quizRoot as HTMLElement).dataset.quizId;
+
+      // Close the current quiz
+      if (currentQuizId) {
+        await closeQuiz(currentQuizId);
+      }
+
+      // Trigger the gender switch using the existing page-level switchGender
+      const targetGender = detail.targetGender;
+      const btnFem = document.getElementById('toggle-feminine') as HTMLButtonElement | null;
+      const btnMas = document.getElementById('toggle-masculine') as HTMLButtonElement | null;
+
+      if (targetGender === 'feminine') {
+        btnFem?.click();
+      } else {
+        btnMas?.click();
+      }
+
+      // After gender switch settles, open the other quiz
+      // Wait for the gender switch animation to complete
+      setTimeout(() => {
+        const otherQuizId = targetGender === 'feminine' ? 'fem' : 'masc';
+        openQuiz(otherQuizId);
+      }, 1500);
+    });
+
+    // ── Hash-based auto-open on page load ──────────────────────────
+    // If URL has #quiz/feminine/... or #quiz/masculine/..., auto-open that quiz
+    function checkHashOnLoad() {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const match = hash.match(/^#quiz\/(feminine|masculine)\//);
+      if (!match) return;
+
+      const hashGender = match[1];
+      const quizId = hashGender === 'feminine' ? 'fem' : 'masc';
+
+      // Ensure the correct gender is active
+      const page = document.getElementById('archetypes-page');
+      const activeGender = page?.getAttribute('data-active-gender');
+
+      if (activeGender !== hashGender) {
+        // Need to switch gender first
+        const btn = hashGender === 'feminine'
+          ? document.getElementById('toggle-feminine')
+          : document.getElementById('toggle-masculine');
+        if (btn) btn.click();
+
+        // Wait for switch, then open quiz
+        setTimeout(() => openQuiz(quizId), 1500);
+      } else {
+        // Correct gender already active, open quiz directly
+        setTimeout(() => openQuiz(quizId), 500);
+      }
+    }
+
+    // Delay hash check to allow other init scripts to run
+    requestAnimationFrame(() => requestAnimationFrame(checkHashOnLoad));
 
   })();
 </script>
