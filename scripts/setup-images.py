@@ -141,10 +141,9 @@ def scaffold():
         if write_placeholder(PUBLIC / f'{name}.webp', 1080, 1920):
             created += 1
 
-    # Hero mosaic — 4:3 landscape (6 slots)
-    for i in range(1, 7):
-        if write_placeholder(PUBLIC / f'hero-{i}.webp', 1200, 900):
-            created += 1
+    # NOTE: hero-1 through hero-6 slots removed — the home page hero mosaic
+    # now draws from public/images/hero-banners/ (unlimited pool, auto-scanned
+    # at build time). Add more images there; run --convert-only to process them.
 
     # Portfolio grid — square (6 slots)
     for i in range(1, 7):
