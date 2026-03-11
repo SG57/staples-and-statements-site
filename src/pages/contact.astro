@@ -44,18 +44,63 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
             </p>
           </div>
 
-          <!-- Calendly inline widget
-               data-resize="true" — Calendly posts its own height via postMessage;
-               the widget script listens and removes the fixed height so the iframe
-               grows naturally and the PAGE scrolls (no nested scrollbar).
-               No fixed height is set here intentionally. -->
-          <div
-            id="calendly-widget"
-            class="calendly-inline-widget border border-surface-dark"
-            data-url={CALENDLY_URL}
-            data-resize="true"
-            style="min-width:320px; min-height:200px;"
-          ></div>
+          <!--
+            Calendly embed wrapper.
+            The skeleton sits absolute inset-0 over the widget, fades out once
+            Calendly's iframe renders. The widget itself has no border — the
+            skeleton provides the visual container during load, and Calendly's
+            own chrome takes over after.
+          -->
+          <div class="relative">
+
+            <!-- Branded skeleton loading state -->
+            <div
+              id="calendly-loading"
+              class="s-sk absolute inset-0 z-10 bg-surface pointer-events-none"
+              style="transition: opacity 600ms ease; border: 1px solid var(--color-surface-dark);"
+              aria-hidden="true"
+            >
+              <div class="p-6 h-full flex flex-col gap-5">
+                <!-- Month navigation row -->
+                <div class="flex items-center justify-between px-1">
+                  <div class="w-7 h-7 rounded-full bg-surface-dark"></div>
+                  <div class="h-4 w-36 rounded bg-surface-dark"></div>
+                  <div class="w-7 h-7 rounded-full bg-surface-dark"></div>
+                </div>
+                <!-- Day-of-week labels -->
+                <div class="grid grid-cols-7 gap-1 px-1">
+                  {[...Array(7)].map(() => (
+                    <div class="h-3 rounded bg-surface-dark mx-auto w-5"></div>
+                  ))}
+                </div>
+                <!-- 5 weeks of calendar days -->
+                {[...Array(5)].map(() => (
+                  <div class="grid grid-cols-7 gap-1 px-1">
+                    {[...Array(7)].map(() => (
+                      <div class="aspect-square rounded bg-surface-dark"></div>
+                    ))}
+                  </div>
+                ))}
+                <!-- Time-slot placeholders -->
+                <div class="mt-auto space-y-2.5 px-1 pb-2">
+                  <div class="h-3 w-28 bg-surface-dark rounded mb-3"></div>
+                  <div class="h-10 bg-surface-dark rounded"></div>
+                  <div class="h-10 bg-surface-dark rounded"></div>
+                  <div class="h-10 w-2/3 bg-surface-dark rounded"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actual Calendly widget — no border (skeleton provides it during load) -->
+            <div
+              id="calendly-widget"
+              class="calendly-inline-widget"
+              data-url={CALENDLY_URL}
+              data-resize="true"
+              style="min-width:320px; min-height:680px;"
+            ></div>
+
+          </div>
           <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
 
           <!-- Fallback: shown if Calendly fails to load (ad blocker, slow network, CDN issue).
@@ -249,6 +294,7 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
 
   (function initCalendlyGuard() {
     const widget   = document.getElementById('calendly-widget');
+    const skeleton = document.getElementById('calendly-loading');
     const fallback = document.getElementById('calendly-fallback');
     const retryBtn = document.getElementById('calendly-retry');
 
@@ -257,7 +303,17 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
     const TIMEOUT_MS = 12_000;
     let timer: ReturnType<typeof setTimeout>;
 
+    // Fade out the skeleton once Calendly's iframe is ready
+    function hideSkeleton() {
+      if (!skeleton) return;
+      skeleton.style.opacity = '0';
+      skeleton.style.pointerEvents = 'none';
+      // Remove from layout after fade completes so it doesn't block interaction
+      setTimeout(() => { skeleton.style.display = 'none'; }, 650);
+    }
+
     function showFallback() {
+      hideSkeleton();
       widget.style.display   = 'none';
       fallback.classList.remove('hidden');
     }
@@ -272,6 +328,7 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
       if (widget.querySelector('iframe')) {
         observer.disconnect();
         clearTimeout(timer);
+        hideSkeleton(); // fade out loading skeleton — Calendly is ready
         hideFallback(); // in case it was briefly shown
       }
     });
