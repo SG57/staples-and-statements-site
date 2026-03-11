@@ -253,7 +253,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   data-archetypes={JSON.stringify(archetypesMeta)}
 >
   <!-- ── QUIZ BODY: split-screen layout ────────────────────── -->
-  <div class="quiz-body flex flex-col md:flex-row w-full h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] overflow-hidden rounded-sm border border-white/10">
+  <div class="quiz-body flex flex-col md:flex-row w-full h-[calc(100dvh-10rem)] max-h-[720px] overflow-hidden rounded-sm border border-white/10">
 
     <!-- LEFT: mood image panel — compact on mobile to preserve answer space -->
     <div class="quiz-image-panel relative w-full md:w-[35%] h-[12dvh] md:h-auto shrink-0 overflow-hidden bg-primary">
@@ -439,7 +439,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
   <!-- ── CALCULATING OVERLAY ─────────────────────────────── -->
   <div class="quiz-calculating hidden" aria-label="Calculating your result">
-    <div class="flex flex-col items-center justify-center h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] bg-primary">
+    <div class="flex flex-col items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] bg-primary">
       <!-- "Discovering" text -->
       <p class="quiz-calc-text font-heading text-white text-2xl md:text-3xl mb-8 opacity-0">
         Discovering your archetype...
@@ -453,20 +453,20 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
   <!-- ── TEASER WORDS OVERLAY ────────────────────────────── -->
   <div class="quiz-teaser hidden" aria-label="Teaser words">
-    <div class="flex items-center justify-center h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] bg-primary">
+    <div class="flex items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] bg-primary">
       <span class="quiz-teaser-word font-heading text-white text-4xl md:text-6xl opacity-0"></span>
     </div>
   </div>
 
   <!-- ── "YOU ARE" REVEAL TEXT ────────────────────────────── -->
   <div class="quiz-youare hidden" aria-label="You are reveal">
-    <div class="flex items-center justify-center h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] bg-primary">
+    <div class="flex items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] bg-primary">
       <span class="quiz-youare-text font-body text-accent text-sm md:text-base tracking-widest uppercase opacity-0">You are...</span>
     </div>
   </div>
 
   <!-- ── RESULTS VIEW ──────────────────────────────────────── -->
-  <div class="quiz-results hidden h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto overflow-x-hidden quiz-hide-scrollbar" aria-label="Your style archetype result">
+  <div class="quiz-results hidden max-h-[720px] overflow-y-auto overflow-x-hidden quiz-hide-scrollbar" aria-label="Your style archetype result">
     <div class="flex flex-col items-center text-center py-8 md:py-12 px-6">
 
       <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Your Style Archetype</p>
