@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SocialLinks from '../components/SocialLinks.astro';
 
 // Formspree endpoint — confirmed in TRACK1-MANUAL-SETUP.md Step 7
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xwvrvgky';
@@ -113,23 +114,9 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
                 <p class="font-body text-xs tracking-widest uppercase text-accent mb-1">Location</p>
                 <p class="font-body text-sm text-text-muted">San Diego, CA — also available virtually nationwide</p>
               </li>
-              <li class="flex gap-5 pt-2">
-                <a
-                  href="https://instagram.com/littledanniii"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-body text-xs tracking-widest uppercase text-text-muted hover:text-primary transition-colors"
-                >
-                  Instagram →
-                </a>
-                <a
-                  href="https://tiktok.com/@staplesandstatementsss"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-body text-xs tracking-widest uppercase text-text-muted hover:text-primary transition-colors"
-                >
-                  TikTok →
-                </a>
+              <li class="pt-2">
+                <p class="font-body text-xs tracking-widest uppercase text-accent mb-2">Follow Along</p>
+                <SocialLinks variant="light" size="md" />
               </li>
             </ul>
           </div>

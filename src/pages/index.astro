@@ -140,28 +140,51 @@ const calendlyURL = '/contact';
 
   <!-- ── HERO CAROUSEL SCRIPT ────────────────────────── -->
   <script define:vars={{ heroBannerImages }}>
-    // ── Hero mosaic auto-carousel ───────────────────────────────────────────
-    // Each mosaic cell independently cycles through the full hero-banners pool.
-    // Cells are staggered so they never all change at the same moment.
+    // ── Hero mosaic auto-carousel — with global deduplication ──────────────
+    // Each mosaic cell cycles through the full hero-banners pool.
+    // A shared active-images registry guarantees NO TWO CELLS ever show
+    // the same image at the same time — looks intentional, never amateur.
     // Respects prefers-reduced-motion: disables cycling entirely.
 
-    const IMAGES   = heroBannerImages;
-    const HOLD_MS  = 12_000;   // how long each image shows
-    const FADE_MS  = 1_500;    // crossfade duration (must match CSS transition)
-    const STAGGER  = 2_200;    // ms delay between each cell's first cycle
+    const IMAGES  = heroBannerImages;
+    const HOLD_MS = 12_000;  // how long each image shows (ms)
+    const STAGGER = 2_200;   // ms delay between each cell's first cycle
 
     if (IMAGES.length < 2) {
-      // Pool too small — nothing to cycle
+      // Pool too small to deduplicate — nothing to cycle
     } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
-      // Fisher-Yates shuffle — returns a NEW shuffled copy
-      function shuffle(arr) {
-        const a = [...arr];
-        for (let i = a.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [a[i], a[j]] = [a[j], a[i]];
-        }
-        return a;
+      // ── Shared active-images registry ──────────────────────────────────
+      // Maps imagePath → number of cells currently displaying it.
+      // Reservations are made BEFORE loading starts so two concurrent cells
+      // can't both race to claim the same image.
+      const active = new Map();
+
+      function normalize(src) {
+        // Browsers resolve src to full URL; we store just the pathname for lookup.
+        try { return new URL(src, location.href).pathname; } catch { return src; }
+      }
+      function register(src)   {
+        const k = normalize(src);
+        active.set(k, (active.get(k) || 0) + 1);
+      }
+      function unregister(src) {
+        const k = normalize(src);
+        const n = (active.get(k) || 1) - 1;
+        if (n <= 0) active.delete(k); else active.set(k, n);
+      }
+      function isActive(src)   { return (active.get(normalize(src)) || 0) > 0; }
+
+      function pickUnique(currentSrc) {
+        // First choice: images not shown ANYWHERE on the page
+        const free = IMAGES.filter(s => !isActive(s));
+        if (free.length > 0)
+          return free[Math.floor(Math.random() * free.length)];
+        // Fallback: at minimum, avoid the cell's own current image
+        const notSelf = IMAGES.filter(s => normalize(s) !== normalize(currentSrc));
+        return notSelf.length > 0
+          ? notSelf[Math.floor(Math.random() * notSelf.length)]
+          : IMAGES[0];
       }
 
       function startCell(cell, startDelay) {
@@ -169,46 +192,43 @@ const calendlyURL = '/contact';
         const layerB = cell.querySelector('[data-layer="b"]');
         if (!layerA || !layerB) return;
 
-        // Track which layer is currently "front" (visible)
         let frontIsA = true;
-
-        // Keep a shuffled queue per cell so cycles aren't predictable
-        let queue = shuffle(IMAGES);
-        // Skip the image already showing so the first transition is always new
-        const initial = layerA.getAttribute('src');
-        queue = queue.filter(s => s !== initial);
-        if (queue.length === 0) queue = shuffle(IMAGES);
-        let qi = 0;
+        // Register starting image so other cells know it's taken
+        register(layerA.getAttribute('src') || '');
 
         function nextImage() {
-          const nextSrc = queue[qi];
-          qi = (qi + 1) % queue.length;
-          if (qi === 0) queue = shuffle(IMAGES); // reshuffle when exhausted
+          const front = frontIsA ? layerA : layerB;
+          const back  = frontIsA ? layerB : layerA;
+          const currentSrc = front.getAttribute('src') || '';
+          const nextSrc    = pickUnique(currentSrc);
 
-          const incoming = frontIsA ? layerB : layerA;
-          const outgoing = frontIsA ? layerA : layerB;
-
-          incoming.src = nextSrc;
+          // Reserve BEFORE loading — prevents race with other cell timers
+          register(nextSrc);
+          back.src = nextSrc;
 
           const doFade = () => {
-            incoming.style.opacity = '1';
-            outgoing.style.opacity = '0';
+            back.style.opacity  = '1';
+            front.style.opacity = '0';
+            unregister(currentSrc);   // release the outgoing image
             frontIsA = !frontIsA;
             setTimeout(nextImage, HOLD_MS);
           };
 
-          if (incoming.complete && incoming.naturalWidth > 0) {
+          if (back.complete && back.naturalWidth > 0) {
             doFade();
           } else {
-            incoming.onload  = doFade;
-            incoming.onerror = () => setTimeout(nextImage, HOLD_MS); // skip broken image
+            back.onload  = doFade;
+            back.onerror = () => {
+              unregister(nextSrc);    // load failed — release reservation
+              setTimeout(nextImage, HOLD_MS);
+            };
           }
         }
 
         setTimeout(nextImage, startDelay + HOLD_MS);
       }
 
-      // Wait until after first paint so eager images are visible before cycling
+      // Wait for first paint so eager images are visible before cycling begins
       requestAnimationFrame(() => {
         document.querySelectorAll('[data-hero-cell]').forEach((cell, i) => {
           startCell(cell, i * STAGGER);
@@ -311,33 +331,37 @@ const calendlyURL = '/contact';
   <!-- ── TESTIMONIALS ──────────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Client testimonials">
     <div class="mx-auto max-w-5xl">
-      <div class="text-center mb-14">
+      <div class="text-center mb-16">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
         <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-secondary mr-2">03 /</span>Client Stories</p>
-        <h2 class="font-heading text-primary">Real Transformations</h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {featuredTestimonials.map((testimonial) => (
-          <div class="bg-surface p-8 md:p-10">
-            <div class="font-heading text-5xl text-accent/30 leading-none mb-4">"</div>
-            <p class="font-body text-text-muted text-base leading-relaxed italic">
-              {testimonial.body.trim().replace(/^"|"$/g, '')}
-            </p>
-            <div class="mt-6 pt-6 border-t border-surface-dark flex items-center justify-between">
-              <p class="font-heading text-xl font-semibold text-primary">{testimonial.data.name}</p>
-              {testimonial.data.service && (
-                <a
-                  href={`/services/${testimonial.data.service}`}
-                  class="font-body text-xs tracking-widest uppercase text-accent hover:text-primary transition-colors"
-                >
-                  {testimonial.data.service.replace(/-/g, ' ')}
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div class="mt-10 text-center">
+
+      {featuredTestimonials[0] && (
+        <figure class="text-center">
+          <!-- Opening quote mark — large decorative -->
+          <div class="font-heading text-8xl text-accent/20 leading-none mb-0 select-none" aria-hidden="true">"</div>
+          <!-- The quote itself — large editorial text -->
+          <blockquote class="font-heading text-primary text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed italic max-w-3xl mx-auto -mt-6">
+            {featuredTestimonials[0].body.trim().replace(/^"|"$/g, '')}
+          </blockquote>
+          <!-- Attribution -->
+          <figcaption class="mt-8 flex flex-col items-center gap-1">
+            <div class="w-8 h-px bg-accent mx-auto mb-3"></div>
+            <p class="font-heading text-xl font-semibold text-primary">{featuredTestimonials[0].data.name}</p>
+            {featuredTestimonials[0].data.service && (
+              <a
+                href={`/services/${featuredTestimonials[0].data.service}`}
+                class="font-body text-xs tracking-widest uppercase text-accent hover:text-primary transition-colors"
+              >
+                {featuredTestimonials[0].data.service.replace(/-/g, ' ')}
+              </a>
+            )}
+          </figcaption>
+        </figure>
+      )}
+
+      <!-- Link to all stories -->
+      <div class="mt-14 text-center">
         <a
           href="/clients"
           class="font-body text-sm tracking-widest uppercase text-text-muted hover:text-primary transition-colors border-b border-current pb-0.5"

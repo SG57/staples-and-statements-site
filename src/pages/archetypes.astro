@@ -160,7 +160,7 @@ const reels = {
       </div>
     </section>
 
-    <!-- FEMININE ARCHETYPE GRID — full-bleed ensemble background, frosted glass cards -->
+    <!-- FEMININE ARCHETYPE GRID — full-bleed portrait image cards -->
     <section
       id="archetypes"
       data-gender="feminine"
@@ -179,6 +179,17 @@ const reels = {
       />
       <!-- Dark overlay — heavy enough for card legibility, light enough to feel the image -->
       <div class="absolute inset-0 bg-gradient-to-b from-primary/72 via-primary/78 to-primary/88 pointer-events-none"></div>
+      <!--
+        Seam blends — dissolve the hard edges where sections meet.
+        Top: fades from solid primary into transparency, bridging the hero's solid-dark
+             bottom into this section's image. Covers the padding zone (py-28 = 112px)
+             so no image shows through at the join line.
+        Bottom: fades from transparency back to solid primary, merging cleanly into
+                the dark section below. No hard cut-off.
+        z-index: auto (above background image via DOM order, below z-10 content).
+      -->
+      <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-primary to-transparent pointer-events-none"></div>
+      <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-primary to-transparent pointer-events-none"></div>
 
       <div class="relative z-10 mx-auto max-w-7xl">
         <div class="text-center mb-14">
@@ -190,70 +201,98 @@ const reels = {
           </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {feminineSorted.map((archetype) => (
-            <div class="group flex flex-col bg-white/7 backdrop-blur-sm border border-white/10 p-7
-                        hover:bg-white/13 hover:border-white/22 transition-all duration-300 cursor-default">
-              <!-- Archetype color accent line -->
+            <div
+              class="archetype-card group relative overflow-hidden cursor-default aspect-[3/4]"
+              data-slug={archetype.data.slug}
+              data-images={JSON.stringify([
+                `/images/archetypes/${archetype.data.slug}-1.webp`,
+                `/images/archetypes/${archetype.data.slug}-2.webp`,
+                `/images/archetypes/${archetype.data.slug}-3.webp`,
+              ])}
+            >
+              <!-- Image layer A (starts visible) -->
+              <img
+                data-layer="a"
+                src={`/images/archetypes/${archetype.data.slug}-1.webp`}
+                alt={archetype.data.name}
+                class="absolute inset-0 w-full h-full object-cover object-top"
+                style="transition: opacity 1000ms ease-in-out; opacity: 1"
+                loading="lazy"
+              />
+              <!-- Image layer B (starts invisible, transitions in) -->
+              <img
+                data-layer="b"
+                src=""
+                alt=""
+                aria-hidden="true"
+                class="absolute inset-0 w-full h-full object-cover object-top"
+                style="transition: opacity 1000ms ease-in-out; opacity: 0"
+                loading="lazy"
+              />
+
+              <!-- Gradient overlay: always-on dark bottom for text legibility -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none"></div>
+
+              <!-- Archetype color accent line at top of card -->
               <div
-                class="w-8 h-0.5 mb-5"
+                class="absolute top-0 left-0 right-0 h-0.5"
                 style={`background-color: ${archetype.data.color ?? '#b8977e'}`}
               ></div>
 
-              <!-- Icon + Name -->
-              <div class="flex items-start gap-3 mb-4">
-                <span class="text-2xl text-white/40 group-hover:text-accent transition-colors duration-300">
-                  {archetype.data.icon ?? '✦'}
-                </span>
-                <h3 class="font-heading text-xl font-semibold text-white/90 group-hover:text-white transition-colors">
-                  {archetype.data.name}
-                </h3>
+              <!-- Always-visible bottom label -->
+              <div class="absolute bottom-0 left-0 right-0 p-5 z-10">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-lg text-accent/70">{archetype.data.icon ?? '✦'}</span>
+                  <h3 class="font-heading text-white text-xl font-semibold leading-tight">
+                    {archetype.data.name}
+                  </h3>
+                </div>
               </div>
 
-              <!-- Description -->
-              <p class="font-body text-sm text-white/55 group-hover:text-white/75 transition-colors leading-relaxed flex-1 mb-4">
-                {archetype.data.description}
-              </p>
-
-              <!-- Links -->
-              <div class="flex flex-col gap-2 border-t border-white/10 group-hover:border-white/18 pt-5 transition-colors">
-                {archetype.data.guideLink && (
-                  <a
-                    href={archetype.data.guideLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors"
-                  >
-                    Get the Style Guide →
-                  </a>
-                )}
-                {archetype.data.ltkLink && (
-                  <a
-                    href={archetype.data.ltkLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors"
-                  >
-                    Shop This Look →
-                  </a>
-                )}
+              <!-- Hover reveal panel: slides up from bottom on hover -->
+              <div class="archetype-reveal absolute inset-x-0 bottom-0 p-5 z-20
+                          bg-gradient-to-t from-black/95 via-black/85 to-transparent
+                          translate-y-full group-hover:translate-y-0
+                          transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="text-lg text-accent/80">{archetype.data.icon ?? '✦'}</span>
+                  <h3 class="font-heading text-white text-xl font-semibold">{archetype.data.name}</h3>
+                </div>
+                <p class="font-body text-sm text-white/70 leading-relaxed mb-4">
+                  {archetype.data.description}
+                </p>
+                <div class="flex flex-col gap-2">
+                  {archetype.data.guideLink && (
+                    <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
+                       class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
+                      Get the Style Guide →
+                    </a>
+                  )}
+                  {archetype.data.ltkLink && (
+                    <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
+                       class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors">
+                      Shop This Look →
+                    </a>
+                  )}
+                </div>
               </div>
+
             </div>
           ))}
 
-          <!-- "Still Not Sure?" card — accent-tinted frosted glass -->
-          <div class="bg-accent/12 backdrop-blur-sm border border-accent/25 p-7 flex flex-col justify-between
-                      hover:bg-accent/18 hover:border-accent/40 transition-all duration-300">
-            <div>
-              <div class="w-8 h-0.5 bg-accent mb-5"></div>
-              <h3 class="font-heading text-xl font-semibold text-white mb-4">Still Not Sure?</h3>
-              <p class="font-body text-sm text-white/60 leading-relaxed">
-                Most women are a blend of two or three archetypes. Work through the quiz reel below to find your dominant type — then bring that clarity to a consultation and Danielle builds your wardrobe strategy from minute one.
-              </p>
-            </div>
+          <!-- "Still Not Sure?" card — accent-tinted, portrait aspect to match archetype cards -->
+          <div class="relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4]
+                      flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300">
+            <div class="w-8 h-0.5 bg-accent mb-4"></div>
+            <h3 class="font-heading text-xl font-semibold text-white mb-3">Still Not Sure?</h3>
+            <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
+              Most women are a blend of two or three archetypes. Work through the quiz reel to find your dominant type — then bring that clarity to a consultation and Danielle builds your wardrobe strategy from minute one.
+            </p>
             <a
               href={calendlyURL}
-              class="mt-8 inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+              class="inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
             >
               Book a Consultation
             </a>
@@ -349,7 +388,7 @@ const reels = {
       </div>
     </section>
 
-    <!-- MASCULINE ARCHETYPE GRID — full-bleed ensemble background, frosted glass cards -->
+    <!-- MASCULINE ARCHETYPE GRID — full-bleed portrait image cards -->
     <section
       id="masculine-archetypes"
       data-gender="masculine"
@@ -366,6 +405,9 @@ const reels = {
         height="1080"
       />
       <div class="absolute inset-0 bg-gradient-to-b from-primary/72 via-primary/78 to-primary/88 pointer-events-none"></div>
+      <!-- Seam blends — same treatment as feminine cards section -->
+      <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-primary to-transparent pointer-events-none"></div>
+      <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-primary to-transparent pointer-events-none"></div>
 
       <div class="relative z-10 mx-auto max-w-7xl">
         <div class="text-center mb-14">
@@ -378,54 +420,98 @@ const reels = {
         </div>
 
         {masculineSorted.length > 0 ? (
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {masculineSorted.map((archetype) => (
-              <div class="group bg-white/7 backdrop-blur-sm border border-white/10 p-7
-                          hover:bg-white/13 hover:border-white/22 transition-all duration-300 cursor-default">
+              <div
+                class="archetype-card group relative overflow-hidden cursor-default aspect-[3/4]"
+                data-slug={archetype.data.slug}
+                data-images={JSON.stringify([
+                  `/images/archetypes/${archetype.data.slug}-1.webp`,
+                  `/images/archetypes/${archetype.data.slug}-2.webp`,
+                  `/images/archetypes/${archetype.data.slug}-3.webp`,
+                ])}
+              >
+                <!-- Image layer A (starts visible) -->
+                <img
+                  data-layer="a"
+                  src={`/images/archetypes/${archetype.data.slug}-1.webp`}
+                  alt={archetype.data.name}
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  style="transition: opacity 1000ms ease-in-out; opacity: 1"
+                  loading="lazy"
+                />
+                <!-- Image layer B (starts invisible, transitions in) -->
+                <img
+                  data-layer="b"
+                  src=""
+                  alt=""
+                  aria-hidden="true"
+                  class="absolute inset-0 w-full h-full object-cover object-top"
+                  style="transition: opacity 1000ms ease-in-out; opacity: 0"
+                  loading="lazy"
+                />
+
+                <!-- Gradient overlay: always-on dark bottom for text legibility -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none"></div>
+
+                <!-- Archetype color accent line at top of card -->
                 <div
-                  class="w-8 h-0.5 mb-5"
+                  class="absolute top-0 left-0 right-0 h-0.5"
                   style={`background-color: ${archetype.data.color ?? '#b8977e'}`}
                 ></div>
-                <div class="flex items-start gap-3 mb-4">
-                  <span class="text-2xl text-white/40 group-hover:text-accent transition-colors duration-300">
-                    {archetype.data.icon ?? '▲'}
-                  </span>
-                  <h3 class="font-heading text-xl font-semibold text-white/90 group-hover:text-white transition-colors">
-                    {archetype.data.name}
-                  </h3>
+
+                <!-- Always-visible bottom label -->
+                <div class="absolute bottom-0 left-0 right-0 p-5 z-10">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-lg text-accent/70">{archetype.data.icon ?? '▲'}</span>
+                    <h3 class="font-heading text-white text-xl font-semibold leading-tight">
+                      {archetype.data.name}
+                    </h3>
+                  </div>
                 </div>
-                <p class="font-body text-sm text-white/55 group-hover:text-white/75 transition-colors leading-relaxed flex-1 mb-4">
-                  {archetype.data.description}
-                </p>
-                <div class="flex flex-col gap-2 border-t border-white/10 group-hover:border-white/18 pt-5 transition-colors">
-                  {archetype.data.guideLink && (
-                    <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
-                      class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
-                      Get the Style Guide →
-                    </a>
-                  )}
-                  {archetype.data.ltkLink && (
-                    <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
-                      class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors">
-                      Shop This Look →
-                    </a>
-                  )}
+
+                <!-- Hover reveal panel: slides up from bottom on hover -->
+                <div class="archetype-reveal absolute inset-x-0 bottom-0 p-5 z-20
+                            bg-gradient-to-t from-black/95 via-black/85 to-transparent
+                            translate-y-full group-hover:translate-y-0
+                            transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="text-lg text-accent/80">{archetype.data.icon ?? '▲'}</span>
+                    <h3 class="font-heading text-white text-xl font-semibold">{archetype.data.name}</h3>
+                  </div>
+                  <p class="font-body text-sm text-white/70 leading-relaxed mb-4">
+                    {archetype.data.description}
+                  </p>
+                  <div class="flex flex-col gap-2">
+                    {archetype.data.guideLink && (
+                      <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
+                         class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
+                        Get the Style Guide →
+                      </a>
+                    )}
+                    {archetype.data.ltkLink && (
+                      <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
+                         class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors">
+                        Shop This Look →
+                      </a>
+                    )}
+                  </div>
                 </div>
+
               </div>
             ))}
 
-            <div class="bg-accent/12 backdrop-blur-sm border border-accent/25 p-7 flex flex-col justify-between
-                        hover:bg-accent/18 hover:border-accent/40 transition-all duration-300">
-              <div>
-                <div class="w-8 h-0.5 bg-accent mb-5"></div>
-                <h3 class="font-heading text-xl font-semibold text-white mb-4">Still Not Sure?</h3>
-                <p class="font-body text-sm text-white/60 leading-relaxed">
-                  Most men lean into one dominant archetype. Watch the quiz reel below, then bring that clarity to a consultation — Danielle will build your wardrobe strategy from minute one.
-                </p>
-              </div>
+            <!-- "Still Not Sure?" card — accent-tinted, portrait aspect to match archetype cards -->
+            <div class="relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4]
+                        flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300">
+              <div class="w-8 h-0.5 bg-accent mb-4"></div>
+              <h3 class="font-heading text-xl font-semibold text-white mb-3">Still Not Sure?</h3>
+              <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
+                Most men lean into one dominant archetype. Watch the quiz reel, then bring that clarity to a consultation — Danielle will build your wardrobe strategy from minute one.
+              </p>
               <a
                 href={calendlyURL}
-                class="mt-8 inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+                class="inline-flex items-center justify-center px-6 py-3 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
               >
                 Book a Consultation
               </a>
@@ -525,6 +611,18 @@ const reels = {
   /* Ensure the wrapper can contain the absolutely-positioned off-screen blocks */
   #archetypes-page {
     position: relative;
+  }
+
+  /*
+   * Archetype card: the reveal panel slides UP from the bottom on hover.
+   * The bottom label (z-10) sits BELOW the reveal panel (z-20) in stacking order,
+   * so the panel slides over it cleanly without needing to hide the label.
+   *
+   * overflow-hidden on the card clips the panel when it is fully translated down.
+   */
+  .archetype-card .archetype-reveal {
+    /* Ensure the panel background extends past the card bottom edge during transition */
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
   }
 </style>
 
@@ -658,4 +756,128 @@ const reels = {
 
   btnFem!.addEventListener('click', () => switchGender('feminine'));
   btnMas!.addEventListener('click', () => switchGender('masculine'));
+</script>
+
+<script>
+  // ── Per-card image carousel with global deduplication ────────
+  // Each archetype card cycles through 3 images (slug-1.webp, slug-2.webp, slug-3.webp).
+  // A shared registry ensures no two cards show the same image simultaneously.
+  // Two stacked <img> layers (data-layer="a" / "b") crossfade with opacity transitions.
+  // Respects prefers-reduced-motion.
+
+  (function initArchetypeCarousel() {
+    const HOLD_MS = 8_000;  // 8 seconds per image
+    const FADE_MS = 1_000;  // 1 second fade (matches inline transition on <img>)
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Global active-images registry — Maps imagePath -> count of cards currently showing it
+    const activeImages = new Map<string, number>();
+
+    function register(src: string) {
+      if (!src) return;
+      activeImages.set(src, (activeImages.get(src) ?? 0) + 1);
+    }
+    function unregister(src: string) {
+      if (!src) return;
+      const count = (activeImages.get(src) ?? 1) - 1;
+      if (count <= 0) activeImages.delete(src);
+      else activeImages.set(src, count);
+    }
+    function isActive(src: string) {
+      return (activeImages.get(src) ?? 0) > 0;
+    }
+
+    function pickUnique(pool: string[], currentSrc: string): string {
+      // Prefer images not shown on ANY card right now, excluding the card's own current image
+      const available = pool.filter(s => !isActive(s) || s === currentSrc);
+      if (available.length === 0) {
+        // Fallback: just avoid the card's own current image
+        const fallback = pool.filter(s => s !== currentSrc);
+        return fallback.length > 0 ? fallback[Math.floor(Math.random() * fallback.length)] : pool[0];
+      }
+      const choices = available.filter(s => s !== currentSrc);
+      if (choices.length === 0) return available[0];
+      return choices[Math.floor(Math.random() * choices.length)];
+    }
+
+    function startCard(card: HTMLElement, startDelay: number) {
+      const images: string[] = JSON.parse(card.dataset.images ?? '[]');
+      if (images.length < 2) return;
+
+      const layerA = card.querySelector<HTMLImageElement>('[data-layer="a"]');
+      const layerB = card.querySelector<HTMLImageElement>('[data-layer="b"]');
+      if (!layerA || !layerB) return;
+
+      let frontIsA = true;
+
+      // Register starting image
+      const initialSrc = layerA.getAttribute('src') ?? '';
+      register(initialSrc);
+
+      function nextImage() {
+        const front = frontIsA ? layerA! : layerB!;
+        const back  = frontIsA ? layerB! : layerA!;
+        const currentSrc = front.getAttribute('src') ?? '';
+
+        const nextSrc = pickUnique(images, currentSrc);
+
+        // Reserve immediately to prevent other cards from picking the same image
+        register(nextSrc);
+        back.src = nextSrc;
+
+        const doFade = () => {
+          back.style.opacity  = '1';
+          front.style.opacity = '0';
+          unregister(currentSrc);
+          frontIsA = !frontIsA;
+          setTimeout(nextImage, HOLD_MS);
+        };
+
+        if (back.complete && back.naturalWidth > 0) {
+          doFade();
+        } else {
+          back.onload  = doFade;
+          back.onerror = () => {
+            unregister(nextSrc); // failed to load — release reservation
+            setTimeout(nextImage, HOLD_MS);
+          };
+        }
+      }
+
+      setTimeout(nextImage, startDelay + HOLD_MS);
+    }
+
+    function initVisible() {
+      const activePage = document.getElementById('archetypes-page') as HTMLElement | null;
+      if (!activePage) return;
+      const activeGender = activePage.getAttribute('data-active-gender') ?? 'feminine';
+
+      let cardIndex = 0;
+      document.querySelectorAll<HTMLElement>('.archetype-card').forEach((card) => {
+        // Only cycle cards in the currently visible gender block
+        const genderBlock = card.closest<HTMLElement>('[data-gender]');
+        if (genderBlock && genderBlock.dataset.gender !== activeGender) return;
+        startCard(card, cardIndex * 600); // 600ms stagger between cards
+        cardIndex++;
+      });
+    }
+
+    requestAnimationFrame(initVisible);
+
+    // Re-init carousels when gender switches (MutationObserver on data-active-gender)
+    const pageEl = document.getElementById('archetypes-page');
+    if (pageEl) {
+      const observer = new MutationObserver(() => {
+        // Reset registry and re-register all layer-A starting images
+        activeImages.clear();
+        document.querySelectorAll<HTMLImageElement>('.archetype-card [data-layer="a"]').forEach(img => {
+          const src = img.getAttribute('src');
+          if (src) register(src);
+        });
+        initVisible();
+      });
+      observer.observe(pageEl, { attributes: true, attributeFilter: ['data-active-gender'] });
+    }
+  })();
 </script>

@@ -1,4 +1,6 @@
 ---
+import SocialLinks from './SocialLinks.astro';
+
 const quickLinks = [
   { label: 'Services', href: '/services' },
   { label: 'Archetypes', href: '/archetypes' },
@@ -7,18 +9,6 @@ const quickLinks = [
   { label: 'Clients', href: '/clients' },
 ];
 
-const socialLinks = [
-  {
-    label: 'Instagram',
-    href: 'https://instagram.com/littledanniii',
-    handle: '@littledanniii',
-  },
-  {
-    label: 'TikTok',
-    href: 'https://tiktok.com/@staplesandstatementsss',
-    handle: '@staplesandstatementsss',
-  },
-];
 ---
 
 <footer class="bg-primary text-white/80">
@@ -66,21 +56,7 @@ const socialLinks = [
         >
           Follow Along
         </h3>
-        <ul class="space-y-2.5">
-          {socialLinks.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm text-white/60 hover:text-accent-light transition-colors duration-200"
-              >
-                {link.label}
-                <span class="ml-1 text-white/40">{link.handle}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <SocialLinks variant="dark" size="md" />
       </div>
 
       <!-- Contact -->
