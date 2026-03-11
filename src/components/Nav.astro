@@ -182,10 +182,11 @@ const currentPath = Astro.url.pathname;
     });
   }
 
-  // ── Scroll behavior: hide/show + transparent-to-solid restore ───────────
+  // ── Scroll behavior: transparent-to-solid restore ───────────────────────
   // Single rAF-throttled scroll listener handles:
-  //   1. nav-scrolled  — warm drop shadow + background restore on transparent pages
-  //   2. nav-hidden    — hides on scroll-down, reveals on scroll-up
+  //   nav-scrolled  — warm drop shadow + background restore on transparent pages
+  //
+  // Nav is ALWAYS visible (no hide/show). The nav-hidden class is never applied.
   //
   // Uses AbortController so the listener is cleanly replaced on re-init
   // (important if this somehow runs more than once via page-load).
@@ -194,38 +195,20 @@ const currentPath = Astro.url.pathname;
 
   function initScrollBehavior(): void {
     const nav = document.getElementById('site-nav') as HTMLElement | null;
-    const menuBtn = document.getElementById('mobile-menu-btn') as HTMLButtonElement | null;
     if (!nav) return;
 
     // Tear down previous scroll listener if re-running
     scrollController?.abort();
     scrollController = new AbortController();
 
-    const HIDE_THRESHOLD = 100;
-    const DELTA_MIN      = 4;
-    let lastY   = window.scrollY;
     let ticking = false;
 
     function updateNav(): void {
-      const y     = window.scrollY;
-      const delta = y - lastY;
-      const menuOpen = menuBtn?.getAttribute('aria-expanded') === 'true';
+      const y = window.scrollY;
 
-      // 1. Scrolled state: shadow + transparent-nav background restore
+      // Scrolled state: shadow + transparent-nav background restore
       nav.classList.toggle('nav-scrolled', y > 80);
 
-      // 2. Smart hide/show — suppressed while mobile menu is open
-      if (!menuOpen) {
-        if (y < HIDE_THRESHOLD) {
-          nav.classList.remove('nav-hidden');
-        } else if (delta > DELTA_MIN) {
-          nav.classList.add('nav-hidden');
-        } else if (delta < -DELTA_MIN) {
-          nav.classList.remove('nav-hidden');
-        }
-      }
-
-      lastY = y;
       ticking = false;
     }
 

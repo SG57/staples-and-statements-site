@@ -530,4 +530,10 @@
     transition: none !important;
   }
   .s-sk::after { animation: none; }
+
+  /* FABs: instant show/hide, no slide */
+  #fab-group,
+  #fab-menu-panel {
+    transition: none !important;
+  }
 }
