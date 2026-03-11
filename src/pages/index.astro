@@ -3,6 +3,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Marquee from '../components/Marquee.astro';
 import { getCollection } from 'astro:content';
 import { featuredGuides } from '../data/guides';
+import { readdirSync } from 'fs';
+import { join } from 'path';
+
+// Scan hero-banners directory at build time so the client script gets the full pool
+let heroBannerImages: string[] = [];
+try {
+  const dir = join(process.cwd(), 'public/images/hero-banners');
+  heroBannerImages = readdirSync(dir)
+    .filter(f => f.endsWith('.webp'))
+    .sort()
+    .map(f => `/images/hero-banners/${f}`);
+} catch { /* folder doesn't exist yet — graceful fallback */ }
 
 const allServices = await getCollection('services', ({ data }) => data.status === 'active');
 const featuredServices = allServices
@@ -32,44 +44,69 @@ const calendlyURL = '/contact';
   <section class="relative overflow-hidden bg-primary" aria-label="Hero">
     <div class="relative min-h-[90vh] lg:min-h-screen flex flex-col lg:flex-row">
 
-      <!-- Mosaic grid — left side on desktop -->
-      <div class="order-1 lg:order-none lg:absolute lg:inset-0 grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 lg:w-full lg:h-full">
-        <!-- Photo 1: large portrait -->
-        <div class="col-span-1 row-span-2 lg:col-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
-          <!-- Add photo: public/images/hero-1.webp — portrait orientation, Danielle or client -->
-          <img src="/images/hero-1.webp" alt="Wardrobe styling by Danielle Marie" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="600" height="900" onerror="this.style.display='none'" />
+      <!--
+        Mosaic hero grid — auto-cycling carousel
+        Each cell has two stacked images (layer-a / layer-b) that crossfade.
+        The client script picks random images from the full hero-banners pool,
+        staggers the cells so they never all change at once, and cycles every 12s.
+        Initial images are set here for fast first paint (no JS required).
+      -->
+      <div id="hero-mosaic" class="order-1 lg:order-none lg:absolute lg:inset-0 grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 lg:w-full lg:h-full">
+
+        <!-- Cell 0 — large portrait (2 rows) -->
+        <div data-hero-cell="0" class="col-span-1 row-span-2 lg:col-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
+          <img data-layer="a" src="/images/hero-banners/cinematic-1.webp" alt="Wardrobe styling by Danielle Marie"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="600" height="900" />
+          <img data-layer="b" src="" alt="" aria-hidden="true"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
         </div>
-        <!-- Photo 2 -->
-        <div class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <!-- Add photo: public/images/hero-2.webp — outfit flat lay or styling detail -->
-          <img src="/images/hero-2.webp" alt="Curated wardrobe" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+
+        <!-- Cell 1 -->
+        <div data-hero-cell="1" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+          <img data-layer="a" src="/images/hero-banners/editorial-1.webp" alt="Editorial styling"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+          <img data-layer="b" src="" alt="" aria-hidden="true"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
-        <!-- Photo 3 -->
-        <div class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <!-- Add photo: public/images/hero-3.webp — Danielle or styled client -->
-          <img src="/images/hero-3.webp" alt="Personal styling session" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+
+        <!-- Cell 2 -->
+        <div data-hero-cell="2" class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+          <img data-layer="a" src="/images/hero-banners/painterly-1.webp" alt="Personal styling session"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+          <img data-layer="b" src="" alt="" aria-hidden="true"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
-        <!-- Photo 4 (desktop only) -->
-        <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
-          <!-- Add photo: public/images/hero-4.webp -->
-          <img src="/images/hero-4.webp" alt="Style archetype inspiration" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+
+        <!-- Cell 3 — desktop only -->
+        <div data-hero-cell="3" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
+          <img data-layer="a" src="/images/hero-banners/maximalist-1.webp" alt="Luxury personal styling"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+          <img data-layer="b" src="" alt="" aria-hidden="true"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
-        <!-- Photo 5 (desktop only) -->
-        <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <!-- Add photo: public/images/hero-5.webp -->
-          <img src="/images/hero-5.webp" alt="Editorial wardrobe styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+
+        <!-- Cell 4 — desktop only -->
+        <div data-hero-cell="4" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+          <img data-layer="a" src="/images/hero-banners/cinematic-3.webp" alt="Editorial wardrobe styling"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+          <img data-layer="b" src="" alt="" aria-hidden="true"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
-        <!-- Photo 6 (desktop only) -->
-        <div class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <!-- Add photo: public/images/hero-6.webp -->
-          <img src="/images/hero-6.webp" alt="Luxury personal styling" class="absolute inset-0 w-full h-full object-cover" loading="eager" width="400" height="300" onerror="this.style.display='none'" />
+
+        <!-- Cell 5 — desktop only -->
+        <div data-hero-cell="5" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+          <img data-layer="a" src="/images/hero-banners/editorial-3.webp" alt="Style archetype styling"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+          <img data-layer="b" src="" alt="" aria-hidden="true"
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
+
       </div>
 
       <!-- Hero text overlay -->
@@ -100,6 +137,85 @@ const calendlyURL = '/contact';
       </div>
     </div>
   </section>
+
+  <!-- ── HERO CAROUSEL SCRIPT ────────────────────────── -->
+  <script define:vars={{ heroBannerImages }}>
+    // ── Hero mosaic auto-carousel ───────────────────────────────────────────
+    // Each mosaic cell independently cycles through the full hero-banners pool.
+    // Cells are staggered so they never all change at the same moment.
+    // Respects prefers-reduced-motion: disables cycling entirely.
+
+    const IMAGES   = heroBannerImages;
+    const HOLD_MS  = 12_000;   // how long each image shows
+    const FADE_MS  = 1_500;    // crossfade duration (must match CSS transition)
+    const STAGGER  = 2_200;    // ms delay between each cell's first cycle
+
+    if (IMAGES.length < 2) {
+      // Pool too small — nothing to cycle
+    } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+
+      // Fisher-Yates shuffle — returns a NEW shuffled copy
+      function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function startCell(cell, startDelay) {
+        const layerA = cell.querySelector('[data-layer="a"]');
+        const layerB = cell.querySelector('[data-layer="b"]');
+        if (!layerA || !layerB) return;
+
+        // Track which layer is currently "front" (visible)
+        let frontIsA = true;
+
+        // Keep a shuffled queue per cell so cycles aren't predictable
+        let queue = shuffle(IMAGES);
+        // Skip the image already showing so the first transition is always new
+        const initial = layerA.getAttribute('src');
+        queue = queue.filter(s => s !== initial);
+        if (queue.length === 0) queue = shuffle(IMAGES);
+        let qi = 0;
+
+        function nextImage() {
+          const nextSrc = queue[qi];
+          qi = (qi + 1) % queue.length;
+          if (qi === 0) queue = shuffle(IMAGES); // reshuffle when exhausted
+
+          const incoming = frontIsA ? layerB : layerA;
+          const outgoing = frontIsA ? layerA : layerB;
+
+          incoming.src = nextSrc;
+
+          const doFade = () => {
+            incoming.style.opacity = '1';
+            outgoing.style.opacity = '0';
+            frontIsA = !frontIsA;
+            setTimeout(nextImage, HOLD_MS);
+          };
+
+          if (incoming.complete && incoming.naturalWidth > 0) {
+            doFade();
+          } else {
+            incoming.onload  = doFade;
+            incoming.onerror = () => setTimeout(nextImage, HOLD_MS); // skip broken image
+          }
+        }
+
+        setTimeout(nextImage, startDelay + HOLD_MS);
+      }
+
+      // Wait until after first paint so eager images are visible before cycling
+      requestAnimationFrame(() => {
+        document.querySelectorAll('[data-hero-cell]').forEach((cell, i) => {
+          startCell(cell, i * STAGGER);
+        });
+      });
+    }
+  </script>
 
   <!-- ── MARQUEE — brand identity band ────────────────── -->
   <Marquee variant="dark" />
