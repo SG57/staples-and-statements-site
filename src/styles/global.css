@@ -288,6 +288,39 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
+   TEXT BLOOM SYSTEM
+   Multi-layer text-shadow for legibility over any hero image.
+   Works equally well on light and dark backgrounds — the tight
+   inner shadow provides crisp contrast, the soft outer bloom
+   adds the dark haze that separates text from the image beneath.
+
+   .text-bloom     — large display / hero headings
+   .text-bloom-sm  — body text, subtitles, nav links
+   ═══════════════════════════════════════════════════════════ */
+
+.text-bloom {
+  text-shadow:
+    0 0 32px rgba(0, 0, 0, 0.55),   /* soft outer bloom */
+    0 2px 8px rgba(0, 0, 0, 0.75),  /* mid shadow */
+    0 1px 2px rgba(0, 0, 0, 0.95);  /* crisp near edge */
+}
+
+.text-bloom-sm {
+  text-shadow:
+    0 0 16px rgba(0, 0, 0, 0.50),
+    0 1px 4px rgba(0, 0, 0, 0.80);
+}
+
+/* Auto-apply bloom to nav links/brand on transparent-nav pages.
+   Removed on scroll (nav-scrolled) — solid background provides contrast. */
+.nav-transparent:not(.nav-scrolled) .nav-link,
+.nav-transparent:not(.nav-scrolled) .nav-brand {
+  text-shadow:
+    0 0 14px rgba(0, 0, 0, 0.50),
+    0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+/* ═══════════════════════════════════════════════════════════
    NAV SYSTEM
    Centered brand mark · animated underline links · hide/show · shadow
    Transparent-overlay hero mode · smooth scroll-restore to solid.
