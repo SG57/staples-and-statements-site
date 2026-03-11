@@ -255,8 +255,8 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   <!-- ── QUIZ BODY: split-screen layout ────────────────────── -->
   <div class="quiz-body flex flex-col md:flex-row w-full h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] overflow-hidden rounded-sm border border-white/10">
 
-    <!-- LEFT: mood image panel -->
-    <div class="quiz-image-panel relative w-full md:w-[40%] h-[20dvh] md:h-auto shrink-0 overflow-hidden bg-primary">
+    <!-- LEFT: mood image panel — compact on mobile to preserve answer space -->
+    <div class="quiz-image-panel relative w-full md:w-[35%] h-[12dvh] md:h-auto shrink-0 overflow-hidden bg-primary">
       {questions.map((q, i) => (
         <img
           src={q.image}
@@ -278,15 +278,45 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     </div>
 
     <!-- RIGHT: question + answers panel -->
-    <div class="quiz-content-panel relative flex-1 flex flex-col bg-primary/95 backdrop-blur-sm p-6 md:p-10 overflow-y-auto">
+    <div class="quiz-content-panel relative flex-1 flex flex-col bg-primary/95 backdrop-blur-sm p-4 md:p-8 overflow-y-auto">
 
       <!-- Progress: live region -->
       <div class="sr-only" aria-live="polite" id={`quiz-${quizId}-live`}>
         Question 1 of {questionCount}
       </div>
 
-      <!-- Desktop question counter -->
-      <div class="hidden md:block font-body text-xs tracking-widest uppercase text-white/50 mb-6">
+      <!-- Top bar: question counter + close/restart controls -->
+      <div class="flex items-center justify-between mb-3">
+        <div class="font-body text-xs tracking-widest uppercase text-white/50">
+          Question <span class="quiz-q-current text-accent">1</span> of {questionCount}
+        </div>
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            class="quiz-btn-restart font-body text-[11px] tracking-wider uppercase text-white/30
+                   hover:text-accent cursor-pointer transition-colors duration-200"
+            aria-label="Start over"
+            title="Start over"
+          >
+            Restart
+          </button>
+          <button
+            type="button"
+            class="quiz-btn-close-x w-7 h-7 flex items-center justify-center rounded-full
+                   text-white/30 hover:text-white hover:bg-white/10 cursor-pointer
+                   transition-all duration-200"
+            aria-label="Close quiz and return to archetypes"
+            title="Close quiz"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hide the old desktop-only counter since we unified it above -->
+      <div class="hidden">
         Question <span class="quiz-q-current text-accent">1</span> of {questionCount}
       </div>
 
@@ -302,13 +332,13 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
             role="group"
             aria-label={`Question ${q.id} of ${questionCount}`}
           >
-            <h3 class="font-heading text-white text-lg md:text-xl lg:text-2xl font-semibold leading-snug mb-6 md:mb-8 max-w-lg">
+            <h3 class="font-heading text-white text-lg md:text-xl lg:text-2xl font-semibold leading-snug mb-3 md:mb-5 max-w-lg">
               {q.text}
             </h3>
 
             <div
               class:list={[
-                'quiz-options grid gap-2.5',
+                'quiz-options grid gap-1.5 md:gap-2',
                 q.options.length <= 5
                   ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2'
                   : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
@@ -320,7 +350,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
                 <button
                   type="button"
                   class="quiz-chip group/chip relative flex flex-col items-center justify-center text-center
-                         px-2.5 py-2.5 md:px-3 md:py-3.5 min-h-[52px] md:min-h-[64px]
+                         px-2 py-2 md:px-3 md:py-3 min-h-[44px] md:min-h-[56px]
                          bg-white/5 backdrop-blur-sm border border-white/10
                          hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]
                          transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
@@ -358,8 +388,8 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         <button
           type="button"
           class="quiz-btn-back font-body text-sm text-white/50 hover:text-white
-                 transition-colors duration-200 flex items-center gap-1.5
-                 disabled:opacity-0 disabled:pointer-events-none
+                 transition-colors duration-200 flex items-center gap-1.5 cursor-pointer
+                 disabled:opacity-0 disabled:pointer-events-none disabled:cursor-default
                  focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           disabled
           aria-label="Previous question"
@@ -374,6 +404,8 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
               type="button"
               class:list={[
                 'quiz-dot w-2.5 h-2.5 rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+                'cursor-pointer hover:scale-150 hover:bg-accent/60',
+                'disabled:cursor-default disabled:hover:scale-100 disabled:hover:bg-white/20',
                 'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
                 i === 0
                   ? 'bg-accent scale-125 shadow-[0_0_8px_rgba(184,151,126,0.5)]'
@@ -393,8 +425,8 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         <button
           type="button"
           class="quiz-btn-next font-body text-sm text-accent hover:text-accent-light
-                 transition-colors duration-200 flex items-center gap-1.5
-                 disabled:opacity-30 disabled:pointer-events-none
+                 transition-colors duration-200 flex items-center gap-1.5 cursor-pointer
+                 disabled:opacity-30 disabled:pointer-events-none disabled:cursor-default
                  focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           disabled
           aria-label="Next question"
@@ -902,6 +934,8 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     const btnSwitch       = root.querySelector<HTMLButtonElement>('.quiz-btn-switch')!;
     const btnRetake       = root.querySelector<HTMLButtonElement>('.quiz-btn-retake')!;
     const btnBackToCards  = root.querySelector<HTMLButtonElement>('.quiz-btn-back-to-cards')!;
+    const btnRestart      = root.querySelector<HTMLButtonElement>('.quiz-btn-restart')!;
+    const btnCloseX       = root.querySelector<HTMLButtonElement>('.quiz-btn-close-x')!;
     const toast           = root.querySelector<HTMLElement>('.quiz-toast')!;
 
     /* ── Helpers ───────────────────────────────────────────── */
@@ -1315,11 +1349,20 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       }
     });
 
-    // Retake button
+    // Retake button (on results screen)
     btnRetake.addEventListener('click', resetQuiz);
 
-    // Back to archetypes button — dispatches event for page-level handler
+    // Back to archetypes button (on results screen)
     btnBackToCards.addEventListener('click', () => {
+      resetQuiz();
+      root.dispatchEvent(new CustomEvent('quiz:exit', { bubbles: true }));
+    });
+
+    // Restart button (top bar, during quiz) — resets to Q1
+    btnRestart.addEventListener('click', resetQuiz);
+
+    // Close X button (top bar, during quiz) — exits quiz entirely
+    btnCloseX.addEventListener('click', () => {
       resetQuiz();
       root.dispatchEvent(new CustomEvent('quiz:exit', { bubbles: true }));
     });
