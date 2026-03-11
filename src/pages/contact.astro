@@ -51,16 +51,28 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
             skeleton provides the visual container during load, and Calendly's
             own chrome takes over after.
           -->
-          <div class="relative">
+          <!--
+            Outer wrapper: position relative, height set by widget.
+            Skeleton: absolute inset-0 z-10 — overlays the widget exactly.
+            Widget: starts opacity:0, fades in when Calendly is ready.
 
-            <!-- Branded skeleton loading state -->
+            IMPORTANT: .s-sk (shimmer) must be on an INNER div, NOT on the
+            absolute skeleton div. .s-sk has position:relative (unlayered CSS,
+            higher cascade than Tailwind utilities) which would override
+            absolute positioning if applied directly — causing the layout bug
+            where skeleton and widget stack vertically instead of overlapping.
+          -->
+          <div class="relative" style="min-height:680px;">
+
+            <!-- Skeleton: absolute overlay, no s-sk on this element -->
             <div
               id="calendly-loading"
-              class="s-sk absolute inset-0 z-10 bg-surface pointer-events-none"
-              style="transition: opacity 600ms ease; border: 1px solid var(--color-surface-dark);"
+              class="absolute inset-0 z-10 pointer-events-none overflow-hidden"
+              style="transition: opacity 600ms ease; background: var(--color-surface); border: 1px solid var(--color-surface-dark);"
               aria-hidden="true"
             >
-              <div class="p-6 h-full flex flex-col gap-5">
+              <!-- Inner div carries the shimmer animation — needs position:relative + overflow:hidden -->
+              <div class="s-sk h-full p-6 flex flex-col gap-5">
                 <!-- Month navigation row -->
                 <div class="flex items-center justify-between px-1">
                   <div class="w-7 h-7 rounded-full bg-surface-dark"></div>
@@ -91,13 +103,13 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
               </div>
             </div>
 
-            <!-- Actual Calendly widget — no border (skeleton provides it during load) -->
+            <!-- Calendly widget: starts invisible, fades in when fully loaded -->
             <div
               id="calendly-widget"
               class="calendly-inline-widget"
               data-url={CALENDLY_URL}
               data-resize="true"
-              style="min-width:320px; min-height:680px;"
+              style="min-width:320px; min-height:680px; opacity:0; transition: opacity 600ms ease;"
             ></div>
 
           </div>
@@ -293,28 +305,36 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
   // and showed false-positive fallbacks on legitimate slow connections.
 
   (function initCalendlyGuard() {
-    const widget   = document.getElementById('calendly-widget');
-    const skeleton = document.getElementById('calendly-loading');
-    const fallback = document.getElementById('calendly-fallback');
-    const retryBtn = document.getElementById('calendly-retry');
+    const widget   = document.getElementById('calendly-widget')   as HTMLElement | null;
+    const skeleton = document.getElementById('calendly-loading')  as HTMLElement | null;
+    const fallback = document.getElementById('calendly-fallback') as HTMLElement | null;
+    const retryBtn = document.getElementById('calendly-retry')    as HTMLButtonElement | null;
 
     if (!widget || !fallback) return;
 
-    const TIMEOUT_MS = 12_000;
-    let timer: ReturnType<typeof setTimeout>;
+    let revealed = false;
+    const TIMEOUT_MS = 14_000;  // generous — Calendly can be slow
 
-    // Fade out the skeleton once Calendly's iframe is ready
-    function hideSkeleton() {
-      if (!skeleton) return;
-      skeleton.style.opacity = '0';
-      skeleton.style.pointerEvents = 'none';
-      // Remove from layout after fade completes so it doesn't block interaction
-      setTimeout(() => { skeleton.style.display = 'none'; }, 650);
+    // ── Crossfade: skeleton OUT, widget IN simultaneously ─────────────────
+    // Both transitions happen at the same time (600ms ease each).
+    // After the fade the skeleton is removed from the layout entirely.
+    function revealCalendly() {
+      if (revealed) return;
+      revealed = true;
+      clearTimeout(fallbackTimer);
+
+      if (skeleton) {
+        skeleton.style.opacity = '0';
+        setTimeout(() => {
+          if (skeleton) skeleton.style.display = 'none';
+        }, 650);
+      }
+      widget.style.opacity = '1';
     }
 
     function showFallback() {
-      hideSkeleton();
-      widget.style.display   = 'none';
+      if (skeleton) { skeleton.style.opacity = '0'; skeleton.style.display = 'none'; }
+      widget.style.display = 'none';
       fallback.classList.remove('hidden');
     }
 
@@ -323,47 +343,65 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
       fallback.classList.add('hidden');
     }
 
-    // MutationObserver watches for Calendly's iframe being inserted
+    // ── Primary trigger: Calendly postMessage ─────────────────────────────
+    // calendly.profile_page_viewed fires when the scheduling page is fully
+    // rendered and "Select a Date & Time" is visible to the user.
+    // This is the most accurate trigger — the iframe content is actually ready.
+    function isCalendlyMsg(e: MessageEvent): boolean {
+      return (
+        e.origin === 'https://calendly.com' &&
+        typeof e.data === 'object' &&
+        typeof e.data.event === 'string' &&
+        e.data.event.startsWith('calendly.')
+      );
+    }
+
+    window.addEventListener('message', (e: MessageEvent) => {
+      if (!isCalendlyMsg(e)) return;
+      // Profile page viewed = "Select a Date & Time" is on screen
+      if (e.data.event === 'calendly.profile_page_viewed') {
+        revealCalendly();
+      }
+      // Event scheduled = hand off to booking-confirmed handler (existing logic below)
+    });
+
+    // ── Secondary trigger: iframe insertion (fallback for postMessage) ─────
+    // If Calendly fires the iframe but doesn't send profile_page_viewed
+    // (can happen in some embed configs), we reveal after a short delay
+    // to let the iframe's content finish rendering before fading in.
     const observer = new MutationObserver(() => {
       if (widget.querySelector('iframe')) {
         observer.disconnect();
-        clearTimeout(timer);
-        hideSkeleton(); // fade out loading skeleton — Calendly is ready
-        hideFallback(); // in case it was briefly shown
+        // Wait 800ms after iframe insertion — gives Calendly's UI time to paint
+        // before we reveal it. Avoids a flash of blank iframe content.
+        setTimeout(revealCalendly, 800);
       }
     });
-
     observer.observe(widget, { childList: true, subtree: true });
 
-    // Timer: if no iframe after TIMEOUT_MS, declare failure
-    timer = setTimeout(() => {
+    // ── Tertiary trigger: hard timeout ────────────────────────────────────
+    // If neither postMessage nor iframe appear after TIMEOUT_MS, show fallback.
+    const fallbackTimer = setTimeout(() => {
       observer.disconnect();
-      if (!widget.querySelector('iframe')) {
+      if (!revealed && !widget.querySelector('iframe')) {
         showFallback();
       }
     }, TIMEOUT_MS);
 
-    // Retry button — reloads the Calendly widget script
+    // ── Retry ─────────────────────────────────────────────────────────────
     retryBtn?.addEventListener('click', () => {
       hideFallback();
+      revealed = false;
+      widget.style.opacity = '0';
+      if (skeleton) { skeleton.style.display = ''; skeleton.style.opacity = '1'; }
 
-      // Re-initialize via Calendly's API if available
       if (typeof (window as any).Calendly !== 'undefined') {
         try {
           (window as any).Calendly.initInlineWidgets();
-
-          // Re-arm the observer and timer
           observer.observe(widget, { childList: true, subtree: true });
-          timer = setTimeout(() => {
-            observer.disconnect();
-            if (!widget.querySelector('iframe')) showFallback();
-          }, TIMEOUT_MS);
-
           return;
         } catch {}
       }
-
-      // Calendly script itself failed to load — reload the page
       window.location.reload();
     });
   })();

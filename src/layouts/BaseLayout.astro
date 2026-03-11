@@ -258,7 +258,7 @@ const GA4_ID = 'G-XXXXXXXXXX';
     const soft = document.createElement('canvas');
     soft.width = soft.height = SIZE;
     const sCtx = soft.getContext('2d')!;
-    sCtx.filter = 'blur(0.6px)';
+    sCtx.filter = 'blur(1px)';
     sCtx.drawImage(canvas, 0, 0);
     const url = soft.toDataURL('image/png');
 
