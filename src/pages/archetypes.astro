@@ -72,11 +72,11 @@ const calendlyURL = '/contact';
            style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)"></div>
 
       <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
-        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4 text-bloom-sm">The Framework</p>
         <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl text-bloom">
           Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
         </h1>
-        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed">
+        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed text-bloom-sm">
           Seven distinct aesthetic identities. One is yours. Understanding it changes how you shop, how you dress, and how you feel every single morning.
         </p>
         <div class="mt-10">
@@ -258,11 +258,11 @@ const calendlyURL = '/contact';
            style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)"></div>
 
       <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
-        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4 text-bloom-sm">The Framework</p>
         <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl text-bloom">
           Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
         </h1>
-        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed">
+        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed text-bloom-sm">
           Distinct aesthetic identities for the modern man. Understanding yours changes how you dress, how you present, and how the world reads you.
         </p>
         <div class="mt-10">
@@ -501,6 +501,22 @@ const calendlyURL = '/contact';
     position: relative;
   }
 
+  /* Click ripple — immediate visual confirmation that click registered */
+  .card-click-ripple {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transform: translate(-50%, -50%) scale(0);
+    animation: card-click-ripple 550ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: none;
+    z-index: 50;
+  }
+  @keyframes card-click-ripple {
+    to { transform: translate(-50%, -50%) scale(45); opacity: 0; }
+  }
+
   /*
    * Archetype card: the reveal panel slides UP from the bottom on hover.
    * The bottom label (z-10) sits BELOW the reveal panel (z-20) in stacking order,
@@ -647,19 +663,25 @@ const calendlyURL = '/contact';
 </script>
 
 <script>
-  // ── Per-card image carousel with global deduplication ────────
-  // Each archetype card cycles through 3 images (slug-1.webp, slug-2.webp, slug-3.webp).
-  // A shared registry ensures no two cards show the same image simultaneously.
-  // Two stacked <img> layers (data-layer="a" / "b") crossfade with opacity transitions.
-  // Respects prefers-reduced-motion.
+  // ── Archetype card image carousel — bulletproof rewrite ───────
+  //
+  // Fixes vs previous version:
+  //   1. ALL cards (both genders) started on page load — no gender-switch
+  //      re-init needed, no risk of masculine cards missing _advanceCarousel
+  //   2. _carouselStarted guard — startCard() called exactly once per card
+  //   3. Load timeout — transitioning flag can't get permanently stuck if
+  //      an image stalls (no onload/onerror fires)
+  //   4. Ripple effect on click — immediate visual confirmation before fade
+  //   5. Deduplication registry shared across all cards (both genders)
 
   (function initArchetypeCarousel() {
-    const HOLD_MS = 8_000;  // 8 seconds per image
-    const FADE_MS = 1_000;  // 1 second fade (matches inline transition on <img>)
+    const HOLD_MS         = 8_000;  // how long each image shows
+    const FADE_MS         = 1_000;  // crossfade duration (must match img transition)
+    const LOAD_TIMEOUT_MS = 6_000;  // max wait for image load before recovery
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Global active-images registry — Maps imagePath -> count of cards currently showing it
+    // ── Shared registry: no two cards ever show the same image ────
     const activeImages = new Map<string, number>();
 
     function register(src: string) {
@@ -668,27 +690,26 @@ const calendlyURL = '/contact';
     }
     function unregister(src: string) {
       if (!src) return;
-      const count = (activeImages.get(src) ?? 1) - 1;
-      if (count <= 0) activeImages.delete(src);
-      else activeImages.set(src, count);
+      const n = (activeImages.get(src) ?? 1) - 1;
+      if (n <= 0) activeImages.delete(src); else activeImages.set(src, n);
     }
-    function isActive(src: string) {
-      return (activeImages.get(src) ?? 0) > 0;
-    }
+    function isActive(src: string) { return (activeImages.get(src) ?? 0) > 0; }
 
     function pickUnique(pool: string[], currentSrc: string): string {
-      // Prefer images not shown on ANY card right now, excluding the card's own current image
-      const available = pool.filter(s => !isActive(s) || s === currentSrc);
-      if (available.length === 0) {
-        // Fallback: just avoid the card's own current image
-        const fallback = pool.filter(s => s !== currentSrc);
-        return fallback.length > 0 ? fallback[Math.floor(Math.random() * fallback.length)] : pool[0];
+      const free = pool.filter(s => !isActive(s));
+      if (free.length > 0) {
+        const choices = free.filter(s => s !== currentSrc);
+        return choices.length > 0
+          ? choices[Math.floor(Math.random() * choices.length)]
+          : free[0];
       }
-      const choices = available.filter(s => s !== currentSrc);
-      if (choices.length === 0) return available[0];
-      return choices[Math.floor(Math.random() * choices.length)];
+      const fallback = pool.filter(s => s !== currentSrc);
+      return fallback.length > 0
+        ? fallback[Math.floor(Math.random() * fallback.length)]
+        : pool[0];
     }
 
+    // ── Per-card cycle ─────────────────────────────────────────────
     function startCard(card: HTMLElement, startDelay: number) {
       const images: string[] = JSON.parse(card.dataset.images ?? '[]');
       if (images.length < 2) return;
@@ -699,11 +720,9 @@ const calendlyURL = '/contact';
 
       let frontIsA    = true;
       let timer: ReturnType<typeof setTimeout> | null = null;
-      let transitioning = false;  // true while a fade is in progress — blocks re-entry
+      let transitioning = false;
 
-      // Register starting image
-      const initialSrc = layerA.getAttribute('src') ?? '';
-      register(initialSrc);
+      register(layerA.getAttribute('src') ?? '');
 
       function nextImage() {
         if (transitioning) return;
@@ -713,19 +732,25 @@ const calendlyURL = '/contact';
         const front = frontIsA ? layerA! : layerB!;
         const back  = frontIsA ? layerB! : layerA!;
         const currentSrc = front.getAttribute('src') ?? '';
+        const nextSrc    = pickUnique(images, currentSrc);
 
-        const nextSrc = pickUnique(images, currentSrc);
-
-        // Reserve immediately to prevent other cards from picking the same image
         register(nextSrc);
         back.src = nextSrc;
 
+        // Safety net: if the image never fires onload/onerror, recover after timeout
+        const loadTimer = setTimeout(() => {
+          back.onload = back.onerror = null;
+          unregister(nextSrc);
+          transitioning = false;
+          timer = setTimeout(nextImage, HOLD_MS);
+        }, LOAD_TIMEOUT_MS);
+
         const doFade = () => {
+          clearTimeout(loadTimer);
           back.style.opacity  = '1';
           front.style.opacity = '0';
           unregister(currentSrc);
           frontIsA = !frontIsA;
-          // Release the transitioning lock after the CSS fade completes
           setTimeout(() => { transitioning = false; }, FADE_MS);
           timer = setTimeout(nextImage, HOLD_MS);
         };
@@ -735,60 +760,51 @@ const calendlyURL = '/contact';
         } else {
           back.onload  = doFade;
           back.onerror = () => {
-            unregister(nextSrc); // failed to load — release reservation
+            clearTimeout(loadTimer);
+            unregister(nextSrc);
             transitioning = false;
             timer = setTimeout(nextImage, HOLD_MS);
           };
         }
       }
 
-      // Expose an advance function on the card element so click handlers can trigger it
       (card as any)._advanceCarousel = () => { if (!transitioning) nextImage(); };
-
       timer = setTimeout(nextImage, startDelay + HOLD_MS);
     }
 
-    function initVisible() {
-      const activePage = document.getElementById('archetypes-page') as HTMLElement | null;
-      if (!activePage) return;
-      const activeGender = activePage.getAttribute('data-active-gender') ?? 'feminine';
+    // ── Ripple helper ─────────────────────────────────────────────
+    function spawnRipple(card: HTMLElement, e: MouseEvent) {
+      const ripple = document.createElement('span');
+      ripple.className = 'card-click-ripple';
+      const r = card.getBoundingClientRect();
+      ripple.style.left = `${e.clientX - r.left}px`;
+      ripple.style.top  = `${e.clientY - r.top}px`;
+      card.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+    }
 
-      let cardIndex = 0;
+    // ── Init ALL cards once — both genders, never repeated ────────
+    // Starting all cards up-front means:
+    //   • masculine cards have _advanceCarousel set before first switch
+    //   • no MutationObserver re-init needed
+    //   • off-screen cards cycle silently — registry stays globally consistent
+    requestAnimationFrame(() => {
+      let i = 0;
       document.querySelectorAll<HTMLElement>('.archetype-card').forEach((card) => {
-        // Only cycle cards in the currently visible gender block
-        const genderBlock = card.closest<HTMLElement>('[data-gender]');
-        if (genderBlock && genderBlock.dataset.gender !== activeGender) return;
-        startCard(card, cardIndex * 600); // 600ms stagger between cards
-        cardIndex++;
+        if ((card as any)._carouselStarted) return;
+        (card as any)._carouselStarted = true;
 
-        // Click anywhere on the card body (not on links/buttons) advances to next image.
-        // This lets curious users explore all 3 images without waiting for auto-cycle.
-        if (!(card as any)._clickBound) {
-          (card as any)._clickBound = true;
-          card.addEventListener('click', (e) => {
-            if ((e.target as Element).closest('a, button')) return; // let links work normally
-            const advance = (card as any)._advanceCarousel;
-            if (advance) advance();
-          });
-        }
-      });
-    }
+        startCard(card, i * 350);  // 350ms stagger across all cards
+        i++;
 
-    requestAnimationFrame(initVisible);
-
-    // Re-init carousels when gender switches (MutationObserver on data-active-gender)
-    const pageEl = document.getElementById('archetypes-page');
-    if (pageEl) {
-      const observer = new MutationObserver(() => {
-        // Reset registry and re-register all layer-A starting images
-        activeImages.clear();
-        document.querySelectorAll<HTMLImageElement>('.archetype-card [data-layer="a"]').forEach(img => {
-          const src = img.getAttribute('src');
-          if (src) register(src);
+        card.addEventListener('click', (e: MouseEvent) => {
+          if ((e.target as Element).closest('a, button')) return;
+          spawnRipple(card, e);
+          const advance = (card as any)._advanceCarousel;
+          if (advance) advance();
         });
-        initVisible();
       });
-      observer.observe(pageEl, { attributes: true, attributeFilter: ['data-active-gender'] });
-    }
+    });
+
   })();
 </script>

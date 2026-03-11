@@ -6,7 +6,7 @@ import { featuredGuides } from '../data/guides';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 
-// Scan hero-banners directory at build time so the client script gets the full pool
+// Scan hero-banners directory at build time
 let heroBannerImages: string[] = [];
 try {
   const dir = join(process.cwd(), 'public/images/hero-banners');
@@ -15,6 +15,20 @@ try {
     .sort()
     .map(f => `/images/hero-banners/${f}`);
 } catch { /* folder doesn't exist yet — graceful fallback */ }
+
+// Pick 6 random unique starting images at build time — no two cells start
+// with the same image, and the set changes on every deploy.
+function sampleUnique(arr: string[], n: number): string[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, n);
+}
+const heroStart = heroBannerImages.length >= 6
+  ? sampleUnique(heroBannerImages, 6)
+  : [...heroBannerImages, ...heroBannerImages, ...heroBannerImages].slice(0, 6);
 
 const allServices = await getCollection('services', ({ data }) => data.status === 'active');
 const featuredServices = allServices
@@ -59,7 +73,7 @@ const calendlyURL = '/contact';
 
         <!-- Cell 0 — large portrait (2 rows) -->
         <div data-hero-cell="0" class="col-span-1 row-span-2 lg:col-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
-          <img data-layer="a" src="/images/hero-banners/cinematic-1.webp" alt="Wardrobe styling by Danielle Marie"
+          <img data-layer="a" src={heroStart[0]} alt="Wardrobe styling by Danielle Marie"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="600" height="900" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
@@ -68,7 +82,7 @@ const calendlyURL = '/contact';
 
         <!-- Cell 1 -->
         <div data-hero-cell="1" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <img data-layer="a" src="/images/hero-banners/editorial-1.webp" alt="Editorial styling"
+          <img data-layer="a" src={heroStart[1]} alt="Editorial styling"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
@@ -77,7 +91,7 @@ const calendlyURL = '/contact';
 
         <!-- Cell 2 -->
         <div data-hero-cell="2" class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <img data-layer="a" src="/images/hero-banners/painterly-1.webp" alt="Personal styling session"
+          <img data-layer="a" src={heroStart[2]} alt="Personal styling session"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
@@ -86,7 +100,7 @@ const calendlyURL = '/contact';
 
         <!-- Cell 3 — desktop only -->
         <div data-hero-cell="3" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
-          <img data-layer="a" src="/images/hero-banners/maximalist-1.webp" alt="Luxury personal styling"
+          <img data-layer="a" src={heroStart[3]} alt="Luxury personal styling"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
@@ -95,7 +109,7 @@ const calendlyURL = '/contact';
 
         <!-- Cell 4 — desktop only -->
         <div data-hero-cell="4" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <img data-layer="a" src="/images/hero-banners/cinematic-3.webp" alt="Editorial wardrobe styling"
+          <img data-layer="a" src={heroStart[4]} alt="Editorial wardrobe styling"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
@@ -104,7 +118,7 @@ const calendlyURL = '/contact';
 
         <!-- Cell 5 — desktop only -->
         <div data-hero-cell="5" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <img data-layer="a" src="/images/hero-banners/editorial-3.webp" alt="Style archetype styling"
+          <img data-layer="a" src={heroStart[5]} alt="Style archetype styling"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
