@@ -2,7 +2,7 @@
 name: "The Siren"
 slug: "the-siren"
 description: "Confident, magnetic, and irresistibly alluring. Your style celebrates every curve and commands every room."
-order: 6
+order: 1
 gender: "feminine"
 icon: "◉"
 color: "#8c4a3e"

@@ -2,7 +2,7 @@
 name: "The Enchantress"
 slug: "the-enchantress"
 description: "Dark, magnetic, and mysterious. Your style draws people in before you say a word."
-order: 3
+order: 4
 gender: "feminine"
 icon: "◈"
 color: "#4a3d5c"

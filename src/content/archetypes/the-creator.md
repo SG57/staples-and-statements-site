@@ -2,7 +2,7 @@
 name: "The Creator"
 slug: "the-creator"
 description: "Eclectic, expressive, and artistically fearless. Your style is wearable art — and the rules don't apply."
-order: 7
+order: 5
 gender: "feminine"
 icon: "◐"
 color: "#6b8c6e"

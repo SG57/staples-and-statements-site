@@ -2,7 +2,7 @@
 name: "The Muse"
 slug: "the-muse"
 description: "Romantic, ethereal, and endlessly creative. Your style is poetry in motion."
-order: 1
+order: 2
 gender: "feminine"
 icon: "✦"
 color: "#c9b8d4"

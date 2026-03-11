@@ -4,7 +4,8 @@
  *
  * Split-screen editorial layout: mood image left, questions right.
  * 7 questions per gender, multi-select answer chips, animated transitions,
- * results view with sharing. Fully self-contained — no external deps.
+ * cinematic results reveal with per-archetype entrance animations,
+ * triptych image display, and sharing. Fully self-contained — no external deps.
  */
 
 interface Props {
@@ -209,23 +210,35 @@ const masculineQuestions = [
 
 const questions = isFeminine ? feminineQuestions : masculineQuestions;
 
-/* Archetype metadata for results display */
-const feminineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string }> = {
-  A: { name: 'The Siren', icon: '\u25C9', color: '#8c4a3e', slug: 'the-siren' },
-  B: { name: 'The Muse', icon: '\u2726', color: '#c9b8d4', slug: 'the-muse' },
-  C: { name: 'The Warrior', icon: '\u25B2', color: '#5a5a5a', slug: 'the-warrior' },
-  D: { name: 'The Enchantress', icon: '\u25C8', color: '#4a3d5c', slug: 'the-enchantress' },
-  E: { name: 'The Creator', icon: '\u25D0', color: '#6b8c6e', slug: 'the-creator' },
-  F: { name: 'The Empress', icon: '\u265B', color: '#8b6b4a', slug: 'the-empress' },
-  G: { name: 'The Angelic One', icon: '\u2727', color: '#e8ddd4', slug: 'the-angelic-one' },
+/* Archetype metadata for results display (with descriptions) */
+const feminineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string; desc: string }> = {
+  A: { name: 'The Siren', icon: '\u25C9', color: '#8c4a3e', slug: 'the-siren',
+       desc: 'Confident, magnetic, and irresistibly alluring. Your style celebrates every curve and commands every room.' },
+  B: { name: 'The Muse', icon: '\u2726', color: '#c9b8d4', slug: 'the-muse',
+       desc: 'Romantic, ethereal, and endlessly creative. Your style is poetry in motion.' },
+  C: { name: 'The Warrior', icon: '\u25B2', color: '#5a5a5a', slug: 'the-warrior',
+       desc: 'Bold, structured, and completely unapologetic. You dress with intention and leave an impression.' },
+  D: { name: 'The Enchantress', icon: '\u25C8', color: '#4a3d5c', slug: 'the-enchantress',
+       desc: 'Dark, magnetic, and mysterious. Your style draws people in before you say a word.' },
+  E: { name: 'The Creator', icon: '\u25D0', color: '#6b8c6e', slug: 'the-creator',
+       desc: 'Eclectic, expressive, and artistically fearless. Your style is wearable art — and the rules don\'t apply.' },
+  F: { name: 'The Empress', icon: '\u265B', color: '#8b6b4a', slug: 'the-empress',
+       desc: 'Nurturing, grounding, and abundantly elegant. You dress with quiet confidence — luxe elevated basics and warm neutrals that radiate stability and grace.' },
+  G: { name: 'The Angelic One', icon: '\u2727', color: '#e8ddd4', slug: 'the-angelic-one',
+       desc: 'Pure, luminous, and timelessly beautiful. Your style radiates grace and effortless softness.' },
 };
 
-const masculineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string }> = {
-  A: { name: 'The Protector', icon: '\u25C6', color: '#2c3e50', slug: 'the-protector' },
-  B: { name: 'The Maverick', icon: '\u25C7', color: '#2d1b33', slug: 'the-maverick' },
-  C: { name: 'The Architect', icon: '\u25FC', color: '#1a1a2e', slug: 'the-architect' },
-  D: { name: 'The Alchemist', icon: '\u25CE', color: '#4a2d3e', slug: 'the-alchemist' },
-  E: { name: 'The Sovereign', icon: '\u2B21', color: '#1a3a2a', slug: 'the-sovereign' },
+const masculineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string; desc: string }> = {
+  A: { name: 'The Protector', icon: '\u25C6', color: '#2c3e50', slug: 'the-protector',
+       desc: 'Grounded, capable, and quietly strong. You dress to feel steady and ready for life — not to impress, but to be prepared for whatever comes.' },
+  B: { name: 'The Maverick', icon: '\u25C7', color: '#2d1b33', slug: 'the-maverick',
+       desc: 'Driven by freedom, individuality, and self-expression. Fashion is a playground, not a rule book — you evolve with curiosity and refuse to blend in.' },
+  C: { name: 'The Architect', icon: '\u25FC', color: '#1a1a2e', slug: 'the-architect',
+       desc: 'Intentional, precise, and deeply aware of the power of presentation. Every choice is considered, every detail calculated — nothing is accidental.' },
+  D: { name: 'The Alchemist', icon: '\u25CE', color: '#4a2d3e', slug: 'the-alchemist',
+       desc: 'Style as emotional language. You move through phases, moods, and transformation — your wardrobe reflects inner depth and personal evolution.' },
+  E: { name: 'The Sovereign', icon: '\u2B21', color: '#1a3a2a', slug: 'the-sovereign',
+       desc: 'Fully aligned — your style feels effortless, grounded, and quietly powerful. You\'re not chasing trends or identities; you\'re expressing a fully formed sense of self.' },
 };
 
 const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypesMeta;
@@ -240,10 +253,10 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   data-archetypes={JSON.stringify(archetypesMeta)}
 >
   <!-- ── QUIZ BODY: split-screen layout ────────────────────── -->
-  <div class="quiz-body flex flex-col md:flex-row w-full min-h-[600px] md:min-h-[680px] overflow-hidden rounded-sm border border-white/10">
+  <div class="quiz-body flex flex-col md:flex-row w-full h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] overflow-hidden rounded-sm border border-white/10">
 
     <!-- LEFT: mood image panel -->
-    <div class="quiz-image-panel relative w-full md:w-[40%] h-[30vh] md:h-auto shrink-0 overflow-hidden bg-primary">
+    <div class="quiz-image-panel relative w-full md:w-[40%] h-[20dvh] md:h-auto shrink-0 overflow-hidden bg-primary">
       {questions.map((q, i) => (
         <img
           src={q.image}
@@ -265,7 +278,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     </div>
 
     <!-- RIGHT: question + answers panel -->
-    <div class="quiz-content-panel relative flex-1 flex flex-col bg-primary/95 backdrop-blur-sm p-6 md:p-10 overflow-hidden">
+    <div class="quiz-content-panel relative flex-1 flex flex-col bg-primary/95 backdrop-blur-sm p-6 md:p-10 overflow-y-auto">
 
       <!-- Progress: live region -->
       <div class="sr-only" aria-live="polite" id={`quiz-${quizId}-live`}>
@@ -289,7 +302,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
             role="group"
             aria-label={`Question ${q.id} of ${questionCount}`}
           >
-            <h3 class="font-heading text-white text-xl md:text-2xl lg:text-3xl font-semibold leading-snug mb-6 md:mb-8 max-w-lg">
+            <h3 class="font-heading text-white text-lg md:text-xl lg:text-2xl font-semibold leading-snug mb-6 md:mb-8 max-w-lg">
               {q.text}
             </h3>
 
@@ -307,7 +320,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
                 <button
                   type="button"
                   class="quiz-chip group/chip relative flex flex-col items-center justify-center text-center
-                         px-3 py-4 md:px-4 md:py-5 min-h-[68px] md:min-h-[80px]
+                         px-2.5 py-2.5 md:px-3 md:py-3.5 min-h-[52px] md:min-h-[64px]
                          bg-white/5 backdrop-blur-sm border border-white/10
                          hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]
                          transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
@@ -324,7 +337,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
                                transition-all duration-200">
                     &#10003;
                   </span>
-                  <span class="font-heading text-[1.75rem] leading-none text-accent/70 mb-1.5
+                  <span class="font-heading text-xl md:text-2xl leading-none text-accent/70 mb-1.5
                                group-hover/chip:text-accent transition-colors duration-200">
                     {opt.letter}
                   </span>
@@ -340,7 +353,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       </div>
 
       <!-- Navigation bar -->
-      <div class="quiz-nav flex items-center justify-between mt-6 pt-4 border-t border-white/10">
+      <div class="quiz-nav flex items-center justify-between mt-auto pt-3 border-t border-white/10">
         <!-- Back button -->
         <button
           type="button"
@@ -392,38 +405,85 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     </div>
   </div>
 
+  <!-- ── CALCULATING OVERLAY ─────────────────────────────── -->
+  <div class="quiz-calculating hidden" aria-label="Calculating your result">
+    <div class="flex flex-col items-center justify-center h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] bg-primary">
+      <!-- "Discovering" text -->
+      <p class="quiz-calc-text font-heading text-white text-2xl md:text-3xl mb-8 opacity-0">
+        Discovering your archetype...
+      </p>
+      <!-- Shimmer bar -->
+      <div class="quiz-shimmer-track w-64 h-px bg-white/10 rounded-full overflow-hidden">
+        <div class="quiz-shimmer-bar h-full bg-accent rounded-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TEASER WORDS OVERLAY ────────────────────────────── -->
+  <div class="quiz-teaser hidden" aria-label="Teaser words">
+    <div class="flex items-center justify-center h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] bg-primary">
+      <span class="quiz-teaser-word font-heading text-white text-4xl md:text-6xl opacity-0"></span>
+    </div>
+  </div>
+
+  <!-- ── "YOU ARE" REVEAL TEXT ────────────────────────────── -->
+  <div class="quiz-youare hidden" aria-label="You are reveal">
+    <div class="flex items-center justify-center h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] bg-primary">
+      <span class="quiz-youare-text font-body text-accent text-sm md:text-base tracking-widest uppercase opacity-0">You are...</span>
+    </div>
+  </div>
+
   <!-- ── RESULTS VIEW ──────────────────────────────────────── -->
-  <div class="quiz-results hidden" aria-label="Your style archetype result">
-    <div class="flex flex-col items-center text-center py-10 md:py-16 px-6">
+  <div class="quiz-results hidden h-[calc(100dvh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto" aria-label="Your style archetype result">
+    <div class="flex flex-col items-center text-center py-8 md:py-12 px-6">
 
       <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Your Style Archetype</p>
-      <div class="w-12 h-px bg-accent mb-8"></div>
+      <div class="w-12 h-px bg-accent mb-6"></div>
 
-      <!-- Primary archetype card -->
-      <div class="quiz-result-primary relative w-full max-w-sm aspect-[3/4] overflow-hidden rounded-sm mb-8">
-        <img
-          class="quiz-result-img absolute inset-0 w-full h-full object-cover object-center"
-          src=""
-          alt=""
-          loading="lazy"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
-        <!-- Archetype color accent line -->
-        <div class="quiz-result-accent-line absolute top-0 left-0 right-0 h-1"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-          <div class="flex items-center justify-center gap-3 mb-2">
-            <span class="quiz-result-icon text-2xl text-accent"></span>
-            <h3 class="quiz-result-name font-heading text-white text-3xl md:text-4xl font-semibold"></h3>
+      <!-- Primary archetype card with triptych -->
+      <div class="quiz-result-primary w-full max-w-3xl mb-6">
+        <!-- Triptych: 3 images, center larger -->
+        <div class="quiz-triptych hidden md:grid grid-cols-[1fr_1.2fr_1fr] gap-2 mb-6">
+          <div class="relative aspect-[3/4] overflow-hidden rounded-sm">
+            <img class="quiz-result-img-1 absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
+          </div>
+          <div class="relative aspect-[3/4] overflow-hidden rounded-sm">
+            <img class="quiz-result-img-2 absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
+            <!-- Gradient overlay for center image -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+            <!-- Archetype color accent line -->
+            <div class="quiz-result-accent-line absolute top-0 left-0 right-0 h-1"></div>
+          </div>
+          <div class="relative aspect-[3/4] overflow-hidden rounded-sm">
+            <img class="quiz-result-img-3 absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
           </div>
         </div>
+        <!-- Single image on mobile -->
+        <div class="quiz-single-img md:hidden relative w-full max-w-sm mx-auto aspect-[3/4] overflow-hidden rounded-sm mb-6">
+          <img class="quiz-result-img-mobile absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none"></div>
+          <div class="quiz-result-accent-line-mobile absolute top-0 left-0 right-0 h-1"></div>
+        </div>
+
+        <!-- Archetype icon + name -->
+        <div class="flex items-center justify-center gap-3 mb-3">
+          <span class="quiz-result-icon text-3xl md:text-4xl text-accent"></span>
+          <h3 class="quiz-result-name font-heading text-white text-4xl md:text-5xl font-semibold"></h3>
+        </div>
+
+        <!-- Description as pull-quote -->
+        <blockquote class="quiz-result-desc font-body text-white/70 text-base md:text-lg leading-relaxed max-w-xl mx-auto italic border-l-2 border-accent/40 pl-4 text-left"></blockquote>
       </div>
 
       <!-- Secondary archetype (shown only if strong secondary) -->
-      <div class="quiz-result-secondary hidden mb-8">
-        <p class="font-body text-white/50 text-sm mb-1">with shades of</p>
-        <div class="flex items-center justify-center gap-2">
-          <span class="quiz-result-sec-icon text-lg text-accent/70"></span>
-          <span class="quiz-result-sec-name font-heading text-white/80 text-xl font-semibold"></span>
+      <div class="quiz-result-secondary hidden mb-6 w-full max-w-xl">
+        <div class="flex flex-col items-center gap-2 py-4 border-t border-b border-white/10">
+          <p class="font-body text-white/50 text-sm mb-1">with shades of</p>
+          <div class="flex items-center justify-center gap-2">
+            <span class="quiz-result-sec-icon text-xl text-accent/70"></span>
+            <span class="quiz-result-sec-name font-heading text-white/80 text-2xl font-semibold"></span>
+          </div>
+          <p class="quiz-result-sec-desc font-body text-white/50 text-sm leading-relaxed max-w-md"></p>
         </div>
       </div>
 
@@ -439,10 +499,11 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
           Share Your Result
         </button>
         <a
-          class="quiz-btn-shop w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
-                 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase
-                 hover:bg-accent hover:text-white transition-colors duration-200
-                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          class="quiz-btn-shop w-full inline-flex items-center justify-center px-6 py-3
+                 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase
+                 hover:bg-accent-light transition-colors duration-200
+                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
+                 sm:w-auto sm:bg-transparent sm:text-accent sm:border sm:border-accent sm:hover:bg-accent sm:hover:text-white"
           href="#"
           target="_blank"
           rel="noopener noreferrer"
@@ -531,7 +592,144 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     color: rgba(255, 255, 255, 1);
   }
 
-  /* ── Results card entrance ────────────────────────────────── */
+  /* ── Calculating overlay shimmer ────────────────────────── */
+  @keyframes quiz-shimmer-pulse {
+    0%   { width: 20%; opacity: 0.5; }
+    50%  { width: 80%; opacity: 1; }
+    100% { width: 20%; opacity: 0.5; }
+  }
+
+  .quiz-shimmer-bar {
+    animation: quiz-shimmer-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* ── Per-archetype entrance animations ─────────────────── */
+
+  /* Feminine: The Siren — warm glow from bottom, scale up */
+  @keyframes siren-entrance {
+    0%   { opacity: 0; transform: scale(0.85) translateY(30px); filter: brightness(1.3) blur(4px); }
+    60%  { opacity: 1; transform: scale(1.02) translateY(-4px); filter: brightness(1.1) blur(0px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1) blur(0px); }
+  }
+  .quiz-entrance-the-siren .quiz-result-primary {
+    animation: siren-entrance 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Feminine: The Muse — gentle float down from above */
+  @keyframes muse-entrance {
+    0%   { opacity: 0; transform: translateY(-40px); filter: blur(3px); }
+    50%  { opacity: 0.7; transform: translateY(6px); filter: blur(0px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .quiz-entrance-the-muse .quiz-result-primary {
+    animation: muse-entrance 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Feminine: The Warrior — sharp slide from left, crisp */
+  @keyframes warrior-entrance {
+    0%   { opacity: 0; transform: translateX(-60px) scaleX(0.95); }
+    70%  { opacity: 1; transform: translateX(4px) scaleX(1.01); }
+    100% { opacity: 1; transform: translateX(0) scaleX(1); }
+  }
+  .quiz-entrance-the-warrior .quiz-result-primary {
+    animation: warrior-entrance 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Feminine: The Enchantress — dark shimmer, slow reveal */
+  @keyframes enchantress-entrance {
+    0%   { opacity: 0; transform: scale(1.05); filter: brightness(0.3) blur(6px); }
+    40%  { opacity: 0.5; filter: brightness(0.6) blur(3px); }
+    70%  { opacity: 0.9; transform: scale(1.01); filter: brightness(0.9) blur(1px); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1) blur(0px); }
+  }
+  .quiz-entrance-the-enchantress .quiz-result-primary {
+    animation: enchantress-entrance 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Feminine: The Creator — playful bounce-in */
+  @keyframes creator-entrance {
+    0%   { opacity: 0; transform: scale(0.6) rotate(-3deg); }
+    50%  { opacity: 1; transform: scale(1.06) rotate(1deg); }
+    75%  { transform: scale(0.97) rotate(-0.5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  .quiz-entrance-the-creator .quiz-result-primary {
+    animation: creator-entrance 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Feminine: The Empress — regal rise from below, smooth */
+  @keyframes empress-entrance {
+    0%   { opacity: 0; transform: translateY(50px) scale(0.95); }
+    60%  { opacity: 1; transform: translateY(-6px) scale(1.01); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .quiz-entrance-the-empress .quiz-result-primary {
+    animation: empress-entrance 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Feminine: The Angelic One — soft glow/halo, light fade-in */
+  @keyframes angelic-entrance {
+    0%   { opacity: 0; transform: scale(0.95); filter: brightness(1.6) blur(8px); }
+    50%  { opacity: 0.7; filter: brightness(1.3) blur(3px); }
+    80%  { opacity: 0.95; transform: scale(1.01); filter: brightness(1.1) blur(0px); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1) blur(0px); }
+  }
+  .quiz-entrance-the-angelic-one .quiz-result-primary {
+    animation: angelic-entrance 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Masculine: The Protector — solid ground-up slide */
+  @keyframes protector-entrance {
+    0%   { opacity: 0; transform: translateY(40px); }
+    70%  { opacity: 1; transform: translateY(-3px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .quiz-entrance-the-protector .quiz-result-primary {
+    animation: protector-entrance 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Masculine: The Maverick — dynamic rotate + slide */
+  @keyframes maverick-entrance {
+    0%   { opacity: 0; transform: translateX(50px) rotate(4deg) scale(0.9); }
+    60%  { opacity: 1; transform: translateX(-5px) rotate(-1deg) scale(1.02); }
+    100% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); }
+  }
+  .quiz-entrance-the-maverick .quiz-result-primary {
+    animation: maverick-entrance 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Masculine: The Architect — precise geometric slide-in */
+  @keyframes architect-entrance {
+    0%   { opacity: 0; transform: translateY(-30px) scaleY(0.9); clip-path: inset(0 0 100% 0); }
+    60%  { opacity: 1; clip-path: inset(0 0 0% 0); }
+    100% { opacity: 1; transform: translateY(0) scaleY(1); clip-path: inset(0 0 0% 0); }
+  }
+  .quiz-entrance-the-architect .quiz-result-primary {
+    animation: architect-entrance 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Masculine: The Alchemist — morphing dissolve-in */
+  @keyframes alchemist-entrance {
+    0%   { opacity: 0; transform: scale(1.1) rotate(1deg); filter: blur(10px) saturate(0.3); }
+    40%  { opacity: 0.5; filter: blur(5px) saturate(0.6); }
+    70%  { opacity: 0.9; transform: scale(1.01) rotate(0deg); filter: blur(1px) saturate(0.9); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0px) saturate(1); }
+  }
+  .quiz-entrance-the-alchemist .quiz-result-primary {
+    animation: alchemist-entrance 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Masculine: The Sovereign — quiet scale from center */
+  @keyframes sovereign-entrance {
+    0%   { opacity: 0; transform: scale(0.9); }
+    60%  { opacity: 1; transform: scale(1.015); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .quiz-entrance-the-sovereign .quiz-result-primary {
+    animation: sovereign-entrance 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ── Results card entrance (generic fallback) ───────────── */
   .quiz-result-entering .quiz-result-primary {
     animation: quiz-result-card-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
@@ -589,13 +787,34 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     .quiz-result-entering .quiz-result-name {
       animation: none !important;
     }
+
+    .quiz-shimmer-bar {
+      animation: none !important;
+    }
+
+    /* Disable all per-archetype entrance animations */
+    .quiz-entrance-the-siren .quiz-result-primary,
+    .quiz-entrance-the-muse .quiz-result-primary,
+    .quiz-entrance-the-warrior .quiz-result-primary,
+    .quiz-entrance-the-enchantress .quiz-result-primary,
+    .quiz-entrance-the-creator .quiz-result-primary,
+    .quiz-entrance-the-empress .quiz-result-primary,
+    .quiz-entrance-the-angelic-one .quiz-result-primary,
+    .quiz-entrance-the-protector .quiz-result-primary,
+    .quiz-entrance-the-maverick .quiz-result-primary,
+    .quiz-entrance-the-architect .quiz-result-primary,
+    .quiz-entrance-the-alchemist .quiz-result-primary,
+    .quiz-entrance-the-sovereign .quiz-result-primary {
+      animation: none !important;
+      opacity: 1 !important;
+    }
   }
 </style>
 
 <script>
   /**
    * ArchetypeQuiz runtime — manages question navigation, answer selection,
-   * scoring, results display, URL hash sharing, and all animations.
+   * scoring, cinematic results reveal, URL hash sharing, and all animations.
    *
    * Each quiz instance is self-contained, keyed by data-quiz-id.
    */
@@ -608,7 +827,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       image: string;
       options: Array<{ letter: string; text: string }>;
     }> = JSON.parse(root.dataset.questions!);
-    const archetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string }> =
+    const archetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string; desc: string }> =
       JSON.parse(root.dataset.archetypes!);
 
     const TOTAL = questions.length;
@@ -616,6 +835,27 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     const SLIDE_DURATION = 400;
     const IMAGE_DURATION = 600;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ── Teaser words per archetype ─────────────────────── */
+    const feminineTeaserWords: Record<string, string[]> = {
+      A: ['Bold', 'Captivating', 'Magnetic'],
+      B: ['Soft', 'Dreamy', 'Ethereal'],
+      C: ['Driven', 'Powerful', 'Commanding'],
+      D: ['Mysterious', 'Alluring', 'Intense'],
+      E: ['Expressive', 'Playful', 'Unforgettable'],
+      F: ['Nurturing', 'Grounding', 'Elegant'],
+      G: ['Kind', 'Peaceful', 'Gentle'],
+    };
+
+    const masculineTeaserWords: Record<string, string[]> = {
+      A: ['Steady', 'Capable', 'Grounded'],
+      B: ['Free', 'Unpredictable', 'Expressive'],
+      C: ['Precise', 'Intentional', 'Calculated'],
+      D: ['Deep', 'Transformative', 'Layered'],
+      E: ['Aligned', 'Effortless', 'Centered'],
+    };
+
+    const teaserWords = gender === 'feminine' ? feminineTeaserWords : masculineTeaserWords;
 
     /* ── State ─────────────────────────────────────────────── */
     let currentQ = 0;
@@ -635,14 +875,28 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     const qCurrentEls  = root.querySelectorAll<HTMLElement>('.quiz-q-current');
     const liveRegion   = document.getElementById(`quiz-${quizId}-live`)!;
 
+    /* Cinematic reveal refs */
+    const calculatingEl = root.querySelector<HTMLElement>('.quiz-calculating')!;
+    const calcText      = root.querySelector<HTMLElement>('.quiz-calc-text')!;
+    const teaserEl      = root.querySelector<HTMLElement>('.quiz-teaser')!;
+    const teaserWord    = root.querySelector<HTMLElement>('.quiz-teaser-word')!;
+    const youareEl      = root.querySelector<HTMLElement>('.quiz-youare')!;
+    const youareText    = root.querySelector<HTMLElement>('.quiz-youare-text')!;
+
     /* Results refs */
-    const resultImg       = root.querySelector<HTMLImageElement>('.quiz-result-img')!;
-    const resultAccentLine = root.querySelector<HTMLElement>('.quiz-result-accent-line')!;
+    const resultImg1       = root.querySelector<HTMLImageElement>('.quiz-result-img-1');
+    const resultImg2       = root.querySelector<HTMLImageElement>('.quiz-result-img-2');
+    const resultImg3       = root.querySelector<HTMLImageElement>('.quiz-result-img-3');
+    const resultImgMobile  = root.querySelector<HTMLImageElement>('.quiz-result-img-mobile');
+    const resultAccentLine = root.querySelector<HTMLElement>('.quiz-result-accent-line');
+    const resultAccentLineMobile = root.querySelector<HTMLElement>('.quiz-result-accent-line-mobile');
     const resultIcon      = root.querySelector<HTMLElement>('.quiz-result-icon')!;
     const resultName      = root.querySelector<HTMLElement>('.quiz-result-name')!;
+    const resultDesc      = root.querySelector<HTMLElement>('.quiz-result-desc')!;
     const resultSecondary = root.querySelector<HTMLElement>('.quiz-result-secondary')!;
     const resultSecIcon   = root.querySelector<HTMLElement>('.quiz-result-sec-icon')!;
     const resultSecName   = root.querySelector<HTMLElement>('.quiz-result-sec-name')!;
+    const resultSecDesc   = root.querySelector<HTMLElement>('.quiz-result-sec-desc')!;
     const btnShare        = root.querySelector<HTMLButtonElement>('.quiz-btn-share')!;
     const btnShop         = root.querySelector<HTMLAnchorElement>('.quiz-btn-shop')!;
     const btnSwitch       = root.querySelector<HTMLButtonElement>('.quiz-btn-switch')!;
@@ -651,6 +905,11 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     const toast           = root.querySelector<HTMLElement>('.quiz-toast')!;
 
     /* ── Helpers ───────────────────────────────────────────── */
+
+    /** Promise-based setTimeout for async sequences */
+    function wait(ms: number): Promise<void> {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     function updateQCounter() {
       qCurrentEls.forEach(el => { el.textContent = String(currentQ + 1); });
@@ -810,19 +1069,31 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       return { primary, secondary };
     }
 
-    /* ── Show Results ──────────────────────────────────────── */
+    /* ── Populate Results Data ─────────────────────────────── */
 
-    function showResults() {
-      const { primary, secondary } = calculateResults();
+    function populateResults(primary: string, secondary: string | null) {
       const pMeta = archetypesMeta[primary];
       if (!pMeta) return;
 
-      // Populate primary
-      resultImg.src = `/images/archetypes/${pMeta.slug}-1.webp`;
-      resultImg.alt = pMeta.name;
-      resultAccentLine.style.backgroundColor = pMeta.color;
+      // Triptych images
+      if (resultImg1) resultImg1.src = `/images/archetypes/${pMeta.slug}-1.webp`;
+      if (resultImg2) resultImg2.src = `/images/archetypes/${pMeta.slug}-2.webp`;
+      if (resultImg3) resultImg3.src = `/images/archetypes/${pMeta.slug}-3.webp`;
+      if (resultImgMobile) {
+        resultImgMobile.src = `/images/archetypes/${pMeta.slug}-1.webp`;
+        resultImgMobile.alt = pMeta.name;
+      }
+      if (resultImg1) resultImg1.alt = `${pMeta.name} look 1`;
+      if (resultImg2) resultImg2.alt = `${pMeta.name} look 2`;
+      if (resultImg3) resultImg3.alt = `${pMeta.name} look 3`;
+
+      // Accent lines
+      if (resultAccentLine) resultAccentLine.style.backgroundColor = pMeta.color;
+      if (resultAccentLineMobile) resultAccentLineMobile.style.backgroundColor = pMeta.color;
+
       resultIcon.textContent = pMeta.icon;
       resultName.textContent = pMeta.name;
+      resultDesc.textContent = pMeta.desc;
 
       // Populate secondary
       if (secondary) {
@@ -830,13 +1101,14 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         if (sMeta) {
           resultSecIcon.textContent = sMeta.icon;
           resultSecName.textContent = sMeta.name;
+          resultSecDesc.textContent = sMeta.desc;
           resultSecondary.classList.remove('hidden');
         }
       } else {
         resultSecondary.classList.add('hidden');
       }
 
-      // Shop link: link to the archetype's guide page on the site
+      // Shop link: link to the archetype's page on the site
       btnShop.href = `/archetypes/${pMeta.slug}`;
 
       // Update URL hash for sharing
@@ -846,17 +1118,79 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         if (sMeta) hashParts.push(sMeta.slug);
       }
       history.replaceState(null, '', hashParts.join('/'));
+    }
 
-      // Show results view, hide quiz body
+    /* ── Cinematic Results Reveal ──────────────────────────── */
+
+    async function showResults() {
+      const { primary, secondary } = calculateResults();
+      const pMeta = archetypesMeta[primary];
+      if (!pMeta) return;
+
+      // Populate all results data first (while hidden)
+      populateResults(primary, secondary);
+
+      // If reduced motion, skip the cinematic sequence
+      if (reducedMotion) {
+        quizBody.classList.add('hidden');
+        resultsView.classList.remove('hidden');
+        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      // ── Phase 1: Calculating overlay (1.5s) ──
       quizBody.classList.add('hidden');
+      calculatingEl.classList.remove('hidden');
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Fade in the calculating text
+      await wait(100);
+      calcText.style.transition = 'opacity 400ms ease-out';
+      calcText.style.opacity = '1';
+
+      await wait(1500);
+
+      // Fade out calculating
+      calcText.style.opacity = '0';
+      await wait(300);
+      calculatingEl.classList.add('hidden');
+
+      // ── Phase 2: Teaser words (3 words x ~600ms each) ──
+      const words = teaserWords[primary] || ['Bold', 'Unique', 'You'];
+      teaserEl.classList.remove('hidden');
+
+      for (const word of words) {
+        teaserWord.textContent = word;
+        // Fade in
+        teaserWord.style.transition = 'opacity 200ms ease-out';
+        teaserWord.style.opacity = '1';
+        await wait(500); // hold (200ms fade-in + 300ms hold)
+        // Fade out
+        teaserWord.style.opacity = '0';
+        await wait(200);
+      }
+
+      teaserEl.classList.add('hidden');
+
+      // ── Phase 3: "You are..." text (500ms) ──
+      youareEl.classList.remove('hidden');
+      await wait(50);
+      youareText.style.transition = 'opacity 250ms ease-out';
+      youareText.style.opacity = '1';
+      await wait(500);
+      youareText.style.opacity = '0';
+      await wait(200);
+      youareEl.classList.add('hidden');
+
+      // ── Phase 4: Archetype entrance ──
+      // Apply per-archetype entrance class
+      const entranceClass = `quiz-entrance-${pMeta.slug}`;
+      resultsView.classList.add(entranceClass);
       resultsView.classList.remove('hidden');
 
-      // Trigger entrance animation
-      resultsView.classList.add('quiz-result-entering');
-      setTimeout(() => resultsView.classList.remove('quiz-result-entering'), 1000);
-
-      // Scroll quiz container into view
-      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Clean up entrance class after animation completes
+      await wait(1200);
+      resultsView.classList.remove(entranceClass);
     }
 
     /* ── Reset Quiz ────────────────────────────────────────── */
@@ -886,9 +1220,17 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         img.style.opacity = i === 0 ? '1' : '0';
       });
 
-      // Hide results, show quiz
+      // Hide results & cinematic overlays, show quiz
       resultsView.classList.add('hidden');
+      calculatingEl.classList.add('hidden');
+      teaserEl.classList.add('hidden');
+      youareEl.classList.add('hidden');
       quizBody.classList.remove('hidden');
+
+      // Reset cinematic element opacities
+      calcText.style.opacity = '0';
+      teaserWord.style.opacity = '0';
+      youareText.style.opacity = '0';
 
       updateQCounter();
       updateDots();
@@ -1016,24 +1358,8 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
       if (!primaryLetter) return;
 
-      // Populate the result display directly
-      const pMeta = archetypesMeta[primaryLetter];
-      resultImg.src = `/images/archetypes/${pMeta.slug}-1.webp`;
-      resultImg.alt = pMeta.name;
-      resultAccentLine.style.backgroundColor = pMeta.color;
-      resultIcon.textContent = pMeta.icon;
-      resultName.textContent = pMeta.name;
-
-      if (secondaryLetter) {
-        const sMeta = archetypesMeta[secondaryLetter];
-        if (sMeta) {
-          resultSecIcon.textContent = sMeta.icon;
-          resultSecName.textContent = sMeta.name;
-          resultSecondary.classList.remove('hidden');
-        }
-      }
-
-      btnShop.href = `/archetypes/${pMeta.slug}`;
+      // Populate the result display directly (skip cinematic for hash-restore)
+      populateResults(primaryLetter, secondaryLetter);
 
       quizBody.classList.add('hidden');
       resultsView.classList.remove('hidden');

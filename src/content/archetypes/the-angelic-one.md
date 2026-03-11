@@ -2,7 +2,7 @@
 name: "The Angelic One"
 slug: "the-angelic-one"
 description: "Pure, luminous, and timelessly beautiful. Your style radiates grace and effortless softness."
-order: 5
+order: 7
 gender: "feminine"
 icon: "✧"
 color: "#e8ddd4"

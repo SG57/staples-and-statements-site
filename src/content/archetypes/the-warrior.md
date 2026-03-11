@@ -2,7 +2,7 @@
 name: "The Warrior"
 slug: "the-warrior"
 description: "Bold, structured, and completely unapologetic. You dress with intention and leave an impression."
-order: 4
+order: 3
 gender: "feminine"
 icon: "▲"
 color: "#5a5a5a"
