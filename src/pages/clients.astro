@@ -105,18 +105,18 @@ const rendered = await Promise.all(
                 )}
               </div>
 
-              {t.data.hasPhoto && (
-                <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-dark shrink-0 img-frame-circle">
-                  <img
-                    src={`/images/testimonials/${t.data.name.toLowerCase()}.webp`}
-                    alt={`${t.data.name} — styling client`}
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                    width="48"
-                    height="48"
-                  />
-                </div>
-              )}
+              <!-- Avatar: always attempt — onerror hides if placeholder/missing -->
+              <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 img-frame-circle">
+                <img
+                  src={`/images/testimonials/${t.data.name.toLowerCase()}.webp`}
+                  alt={`${t.data.name} — styling client`}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  width="48"
+                  height="48"
+                  onerror="this.parentElement.style.display='none'"
+                />
+              </div>
             </div>
           </article>
         ))}

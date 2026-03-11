@@ -39,7 +39,7 @@ const featuredServices = allServices
 const allTestimonials = await getCollection('testimonials');
 const featuredTestimonials = allTestimonials
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 2);
+  .slice(0, 3);
 
 const allArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'feminine');
 const featuredArchetypes = allArchetypes
@@ -354,51 +354,57 @@ const calendlyURL = '/contact';
 
   <!-- ── TESTIMONIALS ──────────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Client testimonials">
-    <div class="mx-auto max-w-5xl">
-      <div class="text-center mb-16">
+    <div class="mx-auto max-w-7xl">
+      <div class="text-center mb-14">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
         <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-secondary mr-2">03 /</span>Client Stories</p>
       </div>
 
-      {featuredTestimonials[0] && (
-        <figure class="text-center">
-          <!-- Opening quote mark — large decorative -->
-          <div class="font-heading text-8xl text-accent/20 leading-none mb-0 select-none" aria-hidden="true">"</div>
-          <!-- The quote itself — large editorial text -->
-          <blockquote class="font-heading text-primary text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed italic max-w-3xl mx-auto -mt-6">
-            {featuredTestimonials[0].body.trim().replace(/^"|"$/g, '')}
-          </blockquote>
-          <!-- Attribution -->
-          <figcaption class="mt-8 flex flex-col items-center gap-2">
-            <!-- Circular client headshot — hidden via onerror if still a placeholder -->
-            <div class="w-14 h-14 rounded-full overflow-hidden mb-1 ring-1 ring-surface-dark">
-              <img
-                src={`/images/testimonials/${featuredTestimonials[0].data.name.toLowerCase()}.webp`}
-                alt={featuredTestimonials[0].data.name}
-                class="w-full h-full object-cover"
-                loading="lazy"
-                onerror="this.parentElement.style.display='none'"
-              />
+      <!-- 3-column testimonial card grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+        {featuredTestimonials.map((t) => {
+          const quote = t.body.trim().replace(/^"|"$/g, '');
+          return (
+            <div class="bg-surface border border-surface-dark p-7 flex flex-col">
+              <!-- Decorative quote mark -->
+              <div class="font-heading text-4xl text-accent/25 leading-none mb-4 select-none" aria-hidden="true">"</div>
+              <!-- Quote — clamped to 4 lines so all cards align -->
+              <p class="font-body text-sm text-text-muted leading-relaxed line-clamp-4 flex-1 italic">
+                {quote}
+              </p>
+              <!-- Attribution -->
+              <div class="flex items-center gap-3 mt-6 pt-5 border-t border-surface-dark">
+                <div class="w-9 h-9 rounded-full overflow-hidden shrink-0 ring-1 ring-surface-dark">
+                  <img
+                    src={`/images/testimonials/${t.data.name.toLowerCase()}.webp`}
+                    alt={t.data.name}
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                    onerror="this.parentElement.style.display='none'"
+                  />
+                </div>
+                <div>
+                  <p class="font-heading text-base font-semibold text-primary leading-tight">{t.data.name}</p>
+                  {t.data.service && (
+                    <a
+                      href={`/services/${t.data.service}`}
+                      class="font-body text-[10px] tracking-widest uppercase text-accent hover:text-primary transition-colors"
+                    >
+                      {t.data.service.replace(/-/g, ' ')}
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
-            <div class="w-8 h-px bg-accent mx-auto mb-1"></div>
-            <p class="font-heading text-xl font-semibold text-primary">{featuredTestimonials[0].data.name}</p>
-            {featuredTestimonials[0].data.service && (
-              <a
-                href={`/services/${featuredTestimonials[0].data.service}`}
-                class="font-body text-xs tracking-widest uppercase text-accent hover:text-primary transition-colors"
-              >
-                {featuredTestimonials[0].data.service.replace(/-/g, ' ')}
-              </a>
-            )}
-          </figcaption>
-        </figure>
-      )}
+          );
+        })}
+      </div>
 
-      <!-- Link to all stories -->
-      <div class="mt-14 text-center">
+      <!-- CTA to full client stories page -->
+      <div class="text-center">
         <a
           href="/clients"
-          class="font-body text-sm tracking-widest uppercase text-text-muted hover:text-primary transition-colors border-b border-current pb-0.5"
+          class="inline-flex items-center justify-center px-8 py-3.5 border border-surface-dark text-text-muted font-body text-xs tracking-widest uppercase hover:border-primary hover:text-primary transition-colors duration-200"
         >
           Read All Client Stories →
         </a>
