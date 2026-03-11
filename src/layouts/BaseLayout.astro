@@ -84,6 +84,8 @@ const GA4_ID = 'G-XXXXXXXXXX';
       <slot />
     </main>
     <Footer />
+    <!-- Grain overlay — injected once, persists across ViewTransitions -->
+    <div id="grain-overlay" aria-hidden="true"></div>
   </body>
 </html>
 
@@ -204,5 +206,62 @@ const GA4_ID = 'G-XXXXXXXXXX';
 
   // Re-run on every page (initial load + each ViewTransitions navigation)
   document.addEventListener('astro:page-load', initAnimations);
+</script>
+
+<script>
+  // ── Canvas grain overlay ───────────────────────────────────────────────────
+  // Generates RGBA random noise via Canvas 2D API.
+  // White specks (r=g=b=255) at low alpha → visible on dark backgrounds.
+  // Black specks (r=g=b=0)   at low alpha → visible on light backgrounds.
+  // Both channels fire simultaneously, so the texture reads on any color.
+  //
+  // Configure intensity: change --grain in global.css
+  //   0 = off   1 = whisper   2 = subtle   3 = present   4 = bold
+  //
+  // The canvas is 256×256 and tiled as background-image on #grain-overlay.
+  // Generated once on first load and reused across ViewTransitions navigations.
+  // A new texture is generated on each full page load (truly random).
+
+  (function initGrain() {
+    // Respects prefers-contrast
+    if (window.matchMedia('(prefers-contrast: more)').matches) return;
+
+    // Read --grain from CSS (allows hot-swapping intensity without JS change)
+    const level = Math.max(0, parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--grain').trim()
+    ) || 1);
+
+    if (level === 0) return;
+
+    const overlay = document.getElementById('grain-overlay');
+    if (!overlay) return;
+
+    // Skip if already has a generated texture (ViewTransitions re-use)
+    if (overlay.dataset.grainReady === 'true') return;
+
+    const SIZE = 256;
+    // Alpha per unit level — at level 4: max ~60/255 (~24%) per pixel
+    const ALPHA_SCALE = level * 15;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = SIZE;
+    const ctx    = canvas.getContext('2d')!;
+    const img    = ctx.createImageData(SIZE, SIZE);
+    const data   = img.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      // Randomly assign each pixel as white speck or black speck
+      const bright = Math.random() > 0.5;
+      data[i]     = bright ? 255 : 0;  // R
+      data[i + 1] = bright ? 255 : 0;  // G
+      data[i + 2] = bright ? 255 : 0;  // B
+      // Alpha: random within range — creates organic density variation
+      data[i + 3] = Math.random() * ALPHA_SCALE;
+    }
+
+    ctx.putImageData(img, 0, 0);
+    overlay.style.backgroundImage = `url(${canvas.toDataURL('image/png')})`;
+    overlay.dataset.grainReady = 'true';
+  })();
 </script>
 
