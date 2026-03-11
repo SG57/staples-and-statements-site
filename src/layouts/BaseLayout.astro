@@ -278,8 +278,12 @@ const GA4_ID = 'G-XXXXXXXXXX';
       ...bg.map(c => `section.${c}`),
       ...bg.map(c => `footer.${c}`),
     ].join(',');
+    // Also reset background-image on all controls so nothing interactive
+    // accidentally inherits or shows grain through semi-transparent backgrounds
+    const reset = 'input,textarea,select,button,[role="button"],[role="combobox"]';
     style.textContent =
-      `${targets}{background-image:url('${url}');background-repeat:repeat;background-size:256px 256px}`;
+      `${targets}{background-image:url('${url}');background-repeat:repeat;background-size:256px 256px}` +
+      `${reset}{background-image:none}`;
     document.head.appendChild(style);
   })();
 </script>
