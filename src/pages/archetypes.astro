@@ -204,7 +204,7 @@ const reels = {
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {feminineSorted.map((archetype) => (
             <div
-              class="archetype-card group relative overflow-hidden cursor-default aspect-[3/4]"
+              class="archetype-card group relative overflow-hidden cursor-pointer aspect-[3/4]"
               data-slug={archetype.data.slug}
               data-images={JSON.stringify([
                 `/images/archetypes/${archetype.data.slug}-1.webp`,
@@ -423,7 +423,7 @@ const reels = {
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {masculineSorted.map((archetype) => (
               <div
-                class="archetype-card group relative overflow-hidden cursor-default aspect-[3/4]"
+                class="archetype-card group relative overflow-hidden cursor-pointer aspect-[3/4]"
                 data-slug={archetype.data.slug}
                 data-images={JSON.stringify([
                   `/images/archetypes/${archetype.data.slug}-1.webp`,
@@ -809,13 +809,19 @@ const reels = {
       const layerB = card.querySelector<HTMLImageElement>('[data-layer="b"]');
       if (!layerA || !layerB) return;
 
-      let frontIsA = true;
+      let frontIsA    = true;
+      let timer: ReturnType<typeof setTimeout> | null = null;
+      let transitioning = false;  // true while a fade is in progress — blocks re-entry
 
       // Register starting image
       const initialSrc = layerA.getAttribute('src') ?? '';
       register(initialSrc);
 
       function nextImage() {
+        if (transitioning) return;
+        transitioning = true;
+        if (timer) { clearTimeout(timer); timer = null; }
+
         const front = frontIsA ? layerA! : layerB!;
         const back  = frontIsA ? layerB! : layerA!;
         const currentSrc = front.getAttribute('src') ?? '';
@@ -831,7 +837,9 @@ const reels = {
           front.style.opacity = '0';
           unregister(currentSrc);
           frontIsA = !frontIsA;
-          setTimeout(nextImage, HOLD_MS);
+          // Release the transitioning lock after the CSS fade completes
+          setTimeout(() => { transitioning = false; }, FADE_MS);
+          timer = setTimeout(nextImage, HOLD_MS);
         };
 
         if (back.complete && back.naturalWidth > 0) {
@@ -840,12 +848,16 @@ const reels = {
           back.onload  = doFade;
           back.onerror = () => {
             unregister(nextSrc); // failed to load — release reservation
-            setTimeout(nextImage, HOLD_MS);
+            transitioning = false;
+            timer = setTimeout(nextImage, HOLD_MS);
           };
         }
       }
 
-      setTimeout(nextImage, startDelay + HOLD_MS);
+      // Expose an advance function on the card element so click handlers can trigger it
+      (card as any)._advanceCarousel = () => { if (!transitioning) nextImage(); };
+
+      timer = setTimeout(nextImage, startDelay + HOLD_MS);
     }
 
     function initVisible() {
@@ -860,6 +872,17 @@ const reels = {
         if (genderBlock && genderBlock.dataset.gender !== activeGender) return;
         startCard(card, cardIndex * 600); // 600ms stagger between cards
         cardIndex++;
+
+        // Click anywhere on the card body (not on links/buttons) advances to next image.
+        // This lets curious users explore all 3 images without waiting for auto-cycle.
+        if (!(card as any)._clickBound) {
+          (card as any)._clickBound = true;
+          card.addEventListener('click', (e) => {
+            if ((e.target as Element).closest('a, button')) return; // let links work normally
+            const advance = (card as any)._advanceCarousel;
+            if (advance) advance();
+          });
+        }
       });
     }
 
