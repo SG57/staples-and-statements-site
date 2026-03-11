@@ -38,16 +38,15 @@ const calendlyURL = '/contact';
 <BaseLayout
   title="Staples & Statements — Wardrobe Styling by Danielle Marie"
   description="Expert wardrobe styling and archetype-based personal style guidance by Danielle Marie. Book a free consultation in San Diego or virtually."
+  transparentNav={true}
 >
 
   <!-- ── HERO ────────────────────────────────────────────── -->
   <section class="relative overflow-hidden bg-primary" aria-label="Hero">
-    <!-- Desktop height accounts for all three layers that must fit in 100vh:
-           nav spacer (lg:h-20 = 5rem) + hero + marquee (~2.75rem)
-         So hero = 100vh - 5rem - 2.75rem = calc(100vh - 7.75rem)
-         Using 8rem to give ~2px breathing room at the bottom.
-         Mobile keeps 90vh — marquee is below the fold there intentionally. -->
-    <div class="relative min-h-[90vh] lg:min-h-[calc(100vh-8rem)] flex flex-col lg:flex-row">
+    <!-- Transparent nav: no spacer in the flow, hero starts at top of viewport.
+         Desktop: hero = 100vh - marquee (~2.75rem) so marquee peeks in first view.
+         Mobile: 90vh — marquee below the fold intentionally. -->
+    <div class="relative min-h-[90vh] lg:min-h-[calc(100vh-3rem)] flex flex-col lg:flex-row">
 
       <!--
         Mosaic hero grid — auto-cycling carousel
