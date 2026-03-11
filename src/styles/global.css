@@ -311,7 +311,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --grain: 1;
+  --grain: 4;  /* TEST: set to 4 (max) to preview — dial back to 1 or 2 when done */
 }
 
 body::after {
