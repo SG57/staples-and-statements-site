@@ -84,7 +84,6 @@ const GA4_ID = 'G-XXXXXXXXXX';
       <slot />
     </main>
     <Footer />
-    <div id="s-cursor" aria-hidden="true"></div>
   </body>
 </html>
 
@@ -205,43 +204,3 @@ const GA4_ID = 'G-XXXXXXXXXX';
   document.addEventListener('astro:page-load', initAnimations);
 </script>
 
-<script>
-  // ── Custom cursor ─────────────────────────────────────────────────────────
-  // Lerped follow cursor. Only active on true pointer (hover+fine) devices.
-  (function() {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-    const cursor = document.getElementById('s-cursor');
-    if (!cursor) return;
-
-    let mx = 0, my = 0;   // mouse target
-    let cx = 0, cy = 0;   // current lerped position
-    const LERP = 0.14;    // lower = more lag (0.1-0.2 range)
-
-    window.addEventListener('mousemove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      cursor.style.opacity = '1';
-    }, { passive: true });
-
-    window.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '0';
-    });
-
-    // Track hover state
-    document.addEventListener('mouseover', (e) => {
-      const el = e.target as Element | null;
-      if (!el) return;
-      const isInteractive = el.closest('a, button, [role="button"], input, select, textarea, label, [tabindex]');
-      cursor.classList.toggle('is-hovering', !!isInteractive);
-    });
-
-    function tick() {
-      cx += (mx - cx) * LERP;
-      cy += (my - cy) * LERP;
-      cursor.style.transform = `translate(${cx - (cursor.offsetWidth / 2)}px, ${cy - (cursor.offsetHeight / 2)}px)`;
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  })();
-</script>

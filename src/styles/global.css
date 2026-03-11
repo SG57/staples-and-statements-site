@@ -439,41 +439,6 @@
   -webkit-backdrop-filter: blur(8px) !important;
 }
 
-/* ── Custom cursor ────────────────────────────────────────────────────────
-   Only on true pointer devices (desktop). Hidden + default cursor fallback
-   on touch screens. Uses CSS custom properties for lerped position updates.  */
-@media (hover: hover) and (pointer: fine) {
-  html, * { cursor: none !important; }
-
-  #s-cursor {
-    position: fixed;
-    top: 0; left: 0;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--color-accent);
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition:
-      width  calc(var(--dur) * 0.3) var(--ease),
-      height calc(var(--dur) * 0.3) var(--ease),
-      background-color calc(var(--dur) * 0.3) var(--ease),
-      opacity calc(var(--dur) * 0.3) var(--ease);
-    opacity: 0; /* hidden until mouse moves */
-    will-change: transform;
-  }
-
-  /* Hover state: expands to ring over interactive elements */
-  #s-cursor.is-hovering {
-    width: 28px;
-    height: 28px;
-    background: transparent;
-    border: 1px solid var(--color-accent);
-    opacity: 0.7;
-  }
-
-  /* Link/button text: hide pointer cursor (already handled by html * above) */
-}
 
 /* ── Respect prefers-reduced-motion ────────────────────── */
 @media (prefers-reduced-motion: reduce) {

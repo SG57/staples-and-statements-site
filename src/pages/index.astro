@@ -345,8 +345,18 @@ const calendlyURL = '/contact';
             {featuredTestimonials[0].body.trim().replace(/^"|"$/g, '')}
           </blockquote>
           <!-- Attribution -->
-          <figcaption class="mt-8 flex flex-col items-center gap-1">
-            <div class="w-8 h-px bg-accent mx-auto mb-3"></div>
+          <figcaption class="mt-8 flex flex-col items-center gap-2">
+            <!-- Circular client headshot — hidden via onerror if still a placeholder -->
+            <div class="w-14 h-14 rounded-full overflow-hidden mb-1 ring-1 ring-surface-dark">
+              <img
+                src={`/images/testimonials/${featuredTestimonials[0].data.name.toLowerCase()}.webp`}
+                alt={featuredTestimonials[0].data.name}
+                class="w-full h-full object-cover"
+                loading="lazy"
+                onerror="this.parentElement.style.display='none'"
+              />
+            </div>
+            <div class="w-8 h-px bg-accent mx-auto mb-1"></div>
             <p class="font-heading text-xl font-semibold text-primary">{featuredTestimonials[0].data.name}</p>
             {featuredTestimonials[0].data.service && (
               <a
