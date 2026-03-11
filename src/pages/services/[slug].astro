@@ -32,6 +32,12 @@ const calendlyURL = '/contact';
 <BaseLayout
   title={`${service.data.title} — Staples & Statements`}
   description={service.data.shortDescription ?? service.data.perfectFor}
+  serviceSchema={{
+    name: service.data.title,
+    description: service.data.shortDescription ?? service.data.perfectFor,
+    url: `https://staplesandstatements.com/services/${service.data.slug}`,
+    price: service.data.price,
+  }}
 >
 
   <!-- ── SERVICE HERO ──────────────────────────────────── -->

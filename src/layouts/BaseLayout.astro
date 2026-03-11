@@ -9,6 +9,15 @@ interface Props {
   description?: string;
   ogImage?: string;
   transparentNav?: boolean;
+  /** Prevent indexing — use ONLY for redirect/transaction pages (style-quiz, booking-confirmed) */
+  noindex?: boolean;
+  /** Pass a Service schema object to inject Service structured data on service detail pages */
+  serviceSchema?: {
+    name: string;
+    description: string;
+    url: string;
+    price?: string;
+  };
 }
 
 const {
@@ -16,10 +25,91 @@ const {
   description = 'Staples & Statements — Wardrobe styling by Danielle Marie. Elevate your personal style with expert archetype-based styling services.',
   ogImage = '/images/og-default.webp',
   transparentNav = false,
+  noindex = false,
+  serviceSchema,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(ogImage, Astro.site);
+
+// ── Structured Data (JSON-LD) ────────────────────────────────
+// LocalBusiness schema — included on every page for brand authority
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://staplesandstatements.com/#business',
+  name: 'Staples & Statements',
+  description: 'Expert wardrobe styling and archetype-based personal style guidance by Danielle Marie.',
+  url: 'https://staplesandstatements.com',
+  logo: 'https://staplesandstatements.com/favicon.svg',
+  image: 'https://staplesandstatements.com/images/og-default.webp',
+  email: 'hello@staplesandstatements.com',
+  founder: {
+    '@type': 'Person',
+    name: 'Danielle Marie Holman',
+    jobTitle: 'Wardrobe Stylist & Creative Director',
+    sameAs: [
+      'https://instagram.com/littledanniii',
+      'https://tiktok.com/@staplesandstatementsss',
+    ],
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'San Diego',
+    addressRegion: 'CA',
+    addressCountry: 'US',
+  },
+  areaServed: [
+    { '@type': 'City', name: 'San Diego' },
+    { '@type': 'Country', name: 'United States' },
+  ],
+  serviceType: [
+    'Wardrobe Styling',
+    'Personal Styling',
+    'Color Analysis',
+    'Virtual Styling',
+  ],
+  priceRange: 'FREE – $$$',
+  sameAs: [
+    'https://instagram.com/littledanniii',
+    'https://tiktok.com/@staplesandstatementsss',
+    'https://shopltk.com/explore/Staplesandstatementsss',
+  ],
+};
+
+// Service schema — only injected on individual service pages
+// For offers: only emit a numeric price when the price string starts with $ and a number,
+// e.g. "$50" → "50", "FREE" → "0", "$55/hr" or "~15%" → omit offers (not a fixed price)
+function extractNumericPrice(p: string): string | null {
+  if (!p) return null;
+  const upper = p.toUpperCase();
+  if (upper === 'FREE') return '0';
+  // Match strings that open with "$" followed by digits (fixed price, not hourly or %)
+  const fixed = p.match(/^\$(\d+(?:\.\d+)?)\s*$/);
+  if (fixed) return fixed[1];
+  return null; // hourly, %, approximate — skip offers
+}
+
+const serviceJsonLd = serviceSchema
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: serviceSchema.name,
+      description: serviceSchema.description,
+      url: serviceSchema.url,
+      provider: { '@id': 'https://staplesandstatements.com/#business' },
+      ...(serviceSchema.price && extractNumericPrice(serviceSchema.price) !== null
+        ? {
+            offers: {
+              '@type': 'Offer',
+              price: extractNumericPrice(serviceSchema.price),
+              priceCurrency: 'USD',
+              availability: 'https://schema.org/InStock',
+            },
+          }
+        : {}),
+    })
+  : null;
 
 // GA4 Measurement ID — replace with actual ID from Google Analytics
 // See TRACK1-MANUAL-SETUP.md Step 8 for setup instructions
@@ -39,6 +129,7 @@ const GA4_ID = 'G-XXXXXXXXXX';
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -51,6 +142,11 @@ const GA4_ID = 'G-XXXXXXXXXX';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Structured Data: LocalBusiness (all pages) -->
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+    <!-- Structured Data: Service (service detail pages only) -->
+    {serviceJsonLd && <script type="application/ld+json" set:html={serviceJsonLd} />}
 
     <!-- Google Fonts: Cormorant Garamond + DM Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
