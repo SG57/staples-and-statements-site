@@ -75,6 +75,35 @@
     transition: color 0.2s ease;
   }
 
+  /* ── Prevent text selection on UI elements ──────────────
+     Users should not be able to select/highlight text on buttons,
+     nav links, labels, badges, cards, or any interactive chrome.
+     Only actual content paragraphs and headings remain selectable. */
+  button,
+  [role="button"],
+  [role="tab"],
+  [role="radio"],
+  [role="checkbox"],
+  nav,
+  nav a,
+  footer,
+  footer a,
+  label,
+  .select-none,
+  .archetype-card,
+  .archetype-reveal,
+  .quiz-chip,
+  .quiz-nav,
+  .quiz-dot,
+  .shade-chip,
+  .gender-btn,
+  .section-header-compact,
+  .quiz-cta-card,
+  [class*="tracking-widest"][class*="uppercase"] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
   a:hover {
     color: var(--color-primary);
   }
