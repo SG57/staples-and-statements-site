@@ -267,6 +267,9 @@ const calendlyURL = '/contact';
   <!-- ── SERVICES PREVIEW ──────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Services preview">
     <div class="mx-auto max-w-7xl">
+      <!-- Sentinel -->
+      <div class="section-sentinel" data-section="home-services" aria-hidden="true"></div>
+
       <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
         <div>
           <div class="w-8 h-px bg-accent mb-4"></div>
@@ -280,6 +283,21 @@ const calendlyURL = '/contact';
           View All Services →
         </a>
       </div>
+      <!-- COMPACT sticky header -->
+      <div class="section-header-compact sticky top-16 lg:top-20 z-30
+                  bg-background/85 backdrop-blur-md border-b border-surface-dark/40
+                  -mx-6 px-6 py-3 mb-4
+                  opacity-0 pointer-events-none
+                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+           data-section-compact="home-services">
+        <div class="inline-flex items-center gap-3">
+          <div class="w-6 h-px bg-accent"></div>
+          <p class="font-body text-[10px] tracking-widest uppercase text-accent">What We Offer</p>
+          <span class="text-primary/20">|</span>
+          <h2 class="font-heading text-primary text-lg font-semibold">Styling Services</h2>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {featuredServices.map((service) => (
           <a
@@ -306,6 +324,9 @@ const calendlyURL = '/contact';
   <!-- ── ARCHETYPE TEASE ───────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-primary" aria-label="Style archetypes">
     <div class="mx-auto max-w-7xl">
+      <!-- Sentinel -->
+      <div class="section-sentinel" data-section="home-archetypes" aria-hidden="true"></div>
+
       <div class="text-center mb-14">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
         <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-accent/40 mr-2">02 /</span>The Framework</p>
@@ -314,6 +335,21 @@ const calendlyURL = '/contact';
           Every great wardrobe starts with knowing who you are. Danielle's 7 Feminine Archetypes framework is the foundation of every styling engagement.
         </p>
       </div>
+      <!-- COMPACT sticky header -->
+      <div class="section-header-compact sticky top-16 lg:top-20 z-30
+                  bg-primary/85 backdrop-blur-md border-b border-white/8
+                  -mx-6 px-6 py-3 mb-4
+                  opacity-0 pointer-events-none
+                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+           data-section-compact="home-archetypes">
+        <div class="inline-flex items-center gap-3">
+          <div class="w-6 h-px bg-accent"></div>
+          <p class="font-body text-[10px] tracking-widest uppercase text-accent">The Framework</p>
+          <span class="text-white/20">|</span>
+          <h2 class="font-heading text-white text-lg font-semibold">Discover Your Style Archetype</h2>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
         {featuredArchetypes.map((archetype) => (
           <a
@@ -355,9 +391,27 @@ const calendlyURL = '/contact';
   <!-- ── TESTIMONIALS ──────────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Client testimonials">
     <div class="mx-auto max-w-7xl">
+      <!-- Sentinel -->
+      <div class="section-sentinel" data-section="home-testimonials" aria-hidden="true"></div>
+
       <div class="text-center mb-14">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
         <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-secondary mr-2">03 /</span>Client Stories</p>
+      </div>
+
+      <!-- COMPACT sticky header -->
+      <div class="section-header-compact sticky top-16 lg:top-20 z-30
+                  bg-background/85 backdrop-blur-md border-b border-surface-dark/40
+                  -mx-6 px-6 py-3 mb-4
+                  opacity-0 pointer-events-none
+                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+           data-section-compact="home-testimonials">
+        <div class="inline-flex items-center gap-3">
+          <div class="w-6 h-px bg-accent"></div>
+          <p class="font-body text-[10px] tracking-widest uppercase text-accent">Client Stories</p>
+          <span class="text-primary/20">|</span>
+          <h2 class="font-heading text-primary text-lg font-semibold">What Clients Say</h2>
+        </div>
       </div>
 
       <!-- 3-column testimonial card grid -->
@@ -415,6 +469,9 @@ const calendlyURL = '/contact';
   <!-- ── INSTAGRAM GRID ────────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-surface" aria-label="Instagram portfolio">
     <div class="mx-auto max-w-7xl">
+      <!-- Sentinel -->
+      <div class="section-sentinel" data-section="home-instagram" aria-hidden="true"></div>
+
       <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-4">
         <div>
           <div class="w-8 h-px bg-accent mb-4"></div>
@@ -431,6 +488,21 @@ const calendlyURL = '/contact';
           Follow on Instagram →
         </a>
       </div>
+      <!-- COMPACT sticky header -->
+      <div class="section-header-compact sticky top-16 lg:top-20 z-30
+                  bg-surface/85 backdrop-blur-md border-b border-surface-dark/40
+                  -mx-6 px-6 py-3 mb-4
+                  opacity-0 pointer-events-none
+                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+           data-section-compact="home-instagram">
+        <div class="inline-flex items-center gap-3">
+          <div class="w-6 h-px bg-accent"></div>
+          <p class="font-body text-[10px] tracking-widest uppercase text-accent">Portfolio</p>
+          <span class="text-primary/20">|</span>
+          <h2 class="font-heading text-primary text-lg font-semibold">From the Feed</h2>
+        </div>
+      </div>
+
       <!-- Portfolio grid — 6 image slots
            Add photos to public/images/portfolio-1.webp through portfolio-6.jpg -->
       <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -461,6 +533,9 @@ const calendlyURL = '/contact';
   <!-- ── SHOP PREVIEW ──────────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Style guides preview">
     <div class="mx-auto max-w-7xl">
+      <!-- Sentinel -->
+      <div class="section-sentinel" data-section="home-shop" aria-hidden="true"></div>
+
       <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
         <div>
           <div class="w-8 h-px bg-accent mb-4"></div>
@@ -477,6 +552,21 @@ const calendlyURL = '/contact';
           Shop All Guides →
         </a>
       </div>
+      <!-- COMPACT sticky header -->
+      <div class="section-header-compact sticky top-16 lg:top-20 z-30
+                  bg-background/85 backdrop-blur-md border-b border-surface-dark/40
+                  -mx-6 px-6 py-3 mb-4
+                  opacity-0 pointer-events-none
+                  transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+           data-section-compact="home-shop">
+        <div class="inline-flex items-center gap-3">
+          <div class="w-6 h-px bg-accent"></div>
+          <p class="font-body text-[10px] tracking-widest uppercase text-accent">Digital Products</p>
+          <span class="text-primary/20">|</span>
+          <h2 class="font-heading text-primary text-lg font-semibold">Style Guides</h2>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {featuredGuides.map((guide) => (
           <div class="bg-surface p-7 flex flex-col group">
@@ -567,5 +657,26 @@ const calendlyURL = '/contact';
       </a>
     </div>
   </section>
+
+  <!-- ── Sticky section header observer ──────────────────── -->
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      const sentinels = document.querySelectorAll<HTMLElement>('.section-sentinel');
+      if (sentinels.length === 0) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const section = (entry.target as HTMLElement).dataset.section;
+          if (!section) return;
+          const compact = document.querySelector<HTMLElement>(`[data-section-compact="${section}"]`);
+          if (!compact) return;
+          compact.style.opacity = entry.isIntersecting ? '0' : '1';
+          compact.style.pointerEvents = entry.isIntersecting ? 'none' : 'auto';
+        });
+      }, { threshold: 0, rootMargin: '-80px 0px 0px 0px' });
+
+      sentinels.forEach(s => observer.observe(s));
+    });
+  </script>
 
 </BaseLayout>
