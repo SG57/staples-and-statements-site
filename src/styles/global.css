@@ -311,7 +311,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --grain: 2;  /* 0=off  1=whisper  2=subtle  3=present  4=bold */
+  --grain: 1;  /* 0=off  1=whisper  2=subtle  3=present  4=bold */
 }
 
 /* Grain texture — applied as CSS background-image on flat background sections.
