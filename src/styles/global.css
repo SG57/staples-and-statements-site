@@ -300,24 +300,27 @@
 
 .text-bloom {
   text-shadow:
-    0 0 32px rgba(0, 0, 0, 0.55),   /* soft outer bloom */
-    0 2px 8px rgba(0, 0, 0, 0.75),  /* mid shadow */
-    0 1px 2px rgba(0, 0, 0, 0.95);  /* crisp near edge */
+    0 0 40px rgba(0, 0, 0, 0.70),   /* wide outer bloom */
+    0 0 12px rgba(0, 0, 0, 0.60),   /* tight bloom */
+    0 2px 8px rgba(0, 0, 0, 0.85),  /* directional shadow */
+    0 1px 2px rgba(0, 0, 0, 1.00);  /* crisp near edge */
 }
 
 .text-bloom-sm {
   text-shadow:
-    0 0 16px rgba(0, 0, 0, 0.50),
-    0 1px 4px rgba(0, 0, 0, 0.80);
+    0 0 20px rgba(0, 0, 0, 0.65),
+    0 1px 4px rgba(0, 0, 0, 0.90),
+    0 1px 1px rgba(0, 0, 0, 1.00);
 }
 
-/* Auto-apply bloom to nav links/brand on transparent-nav pages.
-   Removed on scroll (nav-scrolled) — solid background provides contrast. */
+/* Nav links: maximum legibility over any image brightness.
+   Removed on scroll (solid nav background takes over). */
 .nav-transparent:not(.nav-scrolled) .nav-link,
 .nav-transparent:not(.nav-scrolled) .nav-brand {
   text-shadow:
-    0 0 14px rgba(0, 0, 0, 0.50),
-    0 1px 3px rgba(0, 0, 0, 0.85);
+    0 0 20px rgba(0, 0, 0, 0.75),
+    0 0  8px rgba(0, 0, 0, 0.60),
+    0 1px 3px rgba(0, 0, 0, 1.00);
 }
 
 /* ═══════════════════════════════════════════════════════════
