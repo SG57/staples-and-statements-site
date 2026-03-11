@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ReelPlayer from '../components/ReelPlayer.astro';
 import { getCollection } from 'astro:content';
 
 const feminineArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'feminine');
@@ -10,27 +9,6 @@ const masculineArchetypes = await getCollection('archetypes', ({ data }) => data
 const masculineSorted = masculineArchetypes.sort((a, b) => a.data.order - b.data.order);
 
 const calendlyURL = '/contact';
-
-// Reel shortcodes — used in official Instagram blockquote embeds (see panels below)
-// To upgrade to self-hosted video: download each reel as MP4 from the Instagram app
-// (open reel → ... → Save), then drop into public/videos/ using these names:
-//   public/videos/feminine-archetype-quiz.mp4
-//   public/videos/masculine-archetype-quiz.mp4
-// The <video> elements in each panel will auto-activate once those files exist.
-const reels = {
-  feminine: {
-    shortcode: 'DURBEbyEu3-',
-    url: 'https://www.instagram.com/reel/DURBEbyEu3-/',
-    videoSrc: '/videos/feminine-archetype-quiz.mp4',
-    title: 'The 7 Feminine Archetypes Style Quiz',
-  },
-  masculine: {
-    shortcode: 'DU2AVX5Edqc',
-    url: 'https://www.instagram.com/reel/DU2AVX5Edqc/',
-    videoSrc: '/videos/masculine-archetype-quiz.mp4',
-    title: 'The Masculine Archetype Style Quiz',
-  },
-};
 ---
 
 <BaseLayout
@@ -90,72 +68,21 @@ const reels = {
       <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/55 to-primary/15 pointer-events-none"></div>
       <div class="absolute inset-0 bg-gradient-to-l from-primary/65 via-primary/20 to-transparent pointer-events-none"></div>
 
-      <div class="relative z-10 w-full mx-auto max-w-7xl px-6 pt-28 pb-16">
-        <!--
-          Desktop: flex-row-reverse → video is DOM-second but appears LEFT,
-                   headline is DOM-first but appears RIGHT.
-          Mobile:  flex-col → headline first (DOM order), video below.
-        -->
-        <div class="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-14">
-
-          <!-- Headline — left in DOM (mobile-first), right on desktop -->
-          <div class="lg:flex-1 w-full">
-            <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
-            <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight">
-              Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
-            </h1>
-            <p class="mt-6 font-body text-white/70 text-lg max-w-lg leading-relaxed">
-              Seven distinct aesthetic identities. One is yours. Understanding it changes how you shop, how you dress, and how you feel every single morning.
-            </p>
-            <div class="mt-10">
-              <a
-                href="#archetypes"
-                class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
-              >
-                Explore the Archetypes ↓
-              </a>
-            </div>
-          </div>
-
-          <!-- Quiz video — right in DOM (mobile-second), left on desktop -->
-          <!-- Portrait 9:16 reel: constrained to ~300px wide on desktop -->
-          <div class="w-full max-w-[280px] lg:w-[290px] lg:shrink-0 mx-auto lg:mx-0">
-            <ReelPlayer
-              id="video-feminine"
-              src={reels.feminine.videoSrc}
-              poster="/images/quiz-poster-feminine.webp"
-              fallbackId="fallback-feminine"
-              fallbackUrl={reels.feminine.url}
-              title={reels.feminine.title}
-              preload="metadata"
-            />
-            <div
-              id="fallback-feminine"
-              class="hidden w-full bg-primary-light border border-white/10 flex flex-col items-center justify-center p-8 text-center"
-            >
-              <div class="text-2xl text-accent/60 mb-3">✦</div>
-              <h3 class="font-heading text-white text-lg font-semibold mb-2">{reels.feminine.title}</h3>
-              <a
-                href={reels.feminine.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="mt-4 inline-flex items-center gap-2 px-6 py-2.5 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors"
-              >
-                Watch on Instagram →
-              </a>
-            </div>
-            <div class="text-center mt-3">
-              <a
-                href={reels.feminine.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="font-body text-[10px] tracking-widest uppercase text-white/30 hover:text-accent transition-colors"
-              >
-                Open on Instagram →
-              </a>
-            </div>
-          </div>
-
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
+        <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl">
+          Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
+        </h1>
+        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed">
+          Seven distinct aesthetic identities. One is yours. Understanding it changes how you shop, how you dress, and how you feel every single morning.
+        </p>
+        <div class="mt-10">
+          <a
+            href="#archetypes"
+            class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+          >
+            Explore the Archetypes ↓
+          </a>
         </div>
       </div>
     </section>
@@ -324,66 +251,21 @@ const reels = {
       <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/55 to-primary/15 pointer-events-none"></div>
       <div class="absolute inset-0 bg-gradient-to-l from-primary/65 via-primary/20 to-transparent pointer-events-none"></div>
 
-      <div class="relative z-10 w-full mx-auto max-w-7xl px-6 pt-28 pb-16">
-        <div class="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-14">
-
-          <!-- Headline -->
-          <div class="lg:flex-1 w-full">
-            <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
-            <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight">
-              Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
-            </h1>
-            <p class="mt-6 font-body text-white/70 text-lg max-w-lg leading-relaxed">
-              Distinct aesthetic identities for the modern man. Understanding yours changes how you dress, how you present, and how the world reads you.
-            </p>
-            <div class="mt-10">
-              <a
-                href="#masculine-archetypes"
-                class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
-              >
-                Explore the Archetypes ↓
-              </a>
-            </div>
-          </div>
-
-          <!-- Quiz video -->
-          <div class="w-full max-w-[280px] lg:w-[290px] lg:shrink-0 mx-auto lg:mx-0">
-            <ReelPlayer
-              id="video-masculine"
-              src={reels.masculine.videoSrc}
-              poster="/images/quiz-poster-masculine.webp"
-              fallbackId="fallback-masculine"
-              fallbackUrl={reels.masculine.url}
-              title={reels.masculine.title}
-              preload="none"
-            />
-            <div
-              id="fallback-masculine"
-              class="hidden w-full bg-primary-light border border-white/10 flex flex-col items-center justify-center p-8 text-center"
-            >
-              <div class="text-2xl text-accent/60 mb-3">▲</div>
-              <h3 class="font-heading text-white text-lg font-semibold mb-2">{reels.masculine.title}</h3>
-              <a
-                href={reels.masculine.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="mt-4 inline-flex items-center gap-2 px-6 py-2.5 border border-accent text-accent font-body text-xs font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors"
-              >
-                Watch on Instagram →
-              </a>
-            </div>
-            <div class="text-center mt-3">
-              <a
-                href={reels.masculine.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="font-body text-[10px] tracking-widest uppercase text-white/30 hover:text-accent transition-colors"
-              >
-                Open on Instagram →
-              </a>
-            </div>
-          </div>
-
+      <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">The Framework</p>
+        <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl">
+          Find Your<br /><em class="not-italic text-accent">Style Archetype</em>
+        </h1>
+        <p class="mt-6 font-body text-white/70 text-lg max-w-xl leading-relaxed">
+          Distinct aesthetic identities for the modern man. Understanding yours changes how you dress, how you present, and how the world reads you.
+        </p>
+        <div class="mt-10">
+          <a
+            href="#masculine-archetypes"
+            class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+          >
+            Explore the Archetypes ↓
+          </a>
         </div>
       </div>
     </section>
