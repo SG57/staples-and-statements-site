@@ -172,7 +172,9 @@ const GA4_ID = 'G-XXXXXXXXXX';
     // Apply wipe reveal to images inside .img-frame wrappers (about page portraits,
     // service page images, guide covers) — these are editorial standalone images.
     // Grid mosaic images (img-frame-grid) keep the standard fade reveal.
-    document.querySelectorAll<HTMLElement>('.img-frame img').forEach((img, i) => {
+    // .no-reveal: opt-out for images that must be guaranteed visible (e.g. inside
+    // overflow-hidden parents where IntersectionObserver can be unreliable)
+    document.querySelectorAll<HTMLElement>('.img-frame img:not(.no-reveal)').forEach((img, i) => {
       if (inViewport(img)) return;
       img.classList.remove('s-r-img');   // remove fade if it was already added
       observe(img, 's-r-wipe', i * 0.1);
