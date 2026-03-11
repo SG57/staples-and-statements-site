@@ -252,7 +252,15 @@ const GA4_ID = 'G-XXXXXXXXXX';
     }
 
     ctx.putImageData(img, 0, 0);
-    const url = canvas.toDataURL('image/png');
+
+    // Apply sub-pixel blur — softens sharp specks into an organic frosted texture.
+    // 0.6px is barely perceptible as blur but eliminates the "digital pixels" feel.
+    const soft = document.createElement('canvas');
+    soft.width = soft.height = SIZE;
+    const sCtx = soft.getContext('2d')!;
+    sCtx.filter = 'blur(0.6px)';
+    sCtx.drawImage(canvas, 0, 0);
+    const url = soft.toDataURL('image/png');
 
     // Grain only on semantic background elements — never on foreground components.
     // <section> = page-level background blocks (home/about/services/etc sections)
@@ -262,11 +270,13 @@ const GA4_ID = 'G-XXXXXXXXXX';
     // — anything in the foreground — never receive grain texture.
     const style = document.createElement('style');
     style.id = 'grain-style';
+    // Only full-width semantic background elements — never foreground components.
+    // <section> and <footer> are always page-level background areas.
+    // Everything else (<div> cards, nav, marquee band, frosted panels) excluded.
     const bg = ['bg-primary','bg-primary-light','bg-background','bg-surface','bg-surface-dark'];
     const targets = [
       ...bg.map(c => `section.${c}`),
       ...bg.map(c => `footer.${c}`),
-      '.marquee-band',
     ].join(',');
     style.textContent =
       `${targets}{background-image:url('${url}');background-repeat:repeat;background-size:256px 256px}`;
