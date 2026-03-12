@@ -1111,7 +1111,13 @@ const calendlyURL = '/contact';
       }
 
       const section = grid.closest('section');
-      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const header = section?.querySelector('.section-header-full');
+      if (header) {
+        const rect = header.getBoundingClientRect();
+        window.scrollTo({ top: Math.max(0, window.scrollY + rect.top - 24), behavior: 'smooth' });
+      } else if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     // ── CTA click handlers (fresh DOM elements each navigation) ────

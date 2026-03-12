@@ -1307,7 +1307,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       // Clear hash
       history.replaceState(null, '', window.location.pathname + window.location.search);
 
-      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToSectionHeader();
     }
 
     /* ── Event bindings ────────────────────────────────────── */
@@ -1451,7 +1451,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       }
 
       requestAnimationFrame(() => {
-        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToSectionHeader();
       });
     }
 
