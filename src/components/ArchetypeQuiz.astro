@@ -466,121 +466,122 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   </div>
 
   <!-- ── RESULTS VIEW ──────────────────────────────────────── -->
-  <div class="quiz-results hidden max-h-[720px] overflow-y-auto overflow-x-hidden quiz-hide-scrollbar" aria-label="Your style archetype result">
-    <div class="flex flex-col items-center text-center py-8 md:py-12 px-6">
+  <div class="quiz-results hidden" aria-label="Your style archetype result">
+    <div class="quiz-result-primary grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-10 lg:gap-16 py-8 md:py-12">
 
-      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Your Style Archetype</p>
-      <div class="w-12 h-px bg-accent mb-6"></div>
-
-      <!-- Primary archetype card with triptych -->
-      <div class="quiz-result-primary w-full max-w-3xl mb-6">
-        <!-- Triptych: 3 images, center larger -->
-        <div class="quiz-triptych hidden md:grid grid-cols-[1fr_1.2fr_1fr] gap-2 mb-6">
-          <div class="relative aspect-[3/4] overflow-hidden rounded-sm">
-            <img class="quiz-result-img-1 absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
+      <!-- LEFT: Cascaded image collage (matches deep-dive page) -->
+      <div>
+        <!-- Desktop: stacked collage -->
+        <div class="quiz-result-collage hidden md:flex flex-col items-center relative px-4">
+          <div class="quiz-collage-img relative z-10 w-[85%] aspect-[3/4] overflow-hidden rounded-sm border border-white/10"
+               style="transform: rotate(-2deg);">
+            <img class="quiz-result-img-1 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
           </div>
-          <div class="relative aspect-[3/4] overflow-hidden rounded-sm">
-            <img class="quiz-result-img-2 absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
-            <!-- Gradient overlay for center image -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
-            <!-- Archetype color accent line -->
+          <div class="quiz-collage-img relative z-20 w-[90%] aspect-[3/4] overflow-hidden rounded-sm border border-white/10 -mt-[35%]"
+               style="transform: rotate(0deg) scale(1.05);">
+            <img class="quiz-result-img-2 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
             <div class="quiz-result-accent-line absolute top-0 left-0 right-0 h-1"></div>
           </div>
-          <div class="relative aspect-[3/4] overflow-hidden rounded-sm">
-            <img class="quiz-result-img-3 absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
+          <div class="quiz-collage-img relative z-10 w-[85%] aspect-[3/4] overflow-hidden rounded-sm border border-white/10 -mt-[35%]"
+               style="transform: rotate(1deg);">
+            <img class="quiz-result-img-3 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
           </div>
         </div>
-        <!-- Single image on mobile -->
-        <div class="quiz-single-img md:hidden relative w-full max-w-sm mx-auto aspect-[3/4] overflow-hidden rounded-sm mb-6">
-          <img class="quiz-result-img-mobile absolute inset-0 w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
+        <!-- Mobile: single image -->
+        <div class="md:hidden relative w-full max-w-sm mx-auto aspect-[3/4] overflow-hidden rounded-sm">
+          <img class="quiz-result-img-mobile w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none"></div>
           <div class="quiz-result-accent-line-mobile absolute top-0 left-0 right-0 h-1"></div>
         </div>
+      </div>
 
-        <!-- Archetype icon + name -->
-        <div class="flex items-center justify-center gap-3 mb-3">
+      <!-- RIGHT: Archetype details -->
+      <div class="flex flex-col justify-center">
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Your Style Archetype</p>
+        <div class="w-8 h-px bg-accent mb-6"></div>
+
+        <div class="flex items-center gap-3 mb-4">
           <span class="quiz-result-icon text-3xl md:text-4xl text-accent"></span>
           <h3 class="quiz-result-name font-heading text-white text-4xl md:text-5xl font-semibold"></h3>
         </div>
 
-        <!-- Description as pull-quote -->
-        <blockquote class="quiz-result-desc font-body text-white/70 text-base md:text-lg leading-relaxed max-w-xl mx-auto italic border-l-2 border-accent/40 pl-4 text-left"></blockquote>
-      </div>
+        <blockquote class="quiz-result-desc font-body text-white/70 text-base md:text-lg leading-relaxed max-w-xl italic border-l-2 border-accent/40 pl-4"></blockquote>
 
-      <!-- Secondary archetype (shown only if strong secondary) -->
-      <div class="quiz-result-secondary hidden mb-6 w-full max-w-xl">
-        <div class="flex flex-col items-center gap-2 py-4 border-t border-b border-white/10">
-          <p class="font-body text-white/50 text-sm mb-1">with shades of</p>
-          <div class="flex items-center justify-center gap-2">
-            <span class="quiz-result-sec-icon text-xl text-accent/70"></span>
-            <span class="quiz-result-sec-name font-heading text-white/80 text-2xl font-semibold"></span>
+        <!-- Secondary archetype -->
+        <div class="quiz-result-secondary hidden mt-6">
+          <div class="flex flex-col gap-2 py-4 border-t border-b border-white/10">
+            <p class="font-body text-white/50 text-sm mb-1">with shades of</p>
+            <div class="flex items-center gap-2">
+              <span class="quiz-result-sec-icon text-xl text-accent/70"></span>
+              <span class="quiz-result-sec-name font-heading text-white/80 text-2xl font-semibold"></span>
+            </div>
+            <p class="quiz-result-sec-desc font-body text-white/50 text-sm leading-relaxed max-w-md"></p>
           </div>
-          <p class="quiz-result-sec-desc font-body text-white/50 text-sm leading-relaxed max-w-md"></p>
         </div>
-      </div>
 
-      <!-- CTA buttons -->
-      <div class="flex flex-col sm:flex-row items-center gap-3 mt-2 w-full max-w-md">
+        <!-- CTA buttons -->
+        <div class="flex flex-col sm:flex-row items-start gap-3 mt-8">
+          <button
+            type="button"
+            class="quiz-btn-share inline-flex items-center justify-center px-6 py-3
+                   bg-accent text-white font-body text-xs font-medium tracking-widest uppercase
+                   hover:bg-accent-light transition-colors duration-200
+                   focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+          >
+            Share Your Result
+          </button>
+          <a
+            class="quiz-btn-shop inline-flex items-center justify-center px-6 py-3
+                   bg-transparent text-accent border border-accent font-body text-xs font-medium tracking-widest uppercase
+                   hover:bg-accent hover:text-white transition-colors duration-200
+                   focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View This Archetype
+          </a>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-start gap-3 mt-3">
+          <button
+            type="button"
+            class="quiz-btn-switch inline-flex items-center justify-center px-6 py-3
+                   border border-white/20 text-white/60 font-body text-xs font-medium tracking-widest uppercase
+                   hover:border-white/40 hover:text-white transition-colors duration-200
+                   focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          >
+            Take the {otherGender === 'feminine' ? 'Feminine' : 'Masculine'} Quiz
+          </button>
+          <button
+            type="button"
+            class="quiz-btn-retake inline-flex items-center justify-center px-6 py-3
+                   border border-white/20 text-white/60 font-body text-xs font-medium tracking-widest uppercase
+                   hover:border-white/40 hover:text-white transition-colors duration-200
+                   focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          >
+            Retake Quiz
+          </button>
+        </div>
+
         <button
           type="button"
-          class="quiz-btn-share w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
-                 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase
-                 hover:bg-accent-light transition-colors duration-200
-                 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
-        >
-          Share Your Result
-        </button>
-        <a
-          class="quiz-btn-shop w-full inline-flex items-center justify-center px-6 py-3
-                 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase
-                 hover:bg-accent-light transition-colors duration-200
-                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
-                 sm:w-auto sm:bg-transparent sm:text-accent sm:border sm:border-accent sm:hover:bg-accent sm:hover:text-white"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Shop This Style
-        </a>
-      </div>
-
-      <div class="flex flex-col sm:flex-row items-center gap-3 mt-3 w-full max-w-md">
-        <button
-          type="button"
-          class="quiz-btn-switch w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
-                 border border-white/20 text-white/60 font-body text-xs font-medium tracking-widest uppercase
-                 hover:border-white/40 hover:text-white transition-colors duration-200
+          class="quiz-btn-back-to-cards mt-6 self-start font-body text-xs tracking-widest uppercase text-white/40
+                 hover:text-accent transition-colors duration-200
                  focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         >
-          Take the {otherGender === 'feminine' ? 'Feminine' : 'Masculine'} Quiz
-        </button>
-        <button
-          type="button"
-          class="quiz-btn-retake w-full sm:w-auto inline-flex items-center justify-center px-6 py-3
-                 border border-white/20 text-white/60 font-body text-xs font-medium tracking-widest uppercase
-                 hover:border-white/40 hover:text-white transition-colors duration-200
-                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-        >
-          Retake Quiz
+          &larr; Back to Archetypes
         </button>
       </div>
+    </div>
 
-      <button
-        type="button"
-        class="quiz-btn-back-to-cards mt-6 font-body text-xs tracking-widest uppercase text-white/40
-               hover:text-accent transition-colors duration-200
-               focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-      >
-        &larr; Back to Archetypes
-      </button>
-
-      <!-- Share toast notification -->
-      <div class="quiz-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50
-                  bg-accent text-white font-body text-sm px-6 py-3 rounded-sm shadow-lg
-                  opacity-0 translate-y-4 pointer-events-none
-                  transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
-        Link copied to clipboard
-      </div>
+    <!-- Share toast notification -->
+    <div class="quiz-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50
+                bg-accent text-white font-body text-sm px-6 py-3 rounded-sm shadow-lg
+                opacity-0 translate-y-4 pointer-events-none
+                transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+      Link copied to clipboard
     </div>
   </div>
 </div>
@@ -791,6 +792,18 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     opacity: 1 !important;
     transform: translate(-50%, 0) !important;
     pointer-events: auto !important;
+  }
+
+  /* ── Results collage: cascaded magazine layout ─────────────── */
+  .quiz-collage-img {
+    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1),
+                z-index 0ms;
+  }
+  .quiz-collage-img:hover {
+    transform: scale(1.08) rotate(0deg) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    z-index: 30;
   }
 
   /* ── Hide scrollbars while keeping scroll functional ──────── */
@@ -1165,6 +1178,18 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
     /* ── Cinematic Results Reveal ──────────────────────────── */
 
+    /** Scroll viewport so the parent section headline is at top with breathing room */
+    function scrollToSectionHeader() {
+      const section = root.closest('section');
+      const header = section?.querySelector('.section-header-full');
+      if (header) {
+        const rect = header.getBoundingClientRect();
+        window.scrollTo({ top: Math.max(0, window.scrollY + rect.top - 24), behavior: 'smooth' });
+      } else {
+        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
     async function showResults() {
       const { primary, secondary } = calculateResults();
       const pMeta = archetypesMeta[primary];
@@ -1177,14 +1202,14 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       if (reducedMotion) {
         quizBody.classList.add('hidden');
         resultsView.classList.remove('hidden');
-        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToSectionHeader();
         return;
       }
 
       // ── Phase 1: Calculating overlay (1.5s) ──
       quizBody.classList.add('hidden');
       calculatingEl.classList.remove('hidden');
-      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToSectionHeader();
 
       // Fade in the calculating text
       await wait(100);
