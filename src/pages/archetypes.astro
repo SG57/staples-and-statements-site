@@ -1004,9 +1004,9 @@ const calendlyURL = '/contact';
       return parseFloat(raw) * (raw.endsWith('ms') ? 1 : 1000) * mult;
     }
 
-    const quizConfigs: Record<string, { gridSelector: string; containerId: string }> = {
-      fem:  { gridSelector: '#archetypes .grid', containerId: 'fem-quiz-container' },
-      masc: { gridSelector: '#masculine-archetypes .grid', containerId: 'masc-quiz-container' },
+    const quizConfigs: Record<string, { gridSelector: string; containerId: string; headerSelector: string }> = {
+      fem:  { gridSelector: '#archetypes .grid', containerId: 'fem-quiz-container', headerSelector: '#archetypes .section-header-full' },
+      masc: { gridSelector: '#masculine-archetypes .grid', containerId: 'masc-quiz-container', headerSelector: '#masculine-archetypes .section-header-full' },
     };
 
     async function openQuiz(quizId: string) {
@@ -1055,7 +1055,15 @@ const calendlyURL = '/contact';
         });
       }
 
-      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Smooth-scroll so the section headline is perfectly framed at the top
+      const header = document.querySelector<HTMLElement>(config.headerSelector);
+      if (header) {
+        const headerRect = header.getBoundingClientRect();
+        const targetY = window.scrollY + headerRect.top - 32; // 32px breathing room
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      } else {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     async function closeQuiz(quizId: string) {
