@@ -181,6 +181,20 @@ const GA4_ID = 'G-XXXXXXXXXX';
     </main>
     <Footer />
 
+    <!-- ── Compact Section Bar (desktop only) ──────────────── -->
+    <!-- Single shared element — JS updates content + theme dynamically -->
+    <div id="compact-bar" aria-live="polite">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8 py-2.5">
+        <div class="flex items-center gap-3">
+          <div class="w-6 h-px bg-accent flex-shrink-0"></div>
+          <p class="compact-super font-body text-[10px] tracking-widest uppercase whitespace-nowrap"></p>
+          <span class="compact-sep whitespace-nowrap">|</span>
+          <h2 class="compact-title font-heading text-base font-semibold whitespace-nowrap"></h2>
+          <span class="compact-tagline font-body text-xs truncate ml-1 hidden lg:inline" style="max-width: 36ch;"></span>
+        </div>
+      </div>
+    </div>
+
     <!-- ── Floating Action Buttons (FABs) ──────────────────────── -->
     <!-- Scroll-to-top + Quick-menu — appear after 300px scroll    -->
     <div id="fab-group" class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3"
@@ -552,5 +566,169 @@ const GA4_ID = 'G-XXXXXXXXXX';
   }
 
   document.addEventListener('astro:page-load', initFabs);
+</script>
+
+<script>
+  // ── Compact Section Bar ────────────────────────────────────────────────────
+  // Single shared bar at viewport top. Reads data-compact-* attributes from
+  // <section> elements. Desktop only (lg breakpoint). ViewTransitions-safe.
+  //
+  // Algorithm (rAF-throttled scroll):
+  //   1. Walk qualifying sections in DOM order.
+  //   2. A section is "active" when its h2 (or trigger element) has scrolled
+  //      above the viewport AND the section itself is still partially visible.
+  //   3. Among all active sections, the LAST in DOM order wins (deepest scroll).
+  //   4. If the active section changes → fade out → breathing pause → fade in.
+  //   5. Sections shorter than MIN_HEIGHT are skipped (compact bar would flash).
+
+  let compactController: AbortController | null = null;
+
+  function initCompactBar(): void {
+    const bar      = document.getElementById('compact-bar') as HTMLElement | null;
+    const elSuper  = bar?.querySelector('.compact-super')   as HTMLElement | null;
+    const elSep    = bar?.querySelector('.compact-sep')     as HTMLElement | null;
+    const elTitle  = bar?.querySelector('.compact-title')   as HTMLElement | null;
+    const elTag    = bar?.querySelector('.compact-tagline') as HTMLElement | null;
+
+    if (!bar || !elSuper || !elTitle || !elTag || !elSep) return;
+
+    // Desktop-only guard
+    const mql = window.matchMedia('(min-width: 1024px)');
+    if (!mql.matches) { bar.classList.remove('compact-visible'); return; }
+
+    // Tear down previous listeners
+    compactController?.abort();
+    compactController = new AbortController();
+    const signal = compactController.signal;
+
+    // ── Gather qualifying sections ──────────────────────────────
+    interface CompactSection {
+      el: HTMLElement;        // the <section>
+      trigger: HTMLElement;   // the h2 or fallback element we observe
+      superText: string;
+      title: string;
+      tagline: string;
+      theme: string;
+    }
+
+    const MIN_HEIGHT = window.innerHeight * 0.45;
+    const sections: CompactSection[] = [];
+
+    document.querySelectorAll<HTMLElement>('[data-compact-title]').forEach(el => {
+      if (el.offsetHeight < MIN_HEIGHT) return;
+
+      // Find trigger: first h2 inside the section, or the section's top
+      const h2 = el.querySelector('h2');
+      const trigger = h2 || el;
+
+      sections.push({
+        el,
+        trigger,
+        superText: el.dataset.compactSuper || '',
+        title:     el.dataset.compactTitle || '',
+        tagline:   el.dataset.compactTagline || '',
+        theme:     el.dataset.compactTheme || 'light',
+      });
+    });
+
+    if (sections.length === 0) return;
+
+    // ── State ──────────────────────────────────────────────────
+    let currentSection: CompactSection | null = null;
+    let isVisible = false;
+    let ticking = false;
+    let fadeOutTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const FADE_DURATION = 360;   // matches CSS transition
+    const BREATHE_PAUSE = 120;   // gap between out → in
+
+    // ── Populate bar content ────────────────────────────────────
+    function setBarContent(sec: CompactSection): void {
+      elSuper!.textContent = sec.superText;
+      elTitle!.textContent = sec.title;
+      elSep!.style.display = sec.superText ? '' : 'none';
+      elTag!.textContent   = sec.tagline;
+      elTag!.style.display = sec.tagline ? '' : 'none';
+      bar!.dataset.theme   = sec.theme;
+    }
+
+    function showBar(): void {
+      if (isVisible) return;
+      isVisible = true;
+      bar!.classList.add('compact-visible');
+    }
+
+    function hideBar(): void {
+      if (!isVisible) return;
+      isVisible = false;
+      bar!.classList.remove('compact-visible');
+    }
+
+    // ── Core scroll logic ───────────────────────────────────────
+    function update(): void {
+      ticking = false;
+
+      // Find the active section: last in DOM order whose trigger
+      // is above the viewport AND section is still partially visible.
+      let active: CompactSection | null = null;
+
+      for (const sec of sections) {
+        const secRect = sec.el.getBoundingClientRect();
+        const trigRect = sec.trigger.getBoundingClientRect();
+
+        // Trigger (h2) fully above viewport top AND section bottom still in view
+        if (trigRect.bottom < 0 && secRect.bottom > 0) {
+          active = sec;
+        }
+      }
+
+      // Nothing changed
+      if (active === currentSection) return;
+
+      // Clear any pending transition timer
+      if (fadeOutTimer) { clearTimeout(fadeOutTimer); fadeOutTimer = null; }
+
+      if (active === null) {
+        // No section active — fade out
+        currentSection = null;
+        hideBar();
+      } else if (currentSection === null) {
+        // Nothing was showing — populate and fade in
+        currentSection = active;
+        setBarContent(active);
+        showBar();
+      } else {
+        // Switching sections — fade out → pause → update → fade in
+        hideBar();
+        fadeOutTimer = setTimeout(() => {
+          currentSection = active;
+          setBarContent(active!);
+          showBar();
+          fadeOutTimer = null;
+        }, FADE_DURATION + BREATHE_PAUSE);
+      }
+    }
+
+    // ── Scroll listener (rAF throttled, passive) ────────────────
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true, signal });
+
+    // ── Responsive: hide if window drops below lg ───────────────
+    mql.addEventListener('change', (e) => {
+      if (!e.matches) {
+        hideBar();
+        currentSection = null;
+      }
+    }, { signal });
+
+    // Initialize
+    update();
+  }
+
+  document.addEventListener('astro:page-load', initCompactBar);
 </script>
 

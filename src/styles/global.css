@@ -127,6 +127,66 @@
   --ease-mid:   cubic-bezier(0.45, 0, 0.55, 1);/* in-out   — balanced */
 }
 
+/* ── Compact section bar ───────────────────────────────── */
+/* Single fixed bar at viewport top. JS controls content + visibility. */
+#compact-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 45;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition:
+    opacity   360ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+#compact-bar.compact-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Theme variants */
+#compact-bar[data-theme="light"] {
+  background: color-mix(in srgb, var(--color-background) 88%, transparent);
+  border-bottom: 1px solid var(--color-surface-dark);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+#compact-bar[data-theme="light"] .compact-super  { color: var(--color-accent); }
+#compact-bar[data-theme="light"] .compact-sep    { color: color-mix(in srgb, var(--color-primary) 20%, transparent); }
+#compact-bar[data-theme="light"] .compact-title   { color: var(--color-primary); }
+#compact-bar[data-theme="light"] .compact-tagline { color: var(--color-text-muted); }
+
+#compact-bar[data-theme="dark"] {
+  background: color-mix(in srgb, var(--color-primary) 88%, transparent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+#compact-bar[data-theme="dark"] .compact-super  { color: var(--color-accent); }
+#compact-bar[data-theme="dark"] .compact-sep    { color: rgba(255, 255, 255, 0.2); }
+#compact-bar[data-theme="dark"] .compact-title   { color: rgba(255, 255, 255, 1); }
+#compact-bar[data-theme="dark"] .compact-tagline { color: rgba(255, 255, 255, 0.5); }
+
+#compact-bar[data-theme="surface"] {
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border-bottom: 1px solid var(--color-surface-dark);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+#compact-bar[data-theme="surface"] .compact-super  { color: var(--color-accent); }
+#compact-bar[data-theme="surface"] .compact-sep    { color: color-mix(in srgb, var(--color-primary) 20%, transparent); }
+#compact-bar[data-theme="surface"] .compact-title   { color: var(--color-primary); }
+#compact-bar[data-theme="surface"] .compact-tagline { color: var(--color-text-muted); }
+
+/* Hide on mobile — only desktop */
+@media (max-width: 1023px) {
+  #compact-bar { display: none !important; }
+}
+
 /* ── Page transitions (Astro ViewTransitions) ──────────── */
 @keyframes s-page-in {
   from { opacity: 0; transform: translateY(10px); }
