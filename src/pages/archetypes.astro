@@ -1124,6 +1124,23 @@ const calendlyURL = '/contact';
       });
     });
 
+    // ── "Explore the Archetypes" CTA — scroll to section header ──
+    document.querySelectorAll<HTMLAnchorElement>('a[href="#archetypes"], a[href="#masculine-archetypes"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href')!.slice(1);
+        const section = document.getElementById(targetId);
+        const header = section?.querySelector('.section-header-full');
+        if (header) {
+          const headerRect = header.getBoundingClientRect();
+          const targetY = window.scrollY + headerRect.top - 24;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        } else {
+          section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
     // ── Quiz exit event (document-level — use AbortController) ─────
     document.addEventListener('quiz:exit', (e) => {
       const quizRoot = (e.target as HTMLElement).closest('.quiz-root');
