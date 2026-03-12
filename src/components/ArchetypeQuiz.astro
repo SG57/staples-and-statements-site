@@ -842,6 +842,8 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       transparent 360deg
     );
     border-radius: 50%;
+    -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 40%, transparent 70%);
+    mask-image: radial-gradient(circle, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 40%, transparent 70%);
     transition: opacity 600ms ease-out;
   }
   .fan-focused .quiz-fan-rays {
@@ -1505,44 +1507,63 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     // Check on load
     checkHashResults();
 
-    /* ── Fan card hover latch (prevents jitter) ────────────── */
+    /* ── Fan card hover manager (zone-based, jitter-proof) ──── */
     {
-      const fanCards = root.querySelectorAll<HTMLElement>('.quiz-fan-card');
+      const fanContainer = root.querySelector<HTMLElement>('.quiz-result-fan');
+      const fanCards = Array.from(root.querySelectorAll<HTMLElement>('.quiz-fan-card'));
       let focusedCard: HTMLElement | null = null;
-      let latchTimeout: ReturnType<typeof setTimeout> | null = null;
-      const LATCH_MS = 500;
+      let tracking = false;
+      const PAD = 80; // px of generous padding around the fan zone
 
       function focusCard(card: HTMLElement) {
         if (focusedCard === card) return;
-        if (latchTimeout) clearTimeout(latchTimeout);
-        // Unfocus previous
         if (focusedCard) focusedCard.classList.remove('fan-focused');
         focusedCard = card;
         card.classList.add('fan-focused');
       }
 
-      function unfocusCard() {
-        if (latchTimeout) clearTimeout(latchTimeout);
-        latchTimeout = setTimeout(() => {
-          if (focusedCard) focusedCard.classList.remove('fan-focused');
-          focusedCard = null;
-          latchTimeout = null;
-        }, LATCH_MS);
+      function unfocusAll() {
+        if (focusedCard) focusedCard.classList.remove('fan-focused');
+        focusedCard = null;
       }
 
+      function isInFanZone(e: MouseEvent): boolean {
+        if (!fanContainer) return false;
+        const rect = fanContainer.getBoundingClientRect();
+        return (
+          e.clientX >= rect.left - PAD &&
+          e.clientX <= rect.right + PAD &&
+          e.clientY >= rect.top - PAD &&
+          e.clientY <= rect.bottom + PAD
+        );
+      }
+
+      function onDocMouseMove(e: MouseEvent) {
+        if (!isInFanZone(e)) {
+          unfocusAll();
+          stopTracking();
+        }
+      }
+
+      function startTracking() {
+        if (tracking) return;
+        tracking = true;
+        document.addEventListener('mousemove', onDocMouseMove);
+      }
+
+      function stopTracking() {
+        if (!tracking) return;
+        tracking = false;
+        document.removeEventListener('mousemove', onDocMouseMove);
+      }
+
+      // Each card: on enter, focus it and start zone tracking
       fanCards.forEach(card => {
-        card.addEventListener('mouseenter', () => focusCard(card));
-        card.addEventListener('mouseleave', () => unfocusCard());
-      });
-
-      // If cursor re-enters the fan area before latch expires, keep focus
-      const fanContainer = root.querySelector<HTMLElement>('.quiz-result-fan');
-      if (fanContainer) {
-        fanContainer.addEventListener('mouseleave', () => {
-          // Truly left the entire fan area — clear immediately after latch
-          unfocusCard();
+        card.addEventListener('mouseenter', () => {
+          focusCard(card);
+          startTracking();
         });
-      }
+      });
     }
 
     /* ── Initialize ────────────────────────────────────────── */
