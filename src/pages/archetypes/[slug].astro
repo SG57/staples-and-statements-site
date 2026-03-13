@@ -476,29 +476,8 @@ const genderGuide = isFeminine
         <!-- Two-column comparator layout -->
         <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
 
-          <!-- LEFT: Fixed primary archetype image -->
+          <!-- LEFT: Split-screen blend comparator -->
           <div class="w-full lg:w-1/2">
-            <div class="comparator-primary-wrap">
-              <img
-                src={primaryCardImage}
-                alt={data.name}
-                class="comparator-primary-img"
-                loading="lazy"
-              />
-              <!-- Primary label -->
-              <div class="comparator-img-label">
-                <div class="flex items-center gap-2">
-                  <span style={`color: ${data.color}`}>{data.icon}</span>
-                  <span class="font-body text-[10px] tracking-widest uppercase text-white/70">{data.name}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- RIGHT: Blend panel -->
-          <div class="w-full lg:w-1/2 flex flex-col gap-6">
-
-            <!-- Split-screen blend comparator -->
             <div class="comparator-split-wrap">
               <!-- Left half: primary archetype image (always fixed) -->
               <div class="comparator-half comparator-half-left">
@@ -535,6 +514,10 @@ const genderGuide = isFeminine
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- RIGHT: Thumbnail selector + description -->
+          <div class="w-full lg:w-1/2 flex flex-col gap-6">
 
             <!-- Shade thumbnail selector -->
             <div>
@@ -1024,29 +1007,6 @@ const genderGuide = isFeminine
   }
 
   /* ── Blend Comparator ──────────────────────────────────── */
-
-  .comparator-primary-wrap {
-    position: relative;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-  }
-
-  .comparator-primary-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-  }
-
-  .comparator-img-label {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1.25rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
-  }
 
   .comparator-split-wrap {
     position: relative;
