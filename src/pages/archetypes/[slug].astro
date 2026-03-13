@@ -5,7 +5,6 @@ import { getShadesForPrimary } from '../../data/archetype-shades';
 import { getVisualsForSlug, iconPaths } from '../../data/archetype-visuals';
 import { guides } from '../../data/guides';
 import { getCardImages, getWallpaper } from '../../data/archetype-images';
-import ArchetypeFan from '../../components/ArchetypeFan.astro';
 
 export async function getStaticPaths() {
   const archetypes = await getCollection('archetypes');
@@ -33,9 +32,18 @@ const shades = getShadesForPrimary(data.slug);
 /* The first "other" archetype is the default shade selection */
 const defaultShadeSlug = otherArchetypes[0]?.data.slug ?? '';
 
-/* Hero wallpaper + card images for fan */
+/* Hero wallpaper + card images for gallery */
 const cardImages  = getCardImages(data.slug);
 const wallpaperSrc = getWallpaper(data.slug) ?? cardImages[0] ?? `/images/archetypes/${data.slug}-1.webp`;
+
+/* Primary card image used in comparator */
+const primaryCardImage = cardImages[0] ?? wallpaperSrc;
+
+/* Other archetypes enriched with their first card image (for comparator thumbnails) */
+const otherArchetypesWithImages = otherArchetypes.map((a) => ({
+  archetype: a,
+  image: getCardImages(a.data.slug)[0] ?? `/images/archetypes/${a.data.slug}-1.webp`,
+}));
 
 /* Determine gender label for cross-linking */
 const isFeminine = data.gender === 'feminine';
@@ -123,19 +131,10 @@ const genderGuide = isFeminine
     <div class="mx-auto max-w-7xl">
       <div class="grid grid-cols-1 lg:grid-cols-[45fr_55fr] gap-16 lg:gap-20">
 
-        <!-- LEFT COLUMN: Image Fan + Style Icons -->
+        <!-- LEFT COLUMN: Style Icons -->
         <div class="h-fit lg:sticky lg:top-28">
-          <!-- Horizontal rainbow fan — all available card images -->
-          <div class="px-4 pt-4 pb-12">
-            <ArchetypeFan
-              images={cardImages}
-              name={data.name}
-              color={data.color ?? '#b8977e'}
-              gender={data.gender}
-            />
-          </div>
 
-          <!-- Style Icons (below collage) -->
+          <!-- Style Icons -->
           {visuals && visuals.styleIcons.length > 0 && (
             <div class="mt-8 relative" style="z-index: 60;">
               <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-4 text-center lg:text-left">
@@ -296,11 +295,174 @@ const genderGuide = isFeminine
   </section>
 
 
-  <!-- ── WITH SHADES OF: Permutation explorer ─────────────── -->
+  <!-- ── SIGNATURE GALLERY: Full-bleed editorial image layout ── -->
+  {visuals?.galleryLooks && cardImages.length >= 1 && (
+    <section
+      class="bg-primary border-t border-white/8 overflow-hidden"
+      aria-label={`${data.name} signature looks`}
+    >
+      <!-- Section header -->
+      <div class="mx-auto max-w-7xl px-6 py-16 pb-10">
+        <div class="flex items-center gap-4 mb-3">
+          <div class="w-8 h-px bg-accent"></div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent">Editorial</p>
+        </div>
+        <h2 class="font-heading text-white text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
+          Signature {data.name} Looks
+        </h2>
+      </div>
+
+      <!-- Editorial mosaic: 60% primary left, 40% right column with 2 stacked -->
+      <div class="gallery-mosaic">
+
+        <!-- Primary image (card index 0) -->
+        <div
+          class="gallery-item gallery-primary group cursor-pointer"
+          data-look-title={visuals.galleryLooks[0].title}
+          data-look-src={cardImages[0]}
+          data-look-bullets={JSON.stringify(visuals.galleryLooks[0].bullets)}
+        >
+          <div class="gallery-img-wrap">
+            <img
+              src={cardImages[0]}
+              alt={`${data.name} — ${visuals.galleryLooks[0].title}`}
+              class="gallery-img"
+              loading="lazy"
+              data-parallax="0.08"
+            />
+          </div>
+          <div class="gallery-overlay">
+            <div class="gallery-overlay-inner">
+              <p class="gallery-look-tag">{visuals.galleryLooks[0].title}</p>
+              <ul class="gallery-bullets">
+                {visuals.galleryLooks[0].bullets.map((b) => <li>{b}</li>)}
+              </ul>
+            </div>
+          </div>
+          <div class="gallery-expand-hint" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Secondary image 1 (card index 1) -->
+        {cardImages[1] && visuals.galleryLooks[1] && (
+          <div
+            class="gallery-item gallery-secondary-1 group cursor-pointer"
+            data-look-title={visuals.galleryLooks[1].title}
+            data-look-src={cardImages[1]}
+            data-look-bullets={JSON.stringify(visuals.galleryLooks[1].bullets)}
+          >
+            <div class="gallery-img-wrap">
+              <img
+                src={cardImages[1]}
+                alt={`${data.name} — ${visuals.galleryLooks[1].title}`}
+                class="gallery-img"
+                loading="lazy"
+                data-parallax="0.12"
+              />
+            </div>
+            <div class="gallery-overlay">
+              <div class="gallery-overlay-inner">
+                <p class="gallery-look-tag">{visuals.galleryLooks[1].title}</p>
+                <ul class="gallery-bullets">
+                  {visuals.galleryLooks[1].bullets.map((b) => <li>{b}</li>)}
+                </ul>
+              </div>
+            </div>
+            <div class="gallery-expand-hint" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+              </svg>
+            </div>
+          </div>
+        )}
+
+        <!-- Secondary image 2 (card index 2) -->
+        {cardImages[2] && visuals.galleryLooks[2] && (
+          <div
+            class="gallery-item gallery-secondary-2 group cursor-pointer"
+            data-look-title={visuals.galleryLooks[2].title}
+            data-look-src={cardImages[2]}
+            data-look-bullets={JSON.stringify(visuals.galleryLooks[2].bullets)}
+          >
+            <div class="gallery-img-wrap">
+              <img
+                src={cardImages[2]}
+                alt={`${data.name} — ${visuals.galleryLooks[2].title}`}
+                class="gallery-img"
+                loading="lazy"
+                data-parallax="0.05"
+              />
+            </div>
+            <div class="gallery-overlay">
+              <div class="gallery-overlay-inner">
+                <p class="gallery-look-tag">{visuals.galleryLooks[2].title}</p>
+                <ul class="gallery-bullets">
+                  {visuals.galleryLooks[2].bullets.map((b) => <li>{b}</li>)}
+                </ul>
+              </div>
+            </div>
+            <div class="gallery-expand-hint" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+              </svg>
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      <!-- Caption bar -->
+      <div class="mx-auto max-w-7xl px-6 py-6">
+        <p class="font-body text-[11px] tracking-widest uppercase text-white/25 text-center">
+          Click any image to expand
+        </p>
+      </div>
+
+      <!-- Lightbox -->
+      <div
+        id="gallery-lightbox"
+        class="gallery-lightbox"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Image lightbox"
+      >
+        <div class="gallery-lightbox-backdrop"></div>
+        <div class="gallery-lightbox-content">
+          <button id="lightbox-close" class="gallery-lightbox-close" aria-label="Close lightbox">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
+          <img id="lightbox-img" src="" alt="" class="gallery-lightbox-img" />
+          <div class="gallery-lightbox-info">
+            <h3 id="lightbox-title" class="gallery-lightbox-title"></h3>
+            <ul id="lightbox-bullets" class="gallery-lightbox-bullets"></ul>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  )}
+
+
+  <!-- ── YOUR UNIQUE BLEND: Visual comparator ──────────────── -->
   {shades.length > 0 && (
-    <section id="shades" class="py-24 px-6 bg-primary border-t border-white/8" aria-label="Explore archetype blends" data-compact-super="Your Unique Blend" data-compact-title="Discover Your Blend" data-compact-theme="dark">
-      <div class="mx-auto max-w-4xl">
-        <div class="text-center mb-12">
+    <section
+      id="shades"
+      class="py-24 px-6 bg-primary border-t border-white/8"
+      aria-label="Explore archetype blends"
+      data-compact-super="Your Unique Blend"
+      data-compact-title="Discover Your Blend"
+      data-compact-theme="dark"
+    >
+      <div class="mx-auto max-w-7xl">
+
+        <!-- Section header -->
+        <div class="text-center mb-14">
           <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
           <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Your Unique Blend</p>
           <h2 class="font-heading text-white text-3xl md:text-4xl font-semibold mb-4">
@@ -311,51 +473,138 @@ const genderGuide = isFeminine
           </p>
         </div>
 
-        <!-- Secondary selector chips -->
-        <div class="flex flex-wrap justify-center gap-3 mb-10" role="radiogroup" aria-label="Select secondary archetype">
-          {otherArchetypes.map((other, i) => (
-            <button
-              type="button"
-              class="shade-chip font-body text-sm px-5 py-2.5
-                     bg-white/5 border border-white/15 text-white/60
-                     hover:bg-white/10 hover:border-white/25 hover:text-white
-                     transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
-                     focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
-                     cursor-pointer select-none"
-              data-shade-slug={other.data.slug}
-              data-shade-name={other.data.name}
-              role="radio"
-              aria-checked={i === 0 ? 'true' : 'false'}
-              tabindex={i === 0 ? 0 : -1}
-            >
-              <span class="mr-1.5" style={`color: ${other.data.color}`}>{other.data.icon}</span>
-              {other.data.name}
-            </button>
-          ))}
+        <!-- Two-column comparator layout -->
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+
+          <!-- LEFT: Fixed primary archetype image -->
+          <div class="w-full lg:w-1/2">
+            <div class="comparator-primary-wrap">
+              <img
+                src={primaryCardImage}
+                alt={data.name}
+                class="comparator-primary-img"
+                loading="lazy"
+              />
+              <!-- Primary label -->
+              <div class="comparator-img-label">
+                <div class="flex items-center gap-2">
+                  <span style={`color: ${data.color}`}>{data.icon}</span>
+                  <span class="font-body text-[10px] tracking-widest uppercase text-white/70">{data.name}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Blend panel -->
+          <div class="w-full lg:w-1/2 flex flex-col gap-6">
+
+            <!-- Split-screen blend comparator -->
+            <div class="comparator-split-wrap">
+              <!-- Left half: primary archetype image (always fixed) -->
+              <div class="comparator-half comparator-half-left">
+                <img
+                  src={primaryCardImage}
+                  alt={data.name}
+                  class="comparator-half-img"
+                  loading="lazy"
+                />
+              </div>
+              <!-- Right half: selected shade image (updated via JS) -->
+              <div class="comparator-half comparator-half-right">
+                <img
+                  id="shade-comparison-img"
+                  src={otherArchetypesWithImages[0]?.image ?? ''}
+                  alt={otherArchetypes[0]?.data.name ?? ''}
+                  class="comparator-half-img"
+                  loading="lazy"
+                />
+              </div>
+              <!-- Blend gradient in center -->
+              <div class="comparator-blend-overlay" aria-hidden="true"></div>
+              <!-- Center divider line -->
+              <div class="comparator-divider" aria-hidden="true"></div>
+              <!-- Bottom labels -->
+              <div class="comparator-labels" aria-hidden="true">
+                <div class="comparator-label-left">
+                  <span class="font-body text-[9px] tracking-widest uppercase text-white/60">{data.name}</span>
+                </div>
+                <div class="comparator-label-right">
+                  <span id="comparator-shade-label" class="font-body text-[9px] tracking-widest uppercase text-white/60">
+                    {otherArchetypes[0]?.data.name ?? ''}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shade thumbnail selector -->
+            <div>
+              <p class="font-body text-[11px] tracking-widest uppercase text-white/35 mb-4">
+                Choose your shade
+              </p>
+              <div
+                class="shade-thumb-grid"
+                role="radiogroup"
+                aria-label="Select secondary archetype"
+              >
+                {otherArchetypesWithImages.map((item, i) => (
+                  <button
+                    type="button"
+                    class="shade-thumb cursor-pointer overflow-hidden relative group"
+                    data-shade-slug={item.archetype.data.slug}
+                    data-shade-name={item.archetype.data.name}
+                    data-shade-image={item.image}
+                    data-shade-color={item.archetype.data.color}
+                    role="radio"
+                    aria-checked={i === 0 ? 'true' : 'false'}
+                    tabindex={i === 0 ? 0 : -1}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.archetype.data.name}
+                      class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none"></div>
+                    <div
+                      class="shade-thumb-ring absolute inset-0 transition-all duration-300 pointer-events-none"
+                      style={i === 0 ? `box-shadow: inset 0 0 0 2px ${item.archetype.data.color}` : 'box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12)'}
+                    ></div>
+                    <div class="absolute bottom-0 inset-x-0 p-2 text-center pointer-events-none">
+                      <span class="font-body text-[9px] tracking-widest uppercase text-white/75 leading-none">
+                        {item.archetype.data.name.replace(/^The\s+/i, '')}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <!-- Shade description -->
+            <div class="shade-display bg-white/3 border border-white/10 rounded-sm p-6 md:p-8 backdrop-blur-sm">
+              {shades.map((shade) => (
+                <div
+                  class:list={[
+                    'shade-content transition-opacity duration-300',
+                    shade.secondary === defaultShadeSlug ? 'block' : 'hidden',
+                  ]}
+                  data-shade-for={shade.secondary}
+                >
+                  <div class="flex items-center gap-2 mb-4">
+                    <span class="text-accent text-lg">{data.icon}</span>
+                    <span class="font-heading text-white text-xl font-semibold">{data.name}</span>
+                    <span class="text-white/30 mx-1">&times;</span>
+                    <span class="font-heading text-white/70 text-xl">{shade.secondaryName}</span>
+                  </div>
+                  <p class="font-body text-white/70 text-base leading-relaxed italic">
+                    {shade.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
 
-        <!-- Shade description display -->
-        <div class="shade-display bg-white/3 border border-white/10 rounded-sm p-8 md:p-10 backdrop-blur-sm">
-          {shades.map((shade) => (
-            <div
-              class:list={[
-                'shade-content transition-opacity duration-300',
-                shade.secondary === defaultShadeSlug ? 'block' : 'hidden',
-              ]}
-              data-shade-for={shade.secondary}
-            >
-              <div class="flex items-center gap-2 mb-4">
-                <span class="text-accent text-lg">{data.icon}</span>
-                <span class="font-heading text-white text-xl font-semibold">{data.name}</span>
-                <span class="text-white/30 mx-1">&times;</span>
-                <span class="font-heading text-white/70 text-xl">{shade.secondaryName}</span>
-              </div>
-              <p class="font-body text-white/70 text-base leading-relaxed italic">
-                {shade.description}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   )}
@@ -417,13 +666,6 @@ const genderGuide = isFeminine
 
 
 <style>
-  /* ── Active shade chip ─────────────────────────────────── */
-  .shade-chip[aria-checked="true"] {
-    background: rgba(184, 151, 126, 0.15);
-    border-color: rgba(184, 151, 126, 0.4);
-    color: white;
-  }
-
   /* ── Style icon image/fallback layering ────────────────── */
   .icon-img {
     z-index: 1;
@@ -478,69 +720,592 @@ const genderGuide = isFeminine
     border-radius: 999px;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .style-icon-group > div:first-child,
-    .style-icon-label {
-      transition: none !important;
+  /* ── Signature Gallery ──────────────────────────────────── */
+
+  .gallery-mosaic {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+    grid-template-rows: 1fr 1fr;
+    height: clamp(440px, 82vh, 920px);
+    gap: 3px;
+  }
+
+  .gallery-primary {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+
+  .gallery-secondary-1 {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .gallery-secondary-2 {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  @media (max-width: 767px) {
+    .gallery-mosaic {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      height: auto;
+    }
+
+    .gallery-primary {
+      grid-column: 1;
+      grid-row: 1;
+      aspect-ratio: 4 / 5;
+    }
+
+    .gallery-secondary-1 {
+      grid-column: 1;
+      grid-row: 2;
+      aspect-ratio: 4 / 3;
+    }
+
+    .gallery-secondary-2 {
+      grid-column: 1;
+      grid-row: 3;
+      aspect-ratio: 4 / 3;
     }
   }
 
-  /* Left column: allow fan cards to overflow the sticky container */
-  .archetype-fan-overflow {
-    overflow: visible;
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gallery-img-wrap {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  @media (max-width: 767px) {
+    .gallery-img-wrap {
+      position: static;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: 112%;
+    object-fit: cover;
+    object-position: top center;
+    transform: translateY(0);
+    transition:
+      transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
+      scale 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+    display: block;
+  }
+
+  .gallery-item:hover .gallery-img {
+    scale: 1.035;
+  }
+
+  /* Hover info overlay */
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.88) 0%,
+      rgba(0, 0, 0, 0.45) 35%,
+      rgba(0, 0, 0, 0.05) 65%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    opacity: 0;
+    transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-overlay-inner {
+    padding: 2rem 2rem 2.25rem;
+    transform: translateY(10px);
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gallery-item:hover .gallery-overlay-inner {
+    transform: translateY(0);
+  }
+
+  .gallery-look-tag {
+    font-family: var(--font-heading);
+    color: white;
+    font-size: clamp(1rem, 1.8vw, 1.6rem);
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 0.7rem;
+    letter-spacing: -0.01em;
+  }
+
+  .gallery-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .gallery-bullets li {
+    font-family: var(--font-body);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    letter-spacing: 0.025em;
+    line-height: 1.5;
+  }
+
+  .gallery-bullets li::before {
+    content: '— ';
+    color: var(--color-accent);
+  }
+
+  /* Expand hint icon */
+  .gallery-expand-hint {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.55);
+    opacity: 0;
+    transform: scale(0.75);
+    transition:
+      opacity 350ms ease,
+      transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gallery-item:hover .gallery-expand-hint {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ── Lightbox ──────────────────────────────────────────── */
+
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gallery-lightbox.is-open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .gallery-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 8, 6, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+  }
+
+  .gallery-lightbox-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 95dvh;
+    max-width: min(90vw, 900px);
+    padding: 0 1.5rem;
+  }
+
+  .gallery-lightbox-img {
+    max-height: 68dvh;
+    max-width: 100%;
+    width: auto;
+    object-fit: contain;
+    transform: scale(0.9) translateY(12px);
+    transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+    display: block;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+
+  .gallery-lightbox.is-open .gallery-lightbox-img {
+    transform: scale(1) translateY(0);
+  }
+
+  .gallery-lightbox-info {
+    text-align: center;
+    margin-top: 1.75rem;
+    width: 100%;
+  }
+
+  .gallery-lightbox-title {
+    font-family: var(--font-heading);
+    color: white;
+    font-size: clamp(1.375rem, 3vw, 2.25rem);
+    font-weight: 600;
+    margin-bottom: 0.875rem;
+    letter-spacing: -0.015em;
+  }
+
+  .gallery-lightbox-bullets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 450ms 120ms ease,
+      transform 450ms 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gallery-lightbox.is-open .gallery-lightbox-bullets {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .gallery-lightbox-bullets li {
+    font-family: var(--font-body);
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.875rem;
+    letter-spacing: 0.03em;
+  }
+
+  .gallery-lightbox-bullets li::before {
+    content: '— ';
+    color: var(--color-accent);
+  }
+
+  .gallery-lightbox-close {
+    position: absolute;
+    top: -3.25rem;
+    right: 0;
+    color: rgba(255, 255, 255, 0.45);
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease,
+      background-color 200ms ease;
+  }
+
+  .gallery-lightbox-close:hover {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.45);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  /* ── Blend Comparator ──────────────────────────────────── */
+
+  .comparator-primary-wrap {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+
+  .comparator-primary-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  .comparator-img-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.25rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
+  }
+
+  .comparator-split-wrap {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+
+  .comparator-half {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    overflow: hidden;
+  }
+
+  .comparator-half-left {
+    left: 0;
+  }
+
+  .comparator-half-right {
+    right: 0;
+  }
+
+  .comparator-half-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .comparator-blend-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to right,
+      transparent 28%,
+      rgba(184, 151, 126, 0.22) 44%,
+      rgba(184, 151, 126, 0.22) 56%,
+      transparent 72%
+    );
+  }
+
+  .comparator-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+  }
+
+  .comparator-labels {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    pointer-events: none;
+  }
+
+  .comparator-label-left {
+    width: 50%;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
+  }
+
+  .comparator-label-right {
+    width: 50%;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
+    text-align: right;
+  }
+
+  /* Shade thumbnail grid */
+  .shade-thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .shade-thumb {
+    aspect-ratio: 3 / 4;
+    display: block;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .shade-thumb[aria-checked="true"] .shade-thumb-ring {
+    /* Handled inline via JS with archetype color */
+  }
+
+  /* Comparator image transition */
+  #shade-comparison-img {
+    transition: opacity 300ms ease;
+  }
+
+  #shade-comparison-img.is-transitioning {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .style-icon-group > div:first-child,
+    .style-icon-label,
+    .gallery-img,
+    .gallery-overlay,
+    .gallery-overlay-inner,
+    .gallery-expand-hint,
+    .gallery-lightbox,
+    .gallery-lightbox-img,
+    .gallery-lightbox-bullets,
+    #shade-comparison-img {
+      transition: none !important;
+    }
   }
 </style>
 
 
 <script>
   document.addEventListener('astro:page-load', () => {
-  // ── Style icon image fallback ──────────────────────────────
-  // Hide broken images so the letter-initial fallback shows through.
 
+  // ── Style icon image fallback ──────────────────────────────
   document.querySelectorAll<HTMLImageElement>('.icon-img').forEach((img) => {
     img.addEventListener('error', () => {
       img.classList.add('is-hidden');
     });
   });
 
-  // ── "With Shades Of" selector ─────────────────────────────
-  // Toggles shade descriptions when user clicks a secondary archetype chip.
+  // ── Gallery parallax on scroll ─────────────────────────────
+  const parallaxImgs = document.querySelectorAll<HTMLImageElement>('[data-parallax]');
+  let ticking = false;
 
-  document.querySelectorAll<HTMLElement>('.shade-chip').forEach((chip) => {
-    chip.addEventListener('click', () => {
-      const slug = chip.dataset.shadeSlug!;
-      const container = chip.closest('section');
-      if (!container) return;
+  const applyParallax = () => {
+    parallaxImgs.forEach((img) => {
+      const strength = parseFloat(img.dataset.parallax ?? '0.08');
+      const item = img.closest<HTMLElement>('.gallery-item');
+      if (!item) return;
+      const rect = item.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      // Only apply while item intersects viewport
+      if (rect.bottom < 0 || rect.top > viewH) return;
+      const center = rect.top + rect.height / 2 - viewH / 2;
+      const offset = (center * strength).toFixed(1);
+      img.style.transform = `translateY(${offset}px)`;
+    });
+    ticking = false;
+  };
 
-      // Update chip states (aria-checked + roving tabindex)
-      container.querySelectorAll<HTMLElement>('.shade-chip').forEach((c) => {
-        const isActive = c === chip;
-        c.setAttribute('aria-checked', String(isActive));
-        c.tabIndex = isActive ? 0 : -1;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(applyParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Initial call
+  applyParallax();
+
+  // ── Gallery lightbox ───────────────────────────────────────
+  const lightbox    = document.getElementById('gallery-lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+  const lightboxTitle   = document.getElementById('lightbox-title');
+  const lightboxBullets = document.getElementById('lightbox-bullets');
+  const lightboxClose   = document.getElementById('lightbox-close');
+
+  const openLightbox = (src: string, title: string, bullets: string[]) => {
+    if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxBullets) return;
+    lightboxImg.src = src;
+    lightboxTitle.textContent = title;
+    lightboxBullets.innerHTML = bullets.map((b) => `<li>${b}</li>`).join('');
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) return;
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  document.querySelectorAll<HTMLElement>('.gallery-item').forEach((item) => {
+    item.addEventListener('click', () => {
+      const src     = item.dataset.lookSrc ?? '';
+      const title   = item.dataset.lookTitle ?? '';
+      const bullets = JSON.parse(item.dataset.lookBullets ?? '[]') as string[];
+      openLightbox(src, title, bullets);
+    });
+  });
+
+  lightboxClose?.addEventListener('click', closeLightbox);
+  lightbox?.querySelector('.gallery-lightbox-backdrop')?.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox?.classList.contains('is-open')) closeLightbox();
+  });
+
+  // ── Blend comparator ──────────────────────────────────────
+  const comparatorImg   = document.getElementById('shade-comparison-img') as HTMLImageElement | null;
+  const comparatorLabel = document.getElementById('comparator-shade-label');
+
+  document.querySelectorAll<HTMLElement>('.shade-thumb').forEach((thumb, _idx, allThumbs) => {
+    thumb.addEventListener('click', () => {
+      const slug  = thumb.dataset.shadeSlug!;
+      const name  = thumb.dataset.shadeName!;
+      const image = thumb.dataset.shadeImage!;
+      const color = thumb.dataset.shadeColor ?? '#b8977e';
+
+      // Crossfade the comparator image
+      if (comparatorImg) {
+        comparatorImg.classList.add('is-transitioning');
+        setTimeout(() => {
+          comparatorImg.src = image;
+          comparatorImg.alt = name;
+          comparatorImg.classList.remove('is-transitioning');
+        }, 150);
+      }
+
+      if (comparatorLabel) comparatorLabel.textContent = name;
+
+      // Update active thumbnail rings + aria-checked + roving tabindex
+      allThumbs.forEach((t) => {
+        const isActive = t === thumb;
+        t.setAttribute('aria-checked', String(isActive));
+        t.tabIndex = isActive ? 0 : -1;
+        const ring = t.querySelector<HTMLElement>('.shade-thumb-ring');
+        if (ring) {
+          ring.style.boxShadow = isActive
+            ? `inset 0 0 0 2px ${color}`
+            : 'inset 0 0 0 1px rgba(255,255,255,0.12)';
+        }
       });
 
       // Show matching shade description, hide others
-      container.querySelectorAll<HTMLElement>('.shade-content').forEach((content) => {
+      document.querySelectorAll<HTMLElement>('.shade-content').forEach((content) => {
         const isMatch = content.dataset.shadeFor === slug;
         content.classList.toggle('hidden', !isMatch);
         content.classList.toggle('block', isMatch);
       });
     });
   });
-  // Arrow key navigation for shade chip radiogroup (WAI-ARIA radiogroup pattern)
-  const shadeGroup = document.querySelector<HTMLElement>('[role="radiogroup"]');
-  shadeGroup?.addEventListener('keydown', (e: KeyboardEvent) => {
+
+  // Arrow-key navigation for shade thumb radiogroup
+  const thumbGroup = document.querySelector<HTMLElement>('[role="radiogroup"]');
+  thumbGroup?.addEventListener('keydown', (e: KeyboardEvent) => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
     e.preventDefault();
-    const chips = Array.from(shadeGroup.querySelectorAll<HTMLButtonElement>('.shade-chip'));
-    const currentIdx = chips.findIndex(c => c === document.activeElement);
+    const thumbs = Array.from(thumbGroup.querySelectorAll<HTMLButtonElement>('.shade-thumb'));
+    const currentIdx = thumbs.findIndex((t) => t === document.activeElement);
     if (currentIdx === -1) return;
-    const dir = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
-    const nextIdx = (currentIdx + dir + chips.length) % chips.length;
-    chips[currentIdx].tabIndex = -1;
-    chips[nextIdx].tabIndex = 0;
-    chips[nextIdx].focus();
-    chips[nextIdx].click(); // Auto-select: standard radiogroup behavior
+    const dir     = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+    const nextIdx = (currentIdx + dir + thumbs.length) % thumbs.length;
+    thumbs[currentIdx].tabIndex = -1;
+    thumbs[nextIdx].tabIndex = 0;
+    thumbs[nextIdx].focus();
+    thumbs[nextIdx].click();
   });
 
   }); // astro:page-load

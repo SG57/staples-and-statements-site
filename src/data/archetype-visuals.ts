@@ -22,6 +22,11 @@ export interface StyleIcon {
   image: string;
 }
 
+export interface GalleryLook {
+  title: string;
+  bullets: [string, string, string];
+}
+
 export interface ArchetypeVisuals {
   slug: string;
   tagline: string;
@@ -29,6 +34,7 @@ export interface ArchetypeVisuals {
   signaturePieces: SignaturePiece[];
   styleIcons: StyleIcon[];
   bodyText: string;
+  galleryLooks: [GalleryLook, GalleryLook, GalleryLook];
 }
 
 // ── Icon category system ────────────────────────────────────
@@ -118,6 +124,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Siren knows exactly what she has and dresses to celebrate it. Your style is sensual without being scandalous, bold without being brash. You gravitate toward body-conscious silhouettes, rich fabrics, deep warm tones, and the kind of pieces that move with you. Your wardrobe is a love letter to your own body.",
+    galleryLooks: [
+      {
+        title: 'The Body as Blueprint',
+        bullets: [
+          'Form follows fantasy — and you wrote the rules',
+          'Every curve deliberate, every detail irreducible',
+          'Worn like a love letter to yourself',
+        ],
+      },
+      {
+        title: 'The Heat',
+        bullets: [
+          'Wrap silhouette that moves with you, not for you',
+          'Deep, saturated color held close to the body',
+          'The look that arrives before you do',
+        ],
+      },
+      {
+        title: 'The Gaze',
+        bullets: [
+          'High slit, statement heel, complete intention',
+          'Jewel-toned fabric that holds and releases light',
+          'Stop a conversation without saying a word',
+        ],
+      },
+    ],
   },
 
   {
@@ -146,6 +178,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Muse lives where art and beauty intersect. Your wardrobe is an expression of your inner world \u2014 layered, romantic, and always slightly dreamy. You're drawn to flowing silhouettes, delicate prints, vintage-inspired details, and fabrics that move. Florals, lace, soft watercolor tones, and unexpected feminine details feel instinctively right to you.",
+    galleryLooks: [
+      {
+        title: 'The Dream',
+        bullets: [
+          'Layers that drift with each step, soft as breath',
+          'Dusty rose and ivory caught mid-motion',
+          'Romantic detail that rewards a second glance',
+        ],
+      },
+      {
+        title: 'The Garden',
+        bullets: [
+          'Vintage-inspired silhouette with effortless modern ease',
+          'Florals worn like they were grown for you specifically',
+          'Delicate textures, invisible but intentional layering',
+        ],
+      },
+      {
+        title: 'The Edit',
+        bullets: [
+          'Art-adjacent accessories as the entire thesis',
+          'Unexpected color pairings that feel inevitable',
+          'Jewelry stacked to tell a quiet, personal story',
+        ],
+      },
+    ],
   },
 
   {
@@ -175,6 +233,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Warrior's style is armor \u2014 beautiful, powerful, and built to move through the world with confidence. You're drawn to strong shoulders, structured silhouettes, sharp tailoring, and a palette of high-contrast neutrals. Your look is minimal in decoration and maximal in impact. You don't need embellishment \u2014 your presence is enough.",
+    galleryLooks: [
+      {
+        title: 'The Red Statement Dress',
+        bullets: [
+          'Sharp silhouette that needs no accessories',
+          'Color as armor — bold, deliberate, final',
+          'The look that walks in before you do',
+        ],
+      },
+      {
+        title: 'The Trench Commander',
+        bullets: [
+          'Structure that moves with authority',
+          'Every button a decision, every line intentional',
+          'From boardroom to sidewalk — no apology needed',
+        ],
+      },
+      {
+        title: 'The Boardroom Power Suit',
+        bullets: [
+          'Precision-cut tailoring as self-expression',
+          'Minimal palette, maximum impact',
+          'The room shifts when you sit down',
+        ],
+      },
+    ],
   },
 
   {
@@ -203,6 +287,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Enchantress operates in the space between shadow and light. Your style is dark romance made wearable \u2014 moody colors, unexpected textures, layered complexity, and an edge that feels effortless rather than studied. You're drawn to deep jewel tones, gothic-adjacent details, velvet, lace, and silhouettes that suggest rather than reveal.",
+    galleryLooks: [
+      {
+        title: 'The Shadow',
+        bullets: [
+          'Dark velvet that holds its secrets close',
+          'Midnight tones layered with deliberate mystery',
+          'A look that invites you closer, then reconsiders',
+        ],
+      },
+      {
+        title: 'The Ritual',
+        bullets: [
+          'Lace detail surfacing unexpectedly, earned',
+          'Deep jewel tones that absorb rather than reflect light',
+          'Gothic-adjacent edge worn without effort',
+        ],
+      },
+      {
+        title: 'The Veil',
+        bullets: [
+          'Draped silhouette that suggests without revealing',
+          'Layered textures building complex visual depth',
+          'Romantic darkness in its most wearable form',
+        ],
+      },
+    ],
   },
 
   {
@@ -231,6 +341,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Creator sees fashion as a medium, not a mandate. You mix prints without apology, layer textures that shouldn't work until they do, and find pieces that tell stories most people would walk right past. Your style is curated chaos \u2014 a visual diary of your obsessions, inspirations, and the beautiful things you can't stop noticing.",
+    galleryLooks: [
+      {
+        title: 'The Collision',
+        bullets: [
+          'Two prints that shouldn\'t work — until they do',
+          'Color-blocking as art direction, not accident',
+          'The outfit that starts a conversation mid-sentence',
+        ],
+      },
+      {
+        title: 'The Vintage Find',
+        bullets: [
+          'Unearthed at a market, made entirely your own',
+          'Unexpected provenance, undeniable presence',
+          'Fashion archaeology turned personal manifesto',
+        ],
+      },
+      {
+        title: 'The Statement',
+        bullets: [
+          'Bold accessories as the entire thesis statement',
+          'Textures stacked with purpose and beautiful chaos',
+          'The outfit that could hang in a gallery',
+        ],
+      },
+    ],
   },
 
   {
@@ -261,6 +397,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Empress radiates warmth the moment she enters a room. Your style isn't about commanding attention \u2014 it's about creating an atmosphere of grounded abundance. You gravitate toward luxe, elevated basics: pieces that feel as good as they look, built with quality that speaks for itself. Your wardrobe is an extension of your nurturing energy \u2014 every piece chosen with care, stability, and timeless intention.\n\nYou don't need trends. Your closet is full of high-quality neutrals that layer beautifully, silk that drapes just right, and gold that catches the light. You dress for how you want to feel: warm, capable, and elegantly put together without trying too hard.",
+    galleryLooks: [
+      {
+        title: 'The Foundation',
+        bullets: [
+          'Silk that drapes with quiet, earned authority',
+          'Gold catching light at every angle — naturally',
+          'Grounded luxury that needs no announcement',
+        ],
+      },
+      {
+        title: 'The Investment',
+        bullets: [
+          'Cashmere and tailored trouser: the wardrobe backbone',
+          'Quality that deepens with every wear',
+          'Warmth as visual language, not just temperature',
+        ],
+      },
+      {
+        title: 'The Presence',
+        bullets: [
+          'Elevated basics assembled with complete intention',
+          'Rich neutral palette that feels like an atmosphere',
+          'The look that makes every room feel warmer',
+        ],
+      },
+    ],
   },
 
   {
@@ -291,6 +453,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Angelic One carries an aura of calm, purity, and gentle beauty. Your wardrobe speaks in whispers \u2014 soft whites, warm creams, blush pinks, and the kind of delicate details that reward a second look. Your style is never loud, but it's never forgettable. There's a timelessness to everything you wear that transcends trend.",
+    galleryLooks: [
+      {
+        title: 'The White Canvas',
+        bullets: [
+          'Flowy white layers that move like breath',
+          'Luminous, soft, and completely at peace',
+          'The look that calms a room just by entering it',
+        ],
+      },
+      {
+        title: 'The Softness',
+        bullets: [
+          'Powder pink and silk slip: a study in ease',
+          'Delicate layering with invisible intentionality',
+          'Feminine in the quietest, most powerful way',
+        ],
+      },
+      {
+        title: 'The Bloom',
+        bullets: [
+          'Sheer layers over warm cream — effortless grace',
+          'Pearl detail that anchors without weighing down',
+          'Light-catching fabric in its most gentle form',
+        ],
+      },
+    ],
   },
 
   // ─── MASCULINE ──────────────────────────────────────────
@@ -321,6 +509,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Protector doesn't dress to be noticed \u2014 he dresses to be ready. Your wardrobe is built on dependability: quality over quantity, durability over novelty. Every piece earns its place through repeated wear and unwavering reliability. You gravitate toward well-worn leather that ages beautifully, heavy-gauge knits, heritage boots, and perfectly fitted denim that holds up to real life.\n\nYou're not chasing the next thing. You've already found what works, and you return to it with quiet confidence. Your style reflects stability, trustworthiness, and a grounding presence that puts everyone around you at ease.",
+    galleryLooks: [
+      {
+        title: 'The Foundation',
+        bullets: [
+          'Well-worn leather that has earned every crease',
+          'Dependable weight, dependable presence',
+          'The jacket that has been everywhere with you',
+        ],
+      },
+      {
+        title: 'The Heritage',
+        bullets: [
+          'Dark denim fitted perfectly from years of wear',
+          'Quality knit that improves with every season',
+          'No trend, no apology — just permanence',
+        ],
+      },
+      {
+        title: 'The Field',
+        bullets: [
+          'Military-inspired outerwear built for real conditions',
+          'Functional design that happens to look exceptional',
+          'Dressed for the work, not the audience',
+        ],
+      },
+    ],
   },
 
   {
@@ -349,6 +563,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Maverick's closet is a contradiction by design. Vintage band tees under structured blazers. Distressed denim with tailored details. Statement accessories that start conversations. You resist being boxed in and see fashion as a playground versus a rule book. Rules exist to be bent, and you bend them with taste.\n\nYour wardrobe is always evolving because standing still is the only thing you refuse to do. You crave freedom, novelty, and movement. Labels feel limiting \u2014 your style is versatile and hard to pin down, which is exactly the point. You enjoy bending and remixing trends on your own terms.",
+    galleryLooks: [
+      {
+        title: 'The Remix',
+        bullets: [
+          'Vintage band tee under a structured blazer — intentional',
+          'Distressed denim with tailored details: the contradiction',
+          'A look that bends the rules it\'s built from',
+        ],
+      },
+      {
+        title: 'The Statement',
+        bullets: [
+          'Oversized outerwear that rewrites the silhouette',
+          'Bold accessories as the opening argument',
+          'Unconventional footwear that completes the whole look',
+        ],
+      },
+      {
+        title: 'The Layer',
+        bullets: [
+          'Mixed-era pieces assembled into something entirely new',
+          'Color-blocking that defies easy category',
+          'Fashion as a living, evolving manifesto',
+        ],
+      },
+    ],
   },
 
   {
@@ -377,6 +617,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Architect's wardrobe is a masterclass in precision. Every piece is selected for its construction, its cut, its purpose in the larger system. You appreciate structure, clarity, and cohesion \u2014 clean lines, architectural shapes, and monochromatic palettes that create visual harmony. You don't wear clothes \u2014 you curate a visual identity where every detail has been considered and nothing is left to chance.\n\nYour style refines over time. You adjust details rather than reinvent yourself. Trends are adopted strategically \u2014 only if they align with the vision you've already built. Your presence enters a room with focus, sharpness, and intention.",
+    galleryLooks: [
+      {
+        title: 'The Blueprint',
+        bullets: [
+          'Monochromatic precision that creates visual harmony',
+          'Every detail considered, nothing superfluous',
+          'Clean lines that speak louder than ornament',
+        ],
+      },
+      {
+        title: 'The System',
+        bullets: [
+          'Well-pressed button-down as the load-bearing structure',
+          'Minimalist watch as the only accent needed',
+          'The look that proves you thought about all of it',
+        ],
+      },
+      {
+        title: 'The Elevation',
+        bullets: [
+          'Precision-cut outerwear making a statement without volume',
+          'Structured trouser meeting clean sneaker: intentional contrast',
+          'Cohesion that feels inevitable, never effortful',
+        ],
+      },
+    ],
   },
 
   {
@@ -405,6 +671,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Alchemist dresses from the inside out. Your wardrobe shifts with your inner landscape \u2014 dark and moody one season, warm and layered the next. You're drawn to texture, contrast, and pieces that carry emotional weight. A vintage ring, a hand-dyed scarf, a jacket that survived three creative phases. For you, getting dressed is an act of translation \u2014 transforming what you feel into what you wear.\n\nYou experience life in phases, and your style evolves alongside your inner world. Clothing becomes a tool for storytelling, exploration, and self-discovery. Nothing in your closet is random \u2014 every piece marks a moment, a mood, a transformation.",
+    galleryLooks: [
+      {
+        title: 'The Phase',
+        bullets: [
+          'Textured layers that carry real emotional weight',
+          'Vintage ring and draped fabric: transformation made visible',
+          'A look that has lived through something',
+        ],
+      },
+      {
+        title: 'The Mood',
+        bullets: [
+          'Dark tones layered with warm patina details',
+          'Pieces chosen for their history, not their newness',
+          'Getting dressed as an act of translation',
+        ],
+      },
+      {
+        title: 'The Depth',
+        bullets: [
+          'Rich, complex palette that shifts in different light',
+          'Hand-dyed textile detail amid structured forms',
+          'Fashion as inner landscape, worn outward',
+        ],
+      },
+    ],
   },
 
   {
@@ -433,6 +725,32 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
     ],
     bodyText:
       "The Sovereign's style is the quietest and the most powerful. Nothing feels forced, nothing feels like a costume. There's a seamless quality to how you dress \u2014 every piece belongs, not because it was carefully selected, but because it simply couldn't be anything else. You've moved past performance and arrived at something more rare: pure alignment.\n\nYour clothes don't make a statement \u2014 they make a presence. You integrate many influences without losing coherence. Trends don't define you, and you don't react strongly to them. When something feels right, you wear it. When it doesn't, you don't. That simplicity is your superpower.",
+    galleryLooks: [
+      {
+        title: 'The Alignment',
+        bullets: [
+          'Perfectly fitted basics that feel like a second skin',
+          'Nothing here is trying — it simply is',
+          'The wardrobe version of arriving',
+        ],
+      },
+      {
+        title: 'The Quiet',
+        bullets: [
+          'Cashmere and clean leather: refined without announcement',
+          'Understated watch as the only statement needed',
+          'Style that whispers and still commands the room',
+        ],
+      },
+      {
+        title: 'The Presence',
+        bullets: [
+          'Quality denim fitted from years of living in it',
+          'Warm grey and cream: the palette of pure certainty',
+          'The look that has moved past needing to explain itself',
+        ],
+      },
+    ],
   },
 ];
 
