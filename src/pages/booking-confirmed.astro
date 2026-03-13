@@ -35,7 +35,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="py-20 px-6 bg-background" aria-label="Next steps" data-compact-super="While You Wait" data-compact-title="Make the Most of Your Consultation" data-compact-theme="light">
     <div class="mx-auto max-w-5xl">
       <div class="text-center mb-14">
-        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">While You Wait</p>
+        <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">While You Wait</p>
         <h2 class="font-heading text-primary text-4xl">Make the Most of Your Consultation</h2>
         <p class="mt-4 font-body text-text-muted text-base max-w-lg mx-auto leading-relaxed">
           The more Danielle knows about your style before the call, the more value you'll get from your 20 minutes together. Here are two great ways to prepare.
@@ -46,7 +46,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <!-- Style Quiz upsell -->
         <div class="bg-surface p-10 flex flex-col">
-          <div class="text-3xl text-accent mb-5">✦</div>
+          <div class="text-3xl text-accent-text mb-5">✦</div>
           <h3 class="font-heading text-2xl font-semibold text-primary mb-3">
             Discover Your Style Archetype
           </h3>
@@ -103,7 +103,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           },
         ].map(({ step, body }) => (
           <div class="p-6 bg-background">
-            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">{step} the Call</p>
+            <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">{step} the Call</p>
             <p class="font-body text-sm text-text-muted leading-relaxed">{body}</p>
           </div>
         ))}
@@ -118,7 +118,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         Questions before the call? Reach out at{' '}
         <a
           href="mailto:hello@staplesandstatements.com"
-          class="text-accent hover:text-primary transition-colors"
+          class="text-accent-text hover:text-primary transition-colors"
         >
           hello@staplesandstatements.com
         </a>

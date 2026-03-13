@@ -6,8 +6,8 @@ order: 5
 gender: masculine
 icon: "⬡"
 color: "#1a3a2a"
-guideLink: ""
-ltkLink: ""
+guideLink: "https://beacons.ai/staplesandstatementsss"
+ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Sovereign's style is the quietest and the most powerful. Nothing feels forced, nothing feels like a costume. There's a seamless quality to how you dress — every piece belongs, not because it was carefully selected, but because it simply couldn't be anything else. You've moved past performance and arrived at something more rare: pure alignment.

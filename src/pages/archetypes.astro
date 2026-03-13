@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArchetypeQuiz from '../components/ArchetypeQuiz.astro';
 import { getCollection } from 'astro:content';
+import { getCardImages } from '../data/archetype-images';
 
 const feminineArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'feminine');
 const feminineSorted = feminineArchetypes.sort((a, b) => a.data.order - b.data.order);
@@ -142,13 +143,9 @@ const calendlyURL = '/contact';
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {feminineSorted.map((archetype) => (
             <div
-              class="archetype-card group relative overflow-hidden cursor-pointer aspect-[3/4] max-h-[340px]"
+              class="archetype-card group relative overflow-hidden cursor-pointer aspect-[3/4] max-h-[374px]"
               data-slug={archetype.data.slug}
-              data-images={JSON.stringify([
-                `/images/archetypes/${archetype.data.slug}-1.webp`,
-                `/images/archetypes/${archetype.data.slug}-2.webp`,
-                `/images/archetypes/${archetype.data.slug}-3.webp`,
-              ])}
+              data-images={JSON.stringify(getCardImages(archetype.data.slug))}
             >
               <!-- Image layer A (starts visible) -->
               <img
@@ -179,8 +176,11 @@ const calendlyURL = '/contact';
                 style={`background-color: ${archetype.data.color ?? '#b8977e'}`}
               ></div>
 
+              <!-- God ray bloom on hover -->
+              <div class="archetype-hover-ray absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-[5]"></div>
+
               <!-- Always-visible bottom label -->
-              <div class="absolute bottom-0 left-0 right-0 p-5 z-10">
+              <div class="archetype-bottom-label absolute bottom-0 left-0 right-0 p-5 z-10">
                 <div class="flex items-center gap-2 mb-1">
                   <span class="text-lg text-accent/70">{archetype.data.icon ?? '✦'}</span>
                   <h3 class="font-heading text-white text-xl font-semibold leading-tight">
@@ -190,34 +190,36 @@ const calendlyURL = '/contact';
               </div>
 
               <!-- Hover reveal panel: slides up from bottom on hover -->
-              <div class="archetype-reveal absolute inset-x-0 bottom-0 p-5 z-20
-                          bg-gradient-to-t from-black/95 via-black/85 to-transparent
-                          translate-y-full group-hover:translate-y-0
-                          transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
-                <div class="flex items-center gap-2 mb-3">
-                  <span class="text-lg text-accent/80">{archetype.data.icon ?? '✦'}</span>
-                  <h3 class="font-heading text-white text-xl font-semibold">{archetype.data.name}</h3>
-                </div>
-                <p class="font-body text-sm text-white/70 leading-relaxed mb-4">
-                  {archetype.data.description}
-                </p>
-                <div class="flex flex-col gap-2">
-                  <a href={`/archetypes/${archetype.data.slug}`}
-                     class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
-                    Deep Dive →
-                  </a>
-                  {archetype.data.guideLink && (
-                    <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
-                       class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors">
-                      Get the Style Guide →
+              <!-- Outer div = gradient only (full card width, no counter-scale) -->
+              <!-- Inner div = text content (counter-scaled to original pixel size) -->
+              <div class="archetype-reveal absolute inset-x-0 bottom-0 z-20
+                          bg-gradient-to-t from-black/50 via-black/40 to-transparent">
+                <div class="archetype-reveal-content p-5">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="text-lg text-accent/80">{archetype.data.icon ?? '✦'}</span>
+                    <h3 class="font-heading text-white text-xl font-semibold">{archetype.data.name}</h3>
+                  </div>
+                  <p class="font-body text-sm text-white/70 leading-relaxed mb-4">
+                    {archetype.data.description}
+                  </p>
+                  <div class="flex flex-col gap-2">
+                    <a href={`/archetypes/${archetype.data.slug}`}
+                       class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
+                      Deep Dive →
                     </a>
-                  )}
-                  {archetype.data.ltkLink && (
-                    <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
-                       class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors">
-                      Shop This Look →
-                    </a>
-                  )}
+                    {archetype.data.guideLink && (
+                      <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
+                         class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
+                        Get the Style Guide →
+                      </a>
+                    )}
+                    {archetype.data.ltkLink && (
+                      <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
+                         class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
+                        Shop This Look →
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -225,7 +227,7 @@ const calendlyURL = '/contact';
           ))}
 
           <!-- "Find Your Archetype" quiz CTA card -->
-          <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[340px]
+          <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[374px]
                       flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
                data-quiz-trigger="fem">
             <div class="w-8 h-0.5 bg-accent mb-4"></div>
@@ -235,7 +237,7 @@ const calendlyURL = '/contact';
             </p>
             <button
               type="button"
-              class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200
+              class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase whitespace-nowrap hover:bg-accent-light transition-colors duration-200
                      focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
               data-quiz-trigger="fem"
             >
@@ -338,13 +340,9 @@ const calendlyURL = '/contact';
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {masculineSorted.map((archetype) => (
               <div
-                class="archetype-card group relative overflow-hidden cursor-pointer aspect-[3/4] max-h-[340px]"
+                class="archetype-card group relative overflow-hidden cursor-pointer aspect-[3/4] max-h-[374px]"
                 data-slug={archetype.data.slug}
-                data-images={JSON.stringify([
-                  `/images/archetypes/${archetype.data.slug}-1.webp`,
-                  `/images/archetypes/${archetype.data.slug}-2.webp`,
-                  `/images/archetypes/${archetype.data.slug}-3.webp`,
-                ])}
+                data-images={JSON.stringify(getCardImages(archetype.data.slug))}
               >
                 <!-- Image layer A (starts visible) -->
                 <img
@@ -375,8 +373,11 @@ const calendlyURL = '/contact';
                   style={`background-color: ${archetype.data.color ?? '#b8977e'}`}
                 ></div>
 
+                <!-- God ray bloom on hover -->
+                <div class="archetype-hover-ray absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-[5]"></div>
+
                 <!-- Always-visible bottom label -->
-                <div class="absolute bottom-0 left-0 right-0 p-5 z-10">
+                <div class="archetype-bottom-label absolute bottom-0 left-0 right-0 p-5 z-10">
                   <div class="flex items-center gap-2 mb-1">
                     <span class="text-lg text-accent/70">{archetype.data.icon ?? '▲'}</span>
                     <h3 class="font-heading text-white text-xl font-semibold leading-tight">
@@ -386,30 +387,34 @@ const calendlyURL = '/contact';
                 </div>
 
                 <!-- Hover reveal panel: slides up from bottom on hover -->
-                <div class="archetype-reveal absolute inset-x-0 bottom-0 p-5 z-20
-                            bg-gradient-to-t from-black/95 via-black/85 to-transparent
-                            translate-y-full group-hover:translate-y-0
-                            transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
-                  <div class="flex items-center gap-2 mb-3">
-                    <span class="text-lg text-accent/80">{archetype.data.icon ?? '▲'}</span>
-                    <h3 class="font-heading text-white text-xl font-semibold">{archetype.data.name}</h3>
-                  </div>
-                  <p class="font-body text-sm text-white/70 leading-relaxed mb-4">
-                    {archetype.data.description}
-                  </p>
-                  <div class="flex flex-col gap-2">
-                    {archetype.data.guideLink && (
-                      <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
+                <div class="archetype-reveal absolute inset-x-0 bottom-0 z-20
+                            bg-gradient-to-t from-black/50 via-black/40 to-transparent">
+                  <div class="archetype-reveal-content p-5">
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-lg text-accent/80">{archetype.data.icon ?? '▲'}</span>
+                      <h3 class="font-heading text-white text-xl font-semibold">{archetype.data.name}</h3>
+                    </div>
+                    <p class="font-body text-sm text-white/70 leading-relaxed mb-4">
+                      {archetype.data.description}
+                    </p>
+                    <div class="flex flex-col gap-2">
+                      <a href={`/archetypes/${archetype.data.slug}`}
                          class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
-                        Get the Style Guide →
+                        Deep Dive →
                       </a>
-                    )}
-                    {archetype.data.ltkLink && (
-                      <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
-                         class="font-body text-xs tracking-widest uppercase text-white/40 hover:text-accent transition-colors">
-                        Shop This Look →
-                      </a>
-                    )}
+                      {archetype.data.guideLink && (
+                        <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
+                           class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
+                          Get the Style Guide →
+                        </a>
+                      )}
+                      {archetype.data.ltkLink && (
+                        <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
+                           class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
+                          Shop This Look →
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -417,7 +422,7 @@ const calendlyURL = '/contact';
             ))}
 
             <!-- "Find Your Archetype" quiz CTA card -->
-            <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[340px]
+            <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[374px]
                         flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
                  data-quiz-trigger="masc">
               <div class="w-8 h-0.5 bg-accent mb-4"></div>
@@ -427,7 +432,7 @@ const calendlyURL = '/contact';
               </p>
               <button
                 type="button"
-                class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200
+                class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase whitespace-nowrap hover:bg-accent-light transition-colors duration-200
                        focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
                 data-quiz-trigger="masc"
               >
@@ -626,6 +631,83 @@ const calendlyURL = '/contact';
   .archetype-card .archetype-reveal {
     /* Ensure the panel background extends past the card bottom edge during transition */
     padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  }
+
+  /* ── Reveal panel transitions (fully CSS-controlled) ──────── */
+  /* Base: hidden below card. Transition managed here so we can combine
+     translateY + counter-scale in a single transform declaration. */
+  .archetype-reveal {
+    transform: translateY(100%);
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* Hover: slide up only — gradient stays full card width */
+  .archetype-card:hover .archetype-reveal {
+    transform: translateY(0);
+  }
+  /* Keyboard focus: slide up (card doesn't scale on focus) */
+  .archetype-card:focus-within .archetype-reveal {
+    transform: translateY(0);
+  }
+
+  /* ── Counter-scale text-only layers ──────────────────────── */
+  /* Gradient div (.archetype-reveal) is NOT counter-scaled so it spans
+     the full width of the zoomed card. Only the text content wrapper
+     and always-visible label shrink back to original pixel size. */
+  .archetype-reveal-content,
+  .archetype-bottom-label {
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 300ms ease-out;
+  }
+  .archetype-card:hover .archetype-reveal-content,
+  .archetype-card:hover .archetype-bottom-label {
+    transform: scale(0.6667);
+    transform-origin: bottom left;
+  }
+  /* Hide the always-visible name label once the reveal panel is shown */
+  .archetype-card:hover .archetype-bottom-label,
+  .archetype-card:focus-within .archetype-bottom-label {
+    opacity: 0;
+  }
+
+  /* ── Hover expansion ───────────────────────────────────────── */
+  /* Card scales 1.5× on hover; vertical growth fits within py-28 section padding.
+     Edge cards may clip at section boundary (overflow-hidden on section) —
+     acceptable since users focus on center cards. */
+  .archetype-card {
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .archetype-card:hover {
+    transform: scale(1.5);
+    z-index: 50;
+  }
+
+  /* ── Hover lockout — prevents scale from firing when cursor is
+     already over a card (e.g. on page load or after quiz closes).
+     Removed on mouseleave so subsequent intentional hovers work. ── */
+  .archetype-card.hover-locked:hover {
+    transform: none;
+    z-index: auto;
+  }
+  .archetype-card.hover-locked:hover .archetype-reveal {
+    transform: translateY(100%);
+  }
+  .archetype-card.hover-locked:hover .archetype-reveal-content,
+  .archetype-card.hover-locked:hover .archetype-bottom-label {
+    transform: none;
+    opacity: 1;
+  }
+  .archetype-card.hover-locked .archetype-hover-ray {
+    opacity: 0 !important;
+  }
+
+  /* ── God ray bloom on hover ────────────────────────────────── */
+  /* Feminine: warm gold from top-center */
+  .archetype-hover-ray {
+    background: radial-gradient(ellipse 120% 80% at 50% -10%, rgba(184, 151, 126, 0.5) 0%, transparent 55%);
+  }
+  /* Masculine: angelic silver-white from top-center */
+  [data-gender="masculine"] .archetype-hover-ray {
+    background: radial-gradient(ellipse 120% 80% at 50% -10%, rgba(255, 255, 255, 0.22) 0%, transparent 55%);
   }
 </style>
 
@@ -964,6 +1046,19 @@ const calendlyURL = '/contact';
         startCard(card, i * 350);
         i++;
 
+        // Keyboard accessibility: make card focusable and navigable via Enter/Space
+        const heading = card.querySelector<HTMLElement>('h3');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'article');
+        if (heading) card.setAttribute('aria-label', heading.textContent?.trim() ?? '');
+        card.addEventListener('keydown', (e: KeyboardEvent) => {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          if ((e.target as Element).closest('a, button')) return;
+          e.preventDefault();
+          const slug = card.dataset.slug;
+          if (slug) window.location.href = `/archetypes/${slug}`;
+        });
+
         card.addEventListener('click', (e: MouseEvent) => {
           if ((e.target as Element).closest('a, button')) return;
           spawnRipple(card, e);
@@ -1052,7 +1147,15 @@ const calendlyURL = '/contact';
           { duration: getDur(1), easing: EASE_OUT, fill: 'forwards' }
         ).finished.then(() => {
           container.getAnimations().forEach(a => a.cancel());
+          // Move focus into the quiz after the entrance animation so keyboard users
+          // know the quiz has opened and where they are
+          const firstChip = container.querySelector<HTMLElement>('.quiz-chip');
+          if (firstChip) firstChip.focus({ preventScroll: true });
         });
+      } else {
+        // No animation — focus immediately
+        const firstChip = container.querySelector<HTMLElement>('.quiz-chip');
+        if (firstChip) firstChip.focus({ preventScroll: true });
       }
 
       // Smooth-scroll so the section headline is perfectly framed at the top
@@ -1109,6 +1212,13 @@ const calendlyURL = '/contact';
         );
         cards.forEach(card => card.getAnimations().forEach(a => a.cancel()));
       }
+
+      // Hover lockout: cursor may already be over a re-emerged card
+      cards.forEach(card => {
+        if (!card.classList.contains('archetype-card')) return;
+        card.classList.add('hover-locked');
+        card.addEventListener('mouseleave', () => card.classList.remove('hover-locked'), { once: true });
+      });
 
       const section = grid.closest('section');
       const header = section?.querySelector('.section-header-full');

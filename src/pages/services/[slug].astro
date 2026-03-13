@@ -117,7 +117,7 @@ const calendlyURL = '/contact';
             <h3 class="font-heading text-xl font-semibold text-primary mb-6">At a Glance</h3>
             <dl class="space-y-4">
               <div>
-                <dt class="font-body text-xs tracking-widest uppercase text-accent mb-1">Price</dt>
+                <dt class="font-body text-xs tracking-widest uppercase text-accent-text mb-1">Price</dt>
                 <dd class="font-heading text-2xl font-semibold text-primary">{service.data.price}</dd>
                 {service.data.priceNote && (
                   <dd class="font-body text-xs text-text-light mt-1">{service.data.priceNote}</dd>
@@ -125,12 +125,12 @@ const calendlyURL = '/contact';
               </div>
               {service.data.duration && (
                 <div class="border-t border-surface-dark pt-4">
-                  <dt class="font-body text-xs tracking-widest uppercase text-accent mb-1">Duration</dt>
+                  <dt class="font-body text-xs tracking-widest uppercase text-accent-text mb-1">Duration</dt>
                   <dd class="font-body text-sm text-text-muted">{service.data.duration}</dd>
                 </div>
               )}
               <div class="border-t border-surface-dark pt-4">
-                <dt class="font-body text-xs tracking-widest uppercase text-accent mb-2">Perfect For</dt>
+                <dt class="font-body text-xs tracking-widest uppercase text-accent-text mb-2">Perfect For</dt>
                 <dd class="font-body text-sm text-text-muted leading-relaxed">{service.data.perfectFor}</dd>
               </div>
             </dl>
@@ -183,14 +183,14 @@ const calendlyURL = '/contact';
             href={`/services/${related.data.slug}`}
             class="group flex flex-col bg-surface hover:bg-surface-dark transition-colors p-8"
           >
-            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">{related.data.price}</p>
+            <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">{related.data.price}</p>
             <h3 class="font-heading text-2xl font-semibold text-primary mb-3 group-hover:text-accent transition-colors">
               {related.data.title}
             </h3>
             <p class="font-body text-sm text-text-muted leading-relaxed flex-1">
               {related.data.shortDescription ?? related.data.perfectFor}
             </p>
-            <div class="mt-5 flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent">
+            <div class="mt-5 flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent-text">
               <span>Learn More</span>
               <span class="group-hover:translate-x-1 transition-transform">→</span>
             </div>

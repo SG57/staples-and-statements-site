@@ -15,6 +15,7 @@
   --color-secondary-light: #a89b8f;  /* lighter taupe */
   --color-accent: #b8977e;           /* muted warm gold — elevated, understated */
   --color-accent-light: #cdb5a0;     /* lighter gold for hover states */
+  --color-accent-text: #8c6040;      /* darker accent for text on light backgrounds — 5:1 on cream */
   --color-background: #faf7f4;       /* warm off-white / cream */
   --color-surface: #f2ede8;          /* slightly darker cream for cards */
   --color-surface-dark: #e8e0d8;     /* darker surface for borders/dividers */

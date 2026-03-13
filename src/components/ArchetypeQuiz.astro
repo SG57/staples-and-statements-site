@@ -13,6 +13,8 @@ interface Props {
   quizId: string;
 }
 
+import { getCardImages } from '../data/archetype-images';
+
 const { gender, quizId } = Astro.props;
 const isFeminine = gender === 'feminine';
 const otherGender = isFeminine ? 'masculine' : 'feminine';
@@ -210,35 +212,47 @@ const masculineQuestions = [
 
 const questions = isFeminine ? feminineQuestions : masculineQuestions;
 
-/* Archetype metadata for results display (with descriptions) */
-const feminineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string; desc: string }> = {
+/* Archetype metadata for results display (with descriptions + dynamic images) */
+const feminineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string; desc: string; images: string[] }> = {
   A: { name: 'The Siren', icon: '\u25C9', color: '#8c4a3e', slug: 'the-siren',
-       desc: 'Confident, magnetic, and irresistibly alluring. Your style celebrates every curve and commands every room.' },
+       desc: 'Confident, magnetic, and irresistibly alluring. Your style celebrates every curve and commands every room.',
+       images: getCardImages('the-siren') },
   B: { name: 'The Muse', icon: '\u2726', color: '#c9b8d4', slug: 'the-muse',
-       desc: 'Romantic, ethereal, and endlessly creative. Your style is poetry in motion.' },
+       desc: 'Romantic, ethereal, and endlessly creative. Your style is poetry in motion.',
+       images: getCardImages('the-muse') },
   C: { name: 'The Warrior', icon: '\u25B2', color: '#5a5a5a', slug: 'the-warrior',
-       desc: 'Bold, structured, and completely unapologetic. You dress with intention and leave an impression.' },
+       desc: 'Bold, structured, and completely unapologetic. You dress with intention and leave an impression.',
+       images: getCardImages('the-warrior') },
   D: { name: 'The Enchantress', icon: '\u25C8', color: '#4a3d5c', slug: 'the-enchantress',
-       desc: 'Dark, magnetic, and mysterious. Your style draws people in before you say a word.' },
+       desc: 'Dark, magnetic, and mysterious. Your style draws people in before you say a word.',
+       images: getCardImages('the-enchantress') },
   E: { name: 'The Creator', icon: '\u25D0', color: '#6b8c6e', slug: 'the-creator',
-       desc: 'Eclectic, expressive, and artistically fearless. Your style is wearable art — and the rules don\'t apply.' },
+       desc: 'Eclectic, expressive, and artistically fearless. Your style is wearable art — and the rules don\'t apply.',
+       images: getCardImages('the-creator') },
   F: { name: 'The Empress', icon: '\u265B', color: '#8b6b4a', slug: 'the-empress',
-       desc: 'Nurturing, grounding, and abundantly elegant. You dress with quiet confidence — luxe elevated basics and warm neutrals that radiate stability and grace.' },
+       desc: 'Nurturing, grounding, and abundantly elegant. You dress with quiet confidence — luxe elevated basics and warm neutrals that radiate stability and grace.',
+       images: getCardImages('the-empress') },
   G: { name: 'The Angelic One', icon: '\u2727', color: '#e8ddd4', slug: 'the-angelic-one',
-       desc: 'Pure, luminous, and timelessly beautiful. Your style radiates grace and effortless softness.' },
+       desc: 'Pure, luminous, and timelessly beautiful. Your style radiates grace and effortless softness.',
+       images: getCardImages('the-angelic-one') },
 };
 
-const masculineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string; desc: string }> = {
+const masculineArchetypesMeta: Record<string, { name: string; icon: string; color: string; slug: string; desc: string; images: string[] }> = {
   A: { name: 'The Protector', icon: '\u25C6', color: '#2c3e50', slug: 'the-protector',
-       desc: 'Grounded, capable, and quietly strong. You dress to feel steady and ready for life — not to impress, but to be prepared for whatever comes.' },
+       desc: 'Grounded, capable, and quietly strong. You dress to feel steady and ready for life — not to impress, but to be prepared for whatever comes.',
+       images: getCardImages('the-protector') },
   B: { name: 'The Maverick', icon: '\u25C7', color: '#2d1b33', slug: 'the-maverick',
-       desc: 'Driven by freedom, individuality, and self-expression. Fashion is a playground, not a rule book — you evolve with curiosity and refuse to blend in.' },
+       desc: 'Driven by freedom, individuality, and self-expression. Fashion is a playground, not a rule book — you evolve with curiosity and refuse to blend in.',
+       images: getCardImages('the-maverick') },
   C: { name: 'The Architect', icon: '\u25FC', color: '#1a1a2e', slug: 'the-architect',
-       desc: 'Intentional, precise, and deeply aware of the power of presentation. Every choice is considered, every detail calculated — nothing is accidental.' },
+       desc: 'Intentional, precise, and deeply aware of the power of presentation. Every choice is considered, every detail calculated — nothing is accidental.',
+       images: getCardImages('the-architect') },
   D: { name: 'The Alchemist', icon: '\u25CE', color: '#4a2d3e', slug: 'the-alchemist',
-       desc: 'Style as emotional language. You move through phases, moods, and transformation — your wardrobe reflects inner depth and personal evolution.' },
+       desc: 'Style as emotional language. You move through phases, moods, and transformation — your wardrobe reflects inner depth and personal evolution.',
+       images: getCardImages('the-alchemist') },
   E: { name: 'The Sovereign', icon: '\u2B21', color: '#1a3a2a', slug: 'the-sovereign',
-       desc: 'Fully aligned — your style feels effortless, grounded, and quietly powerful. You\'re not chasing trends or identities; you\'re expressing a fully formed sense of self.' },
+       desc: 'Fully aligned — your style feels effortless, grounded, and quietly powerful. You\'re not chasing trends or identities; you\'re expressing a fully formed sense of self.',
+       images: getCardImages('the-sovereign') },
 };
 
 const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypesMeta;
@@ -293,7 +307,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         <div class="flex items-center gap-3">
           <button
             type="button"
-            class="quiz-btn-restart font-body text-[11px] tracking-wider uppercase text-white/30
+            class="quiz-btn-restart font-body text-[11px] tracking-wider uppercase text-white/55
                    hover:text-accent cursor-pointer transition-colors duration-200"
             aria-label="Start over"
             title="Start over"
@@ -303,7 +317,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
           <button
             type="button"
             class="quiz-btn-close-x w-7 h-7 flex items-center justify-center rounded-full
-                   text-white/30 hover:text-white hover:bg-white/10 cursor-pointer
+                   text-white/55 hover:text-white hover:bg-white/10 cursor-pointer
                    transition-all duration-200"
             aria-label="Close quiz and return to archetypes"
             title="Close quiz"
@@ -398,7 +412,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         </button>
 
         <!-- Progress dots -->
-        <div class="quiz-dots flex items-center gap-2" role="tablist" aria-label="Quiz progress">
+        <nav class="quiz-dots flex items-center gap-2" aria-label="Quiz steps">
           {Array.from({ length: questionCount }).map((_, i) => (
             <button
               type="button"
@@ -412,14 +426,13 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
                   : 'bg-white/20',
               ]}
               data-dot={i}
-              role="tab"
-              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-current={i === 0 ? 'step' : undefined}
               aria-label={`Question ${i + 1}`}
               tabindex={i === 0 ? 0 : -1}
               disabled={i > 0}
             />
           ))}
-        </div>
+        </nav>
 
         <!-- Next / See Results button -->
         <button
@@ -470,7 +483,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     <div class="quiz-result-primary flex flex-col items-center text-center py-8 md:py-12 max-w-3xl mx-auto">
 
       <!-- Fanned image trio — compact cards spread horizontally -->
-      <div class="quiz-result-fan hidden md:flex items-end justify-center mb-10 relative h-56 lg:h-64 w-full" style="overflow: visible;">
+      <div class="quiz-result-fan hidden md:flex items-end justify-center mb-10 relative h-56 lg:h-64 w-full" data-stagger="1" style="overflow: visible;">
         <div class="quiz-fan-card absolute z-10 w-44 lg:w-52 aspect-[3/4] overflow-hidden rounded-sm border border-white/10"
              style="transform: rotate(-10deg) translateX(-80%) translateY(4%);">
           <div class="quiz-fan-rays"></div>
@@ -491,27 +504,27 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       </div>
 
       <!-- Mobile: single image -->
-      <div class="md:hidden relative w-48 mx-auto aspect-[3/4] overflow-hidden rounded-sm mb-8">
+      <div class="md:hidden relative w-48 mx-auto aspect-[3/4] overflow-hidden rounded-sm mb-8" data-stagger="1">
         <img class="quiz-result-img-mobile w-full h-full object-cover object-center" src="" alt="" loading="lazy" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none"></div>
         <div class="quiz-result-accent-line-mobile absolute top-0 left-0 right-0 h-1"></div>
       </div>
 
       <!-- Superscript + accent -->
-      <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Your Style Archetype</p>
-      <div class="w-8 h-px bg-accent mb-6"></div>
+      <p class="font-body text-xs tracking-widest uppercase text-accent mb-3" data-stagger="2">Your Style Archetype</p>
+      <div class="w-8 h-px bg-accent mb-6" data-stagger="2"></div>
 
       <!-- Archetype name -->
-      <div class="flex items-center justify-center gap-3 mb-4">
+      <div class="flex items-center justify-center gap-3 mb-4" data-stagger="0">
         <span class="quiz-result-icon text-3xl md:text-4xl text-accent"></span>
-        <h3 class="quiz-result-name font-heading text-white text-4xl md:text-5xl font-semibold"></h3>
+        <h3 class="quiz-result-name font-heading text-white text-4xl md:text-5xl font-semibold" tabindex="-1"></h3>
       </div>
 
       <!-- Description -->
-      <blockquote class="quiz-result-desc font-body text-white/70 text-base md:text-lg leading-relaxed max-w-xl italic border-l-2 border-accent/40 pl-4 text-left mx-auto"></blockquote>
+      <blockquote class="quiz-result-desc font-body text-white/70 text-base md:text-lg leading-relaxed max-w-xl italic border-l-2 border-accent/40 pl-4 text-left mx-auto" data-stagger="3"></blockquote>
 
       <!-- Secondary archetype -->
-      <div class="quiz-result-secondary hidden mt-6 w-full max-w-xl">
+      <div class="quiz-result-secondary hidden mt-6 w-full max-w-xl" data-stagger="4">
         <div class="flex flex-col items-center gap-2 py-4 border-t border-b border-white/10">
           <p class="font-body text-white/50 text-sm mb-1">with shades of</p>
           <div class="flex items-center justify-center gap-2">
@@ -523,7 +536,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       </div>
 
       <!-- CTA buttons -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8" data-stagger="5">
         <button
           type="button"
           class="quiz-btn-share inline-flex items-center justify-center px-6 py-3
@@ -542,11 +555,11 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
           target="_blank"
           rel="noopener noreferrer"
         >
-          View This Archetype
+          Deep Dive &rarr;
         </a>
       </div>
 
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-3">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-3" data-stagger="5">
         <button
           type="button"
           class="quiz-btn-switch inline-flex items-center justify-center px-6 py-3
@@ -569,9 +582,10 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
       <button
         type="button"
-        class="quiz-btn-back-to-cards mt-6 font-body text-xs tracking-widest uppercase text-white/40
+        class="quiz-btn-back-to-cards mt-6 font-body text-xs tracking-widest uppercase text-white/55
                hover:text-accent transition-colors duration-200
                focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+        data-stagger="5"
       >
         &larr; Back to Archetypes
       </button>
@@ -595,7 +609,6 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   }
 
   .quiz-slide-active {
-    position: relative;
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
@@ -788,6 +801,15 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     to   { opacity: 1; transform: translateY(0); }
   }
 
+  /* ── Grand reveal: full-screen archetype name ─────────────── */
+  .quiz-youare-name {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-align: center;
+    padding: 0 1.5rem;
+  }
+
   /* ── Toast visible state ──────────────────────────────────── */
   .quiz-toast-visible {
     opacity: 1 !important;
@@ -855,6 +877,32 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
     to   { transform: rotate(360deg); }
   }
 
+  /* Masculine quiz results: silver-white god rays instead of golden */
+  .quiz-root[data-gender="masculine"] .quiz-fan-rays {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(255, 255, 255, 0.12) 15deg,
+      transparent 30deg,
+      transparent 60deg,
+      rgba(255, 255, 255, 0.08) 75deg,
+      transparent 90deg,
+      transparent 120deg,
+      rgba(255, 255, 255, 0.10) 135deg,
+      transparent 150deg,
+      transparent 180deg,
+      rgba(255, 255, 255, 0.07) 195deg,
+      transparent 210deg,
+      transparent 240deg,
+      rgba(255, 255, 255, 0.09) 255deg,
+      transparent 270deg,
+      transparent 300deg,
+      rgba(255, 255, 255, 0.08) 315deg,
+      transparent 330deg,
+      transparent 360deg
+    );
+  }
+
   /* ── Hide scrollbars while keeping scroll functional ──────── */
   .quiz-hide-scrollbar {
     scrollbar-width: none; /* Firefox */
@@ -920,7 +968,11 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
    * scoring, cinematic results reveal, URL hash sharing, and all animations.
    *
    * Each quiz instance is self-contained, keyed by data-quiz-id.
+   *
+   * ViewTransitions-compatible: wrapped in astro:page-load so event listeners
+   * are re-attached to fresh DOM elements after every VT navigation.
    */
+  document.addEventListener('astro:page-load', () => {
   document.querySelectorAll<HTMLElement>('.quiz-root').forEach((root) => {
     const quizId = root.dataset.quizId!;
     const gender = root.dataset.gender as 'feminine' | 'masculine';
@@ -1028,7 +1080,11 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         const hasAnswer = answers.has(i) && answers.get(i)!.size > 0;
 
         dot.disabled = !isVisited;
-        dot.setAttribute('aria-selected', String(isCurrent));
+        if (isCurrent) {
+          dot.setAttribute('aria-current', 'step');
+        } else {
+          dot.removeAttribute('aria-current');
+        }
         dot.tabIndex = isCurrent ? 0 : -1;
 
         // Styling
@@ -1180,17 +1236,17 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       const pMeta = archetypesMeta[primary];
       if (!pMeta) return;
 
-      // Triptych images
-      if (resultImg1) resultImg1.src = `/images/archetypes/${pMeta.slug}-1.webp`;
-      if (resultImg2) resultImg2.src = `/images/archetypes/${pMeta.slug}-2.webp`;
-      if (resultImg3) resultImg3.src = `/images/archetypes/${pMeta.slug}-3.webp`;
-      if (resultImgMobile) {
-        resultImgMobile.src = `/images/archetypes/${pMeta.slug}-1.webp`;
-        resultImgMobile.alt = pMeta.name;
-      }
-      if (resultImg1) resultImg1.alt = `${pMeta.name} look 1`;
-      if (resultImg2) resultImg2.alt = `${pMeta.name} look 2`;
-      if (resultImg3) resultImg3.alt = `${pMeta.name} look 3`;
+      // Triptych images — pick first, middle, last from the available set
+      const imgs = (pMeta as any).images as string[] | undefined;
+      const imgCount = imgs?.length ?? 0;
+      const img1 = imgs?.[0]                                  ?? `/images/archetypes/${pMeta.slug}-1.webp`;
+      const img2 = imgs?.[Math.floor(imgCount / 2)]          ?? `/images/archetypes/${pMeta.slug}-2.webp`;
+      const img3 = imgs?.[imgCount - 1]                      ?? `/images/archetypes/${pMeta.slug}-3.webp`;
+
+      if (resultImg1) { resultImg1.src = img1; resultImg1.alt = `${pMeta.name} look 1`; }
+      if (resultImg2) { resultImg2.src = img2; resultImg2.alt = `${pMeta.name} look 2`; }
+      if (resultImg3) { resultImg3.src = img3; resultImg3.alt = `${pMeta.name} look 3`; }
+      if (resultImgMobile) { resultImgMobile.src = img1; resultImgMobile.alt = pMeta.name; }
 
       // Accent lines
       if (resultAccentLine) resultAccentLine.style.backgroundColor = pMeta.color;
@@ -1252,62 +1308,117 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
         quizBody.classList.add('hidden');
         resultsView.classList.remove('hidden');
         scrollToSectionHeader();
+        setTimeout(() => resultName.focus(), 50);
         return;
       }
 
-      // ── Phase 1: Calculating overlay (1.5s) ──
+      // ── Phase 1: Calculating overlay ──
       quizBody.classList.add('hidden');
       calculatingEl.classList.remove('hidden');
       scrollToSectionHeader();
 
-      // Fade in the calculating text
       await wait(100);
-      calcText.style.transition = 'opacity 400ms ease-out';
+      calcText.style.transition = 'opacity 500ms ease-out';
       calcText.style.opacity = '1';
-
-      await wait(1500);
-
-      // Fade out calculating
+      await wait(1800);
+      calcText.style.transition = 'opacity 400ms ease-in';
       calcText.style.opacity = '0';
-      await wait(300);
+      await wait(400);
       calculatingEl.classList.add('hidden');
 
-      // ── Phase 2: Teaser words (3 words x ~600ms each) ──
+      // ── Phase 2: Teaser words — slow, dramatic ──
       const words = teaserWords[primary] || ['Bold', 'Unique', 'You'];
       teaserEl.classList.remove('hidden');
 
       for (const word of words) {
         teaserWord.textContent = word;
-        // Fade in
-        teaserWord.style.transition = 'opacity 200ms ease-out';
+        teaserWord.style.transition = 'opacity 350ms ease-out';
         teaserWord.style.opacity = '1';
-        await wait(500); // hold (200ms fade-in + 300ms hold)
-        // Fade out
+        await wait(1000); // 350ms fade-in + 650ms hold
+        teaserWord.style.transition = 'opacity 350ms ease-in';
         teaserWord.style.opacity = '0';
-        await wait(200);
+        await wait(350);
       }
 
       teaserEl.classList.add('hidden');
 
-      // ── Phase 3: "You are..." text (500ms) ──
+      // ── Phase 3a: "You are..." text ──
       youareEl.classList.remove('hidden');
       await wait(50);
-      youareText.style.transition = 'opacity 250ms ease-out';
+      youareText.style.transition = 'opacity 400ms ease-out';
       youareText.style.opacity = '1';
-      await wait(500);
+      await wait(900);
+      youareText.style.transition = 'opacity 300ms ease-in';
       youareText.style.opacity = '0';
-      await wait(200);
+      await wait(300);
+
+      // ── Phase 3b: Grand reveal — archetype name alone, full screen ──
+      youareText.textContent = pMeta.name;
+      youareText.className = 'quiz-youare-name font-heading text-white opacity-0';
+      await wait(50);
+      youareText.style.transition = 'opacity 600ms ease-out';
+      youareText.style.opacity = '1';
+      await wait(1800); // let the name land
+      youareText.style.transition = 'opacity 500ms ease-in';
+      youareText.style.opacity = '0';
+      await wait(500);
+
       youareEl.classList.add('hidden');
 
-      // ── Phase 4: Archetype entrance ──
-      // Apply per-archetype entrance class
-      const entranceClass = `quiz-entrance-${pMeta.slug}`;
-      resultsView.classList.add(entranceClass);
+      // Reset youare text for future runs
+      youareText.textContent = 'You are...';
+      youareText.className = 'quiz-youare-text font-body text-accent text-sm md:text-base tracking-widest uppercase opacity-0';
+
+      // ── Phase 4: Staggered results entrance ──
+      // Pre-hide all staggerable elements (skip display:none ones)
+      const staggerEls = Array.from(resultsView.querySelectorAll<HTMLElement>('[data-stagger]'));
+      staggerEls.forEach(el => {
+        if (el.classList.contains('hidden')) return;
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(16px)';
+      });
+
       resultsView.classList.remove('hidden');
 
-      // Clean up entrance class after animation completes
-      await wait(1200);
-      resultsView.classList.remove(entranceClass);
+      // Group by data-stagger value, sorted ascending (0 = name, appears first)
+      const groups = new Map<string, HTMLElement[]>();
+      staggerEls.forEach(el => {
+        if (el.classList.contains('hidden')) return;
+        const g = el.dataset.stagger ?? '0';
+        if (!groups.has(g)) groups.set(g, []);
+        groups.get(g)!.push(el);
+      });
+
+      const GROUP_DELAY = 380;
+      const ANIM_DUR = 750;
+      const ANIM_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+      let maxDelay = 0;
+
+      Array.from(groups.entries())
+        .sort(([a], [b]) => Number(a) - Number(b))
+        .forEach(([, groupEls], idx) => {
+          const delay = idx * GROUP_DELAY;
+          maxDelay = Math.max(maxDelay, delay + ANIM_DUR);
+          setTimeout(() => {
+            groupEls.forEach(el => {
+              const anim = el.animate(
+                [
+                  { opacity: '0', transform: 'translateY(16px)' },
+                  { opacity: '1', transform: 'translateY(0)' },
+                ],
+                { duration: ANIM_DUR, easing: ANIM_EASE, fill: 'forwards' }
+              );
+              anim.finished.then(() => {
+                el.style.opacity = '';
+                el.style.transform = '';
+                anim.cancel();
+              });
+            });
+          }, delay);
+        });
+
+      await wait(maxDelay + 100);
+      resultName.focus();
     }
 
     /* ── Reset Quiz ────────────────────────────────────────── */
@@ -1413,6 +1524,27 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
       });
     });
 
+    // Arrow key navigation between dots (roving tabindex, WAI-ARIA pattern)
+    const dotsContainer = root.querySelector<HTMLElement>('.quiz-dots')!;
+    dotsContainer?.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      const allDots = Array.from(dots);
+      const focusedIdx = allDots.findIndex(d => d === document.activeElement);
+      if (focusedIdx === -1) return;
+      const dir = e.key === 'ArrowRight' ? 1 : -1;
+      let nextIdx = focusedIdx + dir;
+      while (nextIdx >= 0 && nextIdx < allDots.length) {
+        if (!allDots[nextIdx].disabled) {
+          allDots[focusedIdx].tabIndex = -1;
+          allDots[nextIdx].tabIndex = 0;
+          allDots[nextIdx].focus();
+          return;
+        }
+        nextIdx += dir;
+      }
+    });
+
     // Share button
     btnShare.addEventListener('click', async () => {
       try {
@@ -1446,6 +1578,15 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
     // Close X button (top bar, during quiz) — exits quiz entirely
     btnCloseX.addEventListener('click', () => {
+      resetQuiz();
+      root.dispatchEvent(new CustomEvent('quiz:exit', { bubbles: true }));
+    });
+
+    // Escape key — close quiz when visible
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const container = root.closest('[id$="-quiz-container"]') as HTMLElement | null;
+      if (!container || container.classList.contains('hidden')) return;
       resetQuiz();
       root.dispatchEvent(new CustomEvent('quiz:exit', { bubbles: true }));
     });
@@ -1564,10 +1705,18 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
           startTracking();
         });
       });
+
+      // Clean up the document-level mousemove listener before VT replaces the DOM.
+      // Without this, if the user navigates while tracking=true, onDocMouseMove
+      // would remain on document and reference stale (detached) DOM elements.
+      document.addEventListener('astro:before-swap', () => {
+        stopTracking();
+      }, { once: true });
     }
 
     /* ── Initialize ────────────────────────────────────────── */
     updateNav();
     updateDots();
   });
+  }); // astro:page-load
 </script>

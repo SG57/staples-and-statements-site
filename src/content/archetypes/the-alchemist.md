@@ -6,8 +6,8 @@ order: 4
 gender: masculine
 icon: "◎"
 color: "#4a2d3e"
-guideLink: ""
-ltkLink: ""
+guideLink: "https://beacons.ai/staplesandstatementsss"
+ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Alchemist dresses from the inside out. Your wardrobe shifts with your inner landscape — dark and moody one season, warm and layered the next. You're drawn to texture, contrast, and pieces that carry emotional weight. A vintage ring, a hand-dyed scarf, a jacket that survived three creative phases. For you, getting dressed is an act of translation — transforming what you feel into what you wear.

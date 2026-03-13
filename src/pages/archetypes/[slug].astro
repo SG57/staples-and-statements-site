@@ -4,6 +4,8 @@ import { getCollection } from 'astro:content';
 import { getShadesForPrimary } from '../../data/archetype-shades';
 import { getVisualsForSlug, iconPaths } from '../../data/archetype-visuals';
 import { guides } from '../../data/guides';
+import { getCardImages, getWallpaper } from '../../data/archetype-images';
+import ArchetypeFan from '../../components/ArchetypeFan.astro';
 
 export async function getStaticPaths() {
   const archetypes = await getCollection('archetypes');
@@ -31,8 +33,9 @@ const shades = getShadesForPrimary(data.slug);
 /* The first "other" archetype is the default shade selection */
 const defaultShadeSlug = otherArchetypes[0]?.data.slug ?? '';
 
-/* Hero image: use wallpaper if it exists, fall back to card image */
-const fallbackSrc = `/images/archetypes/${data.slug}-1.webp`;
+/* Hero wallpaper + card images for fan */
+const cardImages  = getCardImages(data.slug);
+const wallpaperSrc = getWallpaper(data.slug) ?? cardImages[0] ?? `/images/archetypes/${data.slug}-1.webp`;
 
 /* Determine gender label for cross-linking */
 const isFeminine = data.gender === 'feminine';
@@ -51,9 +54,9 @@ const genderGuide = isFeminine
 
   <!-- ── HERO: Full-viewport wallpaper ────────────────────── -->
   <section class="relative min-h-screen flex items-end overflow-hidden bg-primary">
-    <!-- Wallpaper image (falls back to card image until AI wallpaper generated) -->
+    <!-- Wallpaper hero (scanned at build time; falls back to first card image) -->
     <img
-      src={fallbackSrc}
+      src={wallpaperSrc}
       alt={`${data.name} archetype atmosphere`}
       class="absolute inset-0 w-full h-full object-cover object-center"
       loading="eager"
@@ -120,47 +123,35 @@ const genderGuide = isFeminine
     <div class="mx-auto max-w-7xl">
       <div class="grid grid-cols-1 lg:grid-cols-[45fr_55fr] gap-16 lg:gap-20">
 
-        <!-- LEFT COLUMN: Image Collage + Style Icons -->
+        <!-- LEFT COLUMN: Image Fan + Style Icons -->
         <div class="h-fit lg:sticky lg:top-28">
-          <!-- Cascaded image collage -->
-          <div class="archetype-collage relative flex flex-col items-center px-6 pt-4 pb-8">
-            <!-- Image 1: slight left rotate, back -->
-            <div class="archetype-collage-img relative z-10 w-[85%] aspect-[3/4] overflow-hidden rounded-sm border border-white/10"
-                 style="transform: rotate(-2deg);">
-              <img src={`/images/archetypes/${data.slug}-1.webp`} alt={`${data.name} — look 1`}
-                   class="w-full h-full object-cover object-top" loading="lazy" />
-            </div>
-            <!-- Image 2: center, front, larger -->
-            <div class="archetype-collage-img relative z-20 w-[90%] aspect-[3/4] overflow-hidden rounded-sm border border-white/10 -mt-[35%] scale-105"
-                 style="transform: rotate(0deg) scale(1.05);">
-              <img src={`/images/archetypes/${data.slug}-2.webp`} alt={`${data.name} — look 2`}
-                   class="w-full h-full object-cover object-top" loading="lazy" />
-            </div>
-            <!-- Image 3: slight right rotate, back -->
-            <div class="archetype-collage-img relative z-10 w-[85%] aspect-[3/4] overflow-hidden rounded-sm border border-white/10 -mt-[35%]"
-                 style="transform: rotate(1deg);">
-              <img src={`/images/archetypes/${data.slug}-3.webp`} alt={`${data.name} — look 3`}
-                   class="w-full h-full object-cover object-top" loading="lazy" />
-            </div>
+          <!-- Horizontal rainbow fan — all available card images -->
+          <div class="px-4 pt-4 pb-12">
+            <ArchetypeFan
+              images={cardImages}
+              name={data.name}
+              color={data.color ?? '#b8977e'}
+              gender={data.gender}
+            />
           </div>
 
           <!-- Style Icons (below collage) -->
           {visuals && visuals.styleIcons.length > 0 && (
-            <div class="mt-8">
+            <div class="mt-8 relative" style="z-index: 60;">
               <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-4 text-center lg:text-left">
                 Style Icons
               </p>
-              <div class="flex flex-wrap justify-center lg:justify-start gap-6">
+              <div class="flex flex-wrap justify-center lg:justify-start gap-6" style="overflow: visible;">
                 {visuals.styleIcons.map((icon) => (
-                  <div class="group flex flex-col items-center">
+                  <div class="style-icon-group group flex flex-col items-center">
                     <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden
                                 border-2 border-white/15 group-hover:border-accent/50
-                                transition-all duration-300">
+                                transition-colors duration-300">
                       <!-- Actual image (hidden if load fails) -->
                       <img
                         src={icon.image}
                         alt={icon.name}
-                        class="icon-img absolute inset-0 w-full h-full object-cover"
+                        class="icon-img absolute inset-0 w-full h-full object-cover object-top"
                         loading="lazy"
                       />
                       <!-- Letter fallback (shown when image fails) -->
@@ -170,8 +161,7 @@ const genderGuide = isFeminine
                         {icon.name[0]}
                       </div>
                     </div>
-                    <span class="mt-2 font-body text-xs text-white/50
-                                 group-hover:text-white/80 transition-colors duration-200">
+                    <span class="style-icon-label mt-2 font-body text-[10px] text-white/50 whitespace-nowrap">
                       {icon.name}
                     </span>
                   </div>
@@ -336,6 +326,7 @@ const genderGuide = isFeminine
               data-shade-name={other.data.name}
               role="radio"
               aria-checked={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
             >
               <span class="mr-1.5" style={`color: ${other.data.color}`}>{other.data.icon}</span>
               {other.data.name}
@@ -444,21 +435,65 @@ const genderGuide = isFeminine
     display: none;
   }
 
-  /* ── Image collage: cascaded magazine layout ────────────── */
-  .archetype-collage-img {
-    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1),
-                z-index 0ms;
+  /* ── Style icon hover zoom ──────────────────────────────── */
+  .style-icon-group {
+    position: relative;
+    z-index: 1;
+    overflow: visible;
   }
-  .archetype-collage-img:hover {
-    transform: scale(1.08) rotate(0deg) !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    z-index: 30;
+
+  /* Only the avatar circle scales — expands upward, label stays clear below */
+  .style-icon-group > div:first-child {
+    transform-origin: bottom center;
+    transition:
+      transform  500ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 1;
+  }
+
+  .style-icon-group:hover > div:first-child {
+    transform: scale(2.4);
+    z-index: 50;
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Label: dark frosted pill on hover — grounded, not floating */
+  .style-icon-label {
+    transition:
+      color            300ms ease,
+      background-color 300ms ease,
+      padding          300ms ease,
+      border-radius    300ms ease;
+    padding: 0 2px;
+    border-radius: 4px;
+  }
+
+  .style-icon-group:hover .style-icon-label {
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(10, 8, 6, 0.72);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .style-icon-group > div:first-child,
+    .style-icon-label {
+      transition: none !important;
+    }
+  }
+
+  /* Left column: allow fan cards to overflow the sticky container */
+  .archetype-fan-overflow {
+    overflow: visible;
   }
 </style>
 
 
 <script>
+  document.addEventListener('astro:page-load', () => {
   // ── Style icon image fallback ──────────────────────────────
   // Hide broken images so the letter-initial fallback shows through.
 
@@ -477,10 +512,11 @@ const genderGuide = isFeminine
       const container = chip.closest('section');
       if (!container) return;
 
-      // Update chip states
+      // Update chip states (aria-checked + roving tabindex)
       container.querySelectorAll<HTMLElement>('.shade-chip').forEach((c) => {
         const isActive = c === chip;
         c.setAttribute('aria-checked', String(isActive));
+        c.tabIndex = isActive ? 0 : -1;
       });
 
       // Show matching shade description, hide others
@@ -491,5 +527,21 @@ const genderGuide = isFeminine
       });
     });
   });
+  // Arrow key navigation for shade chip radiogroup (WAI-ARIA radiogroup pattern)
+  const shadeGroup = document.querySelector<HTMLElement>('[role="radiogroup"]');
+  shadeGroup?.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+    e.preventDefault();
+    const chips = Array.from(shadeGroup.querySelectorAll<HTMLButtonElement>('.shade-chip'));
+    const currentIdx = chips.findIndex(c => c === document.activeElement);
+    if (currentIdx === -1) return;
+    const dir = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+    const nextIdx = (currentIdx + dir + chips.length) % chips.length;
+    chips[currentIdx].tabIndex = -1;
+    chips[nextIdx].tabIndex = 0;
+    chips[nextIdx].focus();
+    chips[nextIdx].click(); // Auto-select: standard radiogroup behavior
+  });
 
+  }); // astro:page-load
 </script>

@@ -48,7 +48,7 @@ const rendered = await Promise.all(
           { number: "7", label: "Style Archetypes" },
         ].map(({ number, label }) => (
           <div>
-            <p class="font-heading text-4xl font-semibold text-accent">{number}</p>
+            <p class="font-heading text-4xl font-semibold text-accent-text">{number}</p>
             <p class="font-body text-xs tracking-widest uppercase text-text-muted mt-1">{label}</p>
           </div>
         ))}
@@ -146,7 +146,7 @@ const rendered = await Promise.all(
           },
         ].map(({ icon, heading, body }) => (
           <div class="p-6">
-            <div class="text-3xl text-accent mb-4">{icon}</div>
+            <div class="text-3xl text-accent-text mb-4">{icon}</div>
             <h3 class="font-heading text-xl font-semibold text-primary mb-3">{heading}</h3>
             <p class="font-body text-sm text-text-muted leading-relaxed">{body}</p>
           </div>

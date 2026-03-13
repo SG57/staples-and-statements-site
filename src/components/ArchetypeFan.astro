@@ -1,0 +1,217 @@
+---
+/**
+ * ArchetypeFan — interactive horizontal rainbow fan of archetype card images.
+ *
+ * Supports any number of images (1–N). Hover a card to zoom it with a
+ * god ray bloom. Uses the same zone-based hover-tracking pattern as the
+ * quiz results fan for jitter-free transitions.
+ *
+ * Props
+ *   images  — array of /images/... paths (build-time scanned)
+ *   name    — archetype name (alt text)
+ *   color   — archetype accent color hex
+ *   gender  — 'feminine' | 'masculine' (controls god ray colour)
+ */
+interface Props {
+  images: string[];
+  name: string;
+  color: string;
+  gender: 'feminine' | 'masculine';
+}
+
+const { images, name, color, gender } = Astro.props;
+const n = images.length;
+
+/** CSS transform for fan card i of n */
+function transform(i: number): string {
+  if (n <= 1) return 'rotate(0deg) translateY(-2%)';
+  const center = (n - 1) / 2;
+  const offset = i - center;
+  const norm   = offset / center;
+  const angle  = (norm * 15).toFixed(1);
+  const x      = (norm * 80).toFixed(1);
+  const y      = (Math.abs(norm) * 4).toFixed(1);
+  return `rotate(${angle}deg) translateX(${x}%) translateY(${y}%)`;
+}
+
+/** Z-index: center card highest */
+function zIndex(i: number): number {
+  const center = (n - 1) / 2;
+  return 10 + Math.round((1 - Math.abs(i - center) / Math.max(center, 1)) * 10);
+}
+
+/** True if this is the center (or middle-right for even N) card — gets accent line */
+const centerIdx = Math.floor((n - 1) / 2);
+
+// Container height scales slightly with image count
+const h = n <= 3 ? 'h-64 lg:h-72' : n <= 5 ? 'h-72 lg:h-80' : 'h-80 lg:h-96';
+---
+
+<div
+  class={`archetype-fan-root relative flex items-end justify-center w-full ${h}`}
+  data-gender={gender}
+  style="overflow: visible;"
+>
+  {images.map((src, i) => (
+    <div
+      class="archetype-fan-card absolute aspect-[3/4] overflow-hidden rounded-sm border border-white/10 cursor-pointer w-32 sm:w-36 lg:w-44"
+      style={`transform: ${transform(i)}; z-index: ${zIndex(i)};`}
+      data-fan-i={i}
+    >
+      {/* God ray bloom */}
+      <div class="archetype-fan-ray"></div>
+
+      {/* Card image */}
+      <img
+        src={src}
+        alt={`${name} — look ${i + 1}`}
+        class="w-full h-full object-cover object-center relative z-[1]"
+        loading={i === 0 ? 'eager' : 'lazy'}
+      />
+
+      {/* Center card: gradient veil + accent line */}
+      {i === centerIdx && (
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none z-[2]"></div>
+      )}
+      {i === centerIdx && (
+        <div class="absolute top-0 left-0 right-0 h-1 z-[3]" style={`background-color: ${color};`}></div>
+      )}
+    </div>
+  ))}
+</div>
+
+
+<style>
+  /* ── Fan card transitions ─────────────────────────────────── */
+  .archetype-fan-card {
+    transition:
+      transform  700ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter     700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Focused (hovered) card zooms forward */
+  .archetype-fan-card.fan-focused {
+    overflow: visible !important;
+    transform: scale(1.75) rotate(0deg) translateX(0) translateY(-8%) !important;
+    box-shadow:
+      0 0 40px 8px rgba(var(--accent-rgb, 183 135 98) / 0.25),
+      0 30px 60px -12px rgba(0, 0, 0, 0.6);
+    filter: brightness(1.1);
+    z-index: 30 !important;
+  }
+
+  /* ── God ray ──────────────────────────────────────────────── */
+  .archetype-fan-ray {
+    position: absolute;
+    inset: -60%;
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 40%, transparent 70%);
+    mask-image:         radial-gradient(circle, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 40%, transparent 70%);
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,   rgba(var(--accent-rgb,183 135 98)/0.18) 15deg, transparent 30deg,
+      transparent 60deg,  rgba(var(--accent-rgb,183 135 98)/0.12) 75deg, transparent 90deg,
+      transparent 120deg, rgba(var(--accent-rgb,183 135 98)/0.15) 135deg, transparent 150deg,
+      transparent 180deg, rgba(var(--accent-rgb,183 135 98)/0.10) 195deg, transparent 210deg,
+      transparent 240deg, rgba(var(--accent-rgb,183 135 98)/0.14) 255deg, transparent 270deg,
+      transparent 300deg, rgba(var(--accent-rgb,183 135 98)/0.11) 315deg, transparent 330deg,
+      transparent 360deg
+    );
+    transition: opacity 600ms ease-out;
+  }
+
+  /* Masculine: silver-white god rays */
+  [data-gender="masculine"] .archetype-fan-ray {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,   rgba(255,255,255,0.12) 15deg, transparent 30deg,
+      transparent 60deg,  rgba(255,255,255,0.08) 75deg, transparent 90deg,
+      transparent 120deg, rgba(255,255,255,0.10) 135deg, transparent 150deg,
+      transparent 180deg, rgba(255,255,255,0.07) 195deg, transparent 210deg,
+      transparent 240deg, rgba(255,255,255,0.09) 255deg, transparent 270deg,
+      transparent 300deg, rgba(255,255,255,0.08) 315deg, transparent 330deg,
+      transparent 360deg
+    );
+  }
+
+  .archetype-fan-card.fan-focused .archetype-fan-ray {
+    opacity: 1;
+    animation: fan-ray-spin 12s linear infinite;
+  }
+
+  @keyframes fan-ray-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* ── Reduced motion ───────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .archetype-fan-card,
+    .archetype-fan-card.fan-focused {
+      transition: none !important;
+    }
+    .archetype-fan-card.fan-focused .archetype-fan-ray {
+      animation: none !important;
+    }
+  }
+</style>
+
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('.archetype-fan-root').forEach(root => {
+      const cards = Array.from(root.querySelectorAll<HTMLElement>('.archetype-fan-card'));
+      let focusedCard: HTMLElement | null = null;
+      let tracking = false;
+      const PAD = 80;
+
+      function focusCard(card: HTMLElement) {
+        if (focusedCard === card) return;
+        if (focusedCard) focusedCard.classList.remove('fan-focused');
+        focusedCard = card;
+        card.classList.add('fan-focused');
+      }
+
+      function unfocusAll() {
+        if (focusedCard) focusedCard.classList.remove('fan-focused');
+        focusedCard = null;
+      }
+
+      function isInZone(e: MouseEvent): boolean {
+        const rect = root.getBoundingClientRect();
+        return (
+          e.clientX >= rect.left  - PAD &&
+          e.clientX <= rect.right + PAD &&
+          e.clientY >= rect.top   - PAD &&
+          e.clientY <= rect.bottom + PAD
+        );
+      }
+
+      function onDocMove(e: MouseEvent) {
+        if (!isInZone(e)) { unfocusAll(); stopTracking(); }
+      }
+
+      function startTracking() {
+        if (tracking) return;
+        tracking = true;
+        document.addEventListener('mousemove', onDocMove);
+      }
+
+      function stopTracking() {
+        if (!tracking) return;
+        tracking = false;
+        document.removeEventListener('mousemove', onDocMove);
+      }
+
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => { focusCard(card); startTracking(); });
+      });
+
+      document.addEventListener('astro:before-swap', stopTracking, { once: true });
+    });
+  });
+</script>

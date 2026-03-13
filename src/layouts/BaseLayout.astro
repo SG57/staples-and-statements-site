@@ -175,15 +175,16 @@ const GA4_ID = 'G-XXXXXXXXXX';
     )}
   </head>
   <body class="min-h-screen flex flex-col bg-background text-text">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:text-sm focus:font-body focus:tracking-wide">Skip to main content</a>
     <Nav transparentNav={transparentNav} />
-    <main class="flex-1">
+    <main id="main-content" class="flex-1">
       <slot />
     </main>
     <Footer />
 
     <!-- ── Compact Section Bar (desktop only) ──────────────── -->
     <!-- Single shared element — JS updates content + theme dynamically -->
-    <div id="compact-bar" aria-live="polite">
+    <div id="compact-bar" aria-live="off">
       <div class="mx-auto max-w-7xl px-6 lg:px-8 py-2.5">
         <div class="flex items-center gap-3">
           <div class="w-6 h-px bg-accent flex-shrink-0"></div>
@@ -273,7 +274,15 @@ const GA4_ID = 'G-XXXXXXXXXX';
   ──────────────────────────────────────────────────────────────
 -->
 <script>
+  // Module-scoped reference so we can disconnect the previous observer before
+  // creating a new one on each ViewTransitions navigation.
+  let _animationObserver: IntersectionObserver | null = null;
+
   function initAnimations() {
+    // Disconnect any previous observer so detached DOM elements don't linger
+    // as observed targets after a ViewTransitions navigation replaces the DOM.
+    _animationObserver?.disconnect();
+
     // ── IntersectionObserver ───────────────────────────────────
     const io = new IntersectionObserver(
       (entries) => {
@@ -285,6 +294,7 @@ const GA4_ID = 'G-XXXXXXXXXX';
       },
       { threshold: 0.08, rootMargin: '0px 0px 0px 0px' }
     );
+    _animationObserver = io;
 
     // Returns true if the element is already visible in the viewport.
     // Elements in the viewport on load get no entrance animation — show immediately.

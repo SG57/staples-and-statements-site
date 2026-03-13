@@ -123,6 +123,7 @@ const {
     return ms * multiplier;
   }
 
+  document.addEventListener('astro:page-load', () => {
   document.querySelectorAll<HTMLElement>('.reel-player').forEach((container) => {
     const video      = container.querySelector<HTMLVideoElement>('video');
     const posterEl   = container.querySelector<HTMLImageElement>('.reel-poster');
@@ -242,7 +243,11 @@ const {
       revealOverlay();
     });
 
-    document.addEventListener('fullscreenchange', syncFsIcon);
+    // Use AbortController so this document-level listener is cleaned up on
+    // the next ViewTransitions navigation (astro:before-swap fires before DOM swap).
+    const fsController = new AbortController();
+    document.addEventListener('fullscreenchange', syncFsIcon, { signal: fsController.signal });
+    document.addEventListener('astro:before-swap', () => fsController.abort(), { once: true });
     syncFsIcon();
 
     // ── Error fallback ────────────────────────────────────────
@@ -257,4 +262,5 @@ const {
       }
     });
   });
+  }); // astro:page-load
 </script>

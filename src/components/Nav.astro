@@ -160,6 +160,16 @@ const currentPath = Astro.url.pathname;
     if (menuBtn.dataset.menuInitialized === 'true') return;
     menuBtn.dataset.menuInitialized = 'true';
 
+    function closeMenu(): void {
+      menuBtn.setAttribute('aria-expanded', 'false');
+      mobileMenu.classList.add('hidden');
+      if (barTop && barMid && barBottom) {
+        barTop.style.transform    = '';
+        barMid.style.opacity      = '';
+        barBottom.style.transform = '';
+      }
+    }
+
     menuBtn.addEventListener('click', () => {
       const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
       const willOpen = !isOpen;
@@ -178,6 +188,14 @@ const currentPath = Astro.url.pathname;
           barMid.style.opacity      = '';
           barBottom.style.transform = '';
         }
+      }
+    });
+
+    // Escape key closes open menu and returns focus to hamburger button
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuBtn.getAttribute('aria-expanded') === 'true') {
+        closeMenu();
+        menuBtn.focus();
       }
     });
   }
