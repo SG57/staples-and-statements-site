@@ -126,183 +126,14 @@ const genderGuide = isFeminine
   </section>
 
 
-  <!-- ── DEEP DIVE: Visual archetype content ─────────────────── -->
-  <section class="py-24 px-6 bg-primary" aria-label={`About ${data.name}`}>
-    <div class="mx-auto max-w-7xl">
-      <div class="grid grid-cols-1 lg:grid-cols-[45fr_55fr] gap-16 lg:gap-20">
-
-        <!-- LEFT COLUMN: Style Icons -->
-        <div class="h-fit lg:sticky lg:top-28">
-
-          <!-- Style Icons -->
-          {visuals && visuals.styleIcons.length > 0 && (
-            <div class="mt-8 relative" style="z-index: 60;">
-              <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-4 text-center lg:text-left">
-                Style Icons
-              </p>
-              <div class="flex flex-wrap justify-center lg:justify-start gap-6" style="overflow: visible;">
-                {visuals.styleIcons.map((icon) => (
-                  <div class="style-icon-group group flex flex-col items-center">
-                    <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden
-                                border-2 border-white/15 group-hover:border-accent/50
-                                transition-colors duration-300">
-                      <!-- Actual image (hidden if load fails) -->
-                      <img
-                        src={icon.image}
-                        alt={icon.name}
-                        class="icon-img absolute inset-0 w-full h-full object-cover object-top"
-                        loading="lazy"
-                      />
-                      <!-- Letter fallback (shown when image fails) -->
-                      <div class="icon-fallback absolute inset-0 w-full h-full bg-white/10
-                                  flex items-center justify-center
-                                  font-heading text-2xl text-white/30">
-                        {icon.name[0]}
-                      </div>
-                    </div>
-                    <span class="style-icon-label mt-2 font-body text-[10px] text-white/50 whitespace-nowrap">
-                      {icon.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <!-- RIGHT COLUMN: Description + Color Palette + Signature Pieces + Guide Upsell -->
-        <div>
-          {visuals ? (
-            <>
-              <!-- Core description -->
-              <div class="font-body text-white/75 text-base md:text-lg leading-relaxed">
-                {visuals.bodyText.split('\n\n').map((paragraph) => (
-                  <p class="mb-4 max-w-none">{paragraph}</p>
-                ))}
-              </div>
-
-              <!-- Color palette swatches -->
-              <div class="flex flex-wrap gap-2 mt-8 mb-2 justify-center lg:justify-start">
-                {visuals.palette.map((color) => (
-                  <div class="group relative">
-                    <div
-                      class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/15
-                             cursor-default transition-transform duration-200
-                             hover:scale-110"
-                      style={`background-color: ${color.hex};
-                              box-shadow: inset 0 2px 4px rgba(0,0,0,0.3),
-                                          inset 0 -1px 2px rgba(255,255,255,0.1);`}
-                      title={color.name}
-                    />
-                    <span class="absolute -bottom-7 left-1/2 -translate-x-1/2
-                                 font-body text-[10px] text-white/60 whitespace-nowrap
-                                 opacity-0 group-hover:opacity-100 transition-opacity duration-200
-                                 pointer-events-none">
-                      {color.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              <!-- ── Divider ── -->
-              <div class="w-full h-px bg-white/8 my-10"></div>
-
-              <!-- Signature Pieces (first two only) -->
-              <div>
-                <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-5">
-                  Signature Pieces
-                </p>
-                <div class="grid grid-cols-2 gap-2.5">
-                  {visuals.signaturePieces.slice(0, 2).map((piece) => (
-                    <div class="flex flex-col items-center text-center p-4
-                                bg-white/[0.03] backdrop-blur-sm border border-white/[0.07]
-                                rounded-sm hover:bg-white/[0.06] transition-all duration-200">
-                      <svg
-                        class="w-8 h-8 text-accent/70 mb-2"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path d={iconPaths[piece.icon]} />
-                      </svg>
-                      <span class="font-body text-xs text-white/70 leading-snug">{piece.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <!-- Style Guide Upsell Card -->
-              {genderGuide && (
-                <div class="mt-6 bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] rounded-sm p-5 md:p-6
-                            hover:bg-white/[0.05] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
-                  <div class="flex gap-5 items-start">
-                    <!-- Guide cover thumbnail -->
-                    <div class="shrink-0 w-20 md:w-24 aspect-[3/4] overflow-hidden rounded-sm border border-white/10">
-                      <img
-                        src={`/images/guides/${genderGuide.slug}-cover.webp`}
-                        alt={genderGuide.title}
-                        class="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <!-- Guide info + CTAs -->
-                    <div class="flex-1 min-w-0">
-                      <p class="font-body text-[10px] tracking-widest uppercase text-accent mb-1.5">
-                        Style Guide
-                      </p>
-                      <h3 class="font-heading text-white text-base md:text-lg font-semibold leading-snug mb-1.5">
-                        {genderGuide.title}
-                      </h3>
-                      <p class="font-body text-white/50 text-sm leading-relaxed mb-4 max-w-none">
-                        Your complete archetype wardrobe blueprint — from {genderGuide.price}
-                      </p>
-                      <div class="flex flex-col sm:flex-row gap-2.5">
-                        <a
-                          href={genderGuide.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="inline-flex items-center justify-center px-5 py-2.5 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
-                        >
-                          Get the Full Guide
-                          <svg class="w-3.5 h-3.5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
-                          </svg>
-                        </a>
-                        <a
-                          href="/shop#style-guides"
-                          class="inline-flex items-center justify-center px-5 py-2.5 text-white/60 font-body text-xs tracking-widest uppercase hover:text-white transition-colors duration-200"
-                        >
-                          View Style Guides
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            /* Fallback if no visuals data exists for this archetype */
-            <div class="archetype-prose font-body text-white/75 text-base leading-relaxed space-y-4">
-              <p class="text-white/50 italic">Visual data coming soon.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ── SIGNATURE GALLERY: Full-bleed editorial image layout ── -->
+  <!-- ── SIGNATURE GALLERY: flows directly from hero, full-bleed ── -->
   {visuals?.galleryLooks && cardImages.length >= 1 && (
     <section
-      class="bg-primary border-t border-white/8 overflow-hidden"
+      class="relative bg-primary overflow-hidden"
       aria-label={`${data.name} signature looks`}
     >
-      <!-- Section header -->
-      <div class="mx-auto max-w-7xl px-6 py-16 pb-10">
+      <!-- Section header — tight top padding so it reads as hero continuation -->
+      <div class="mx-auto max-w-7xl px-6 pt-10 pb-10">
         <div class="flex items-center gap-4 mb-3">
           <div class="w-8 h-px bg-accent"></div>
           <p class="font-body text-xs tracking-widest uppercase text-accent">Editorial</p>
@@ -414,8 +245,12 @@ const genderGuide = isFeminine
 
       </div>
 
+      <!-- Bottom blend: gallery images dissolve into the next section background -->
+      <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-40"
+           style="background: linear-gradient(to top, var(--color-primary, #0a0806) 0%, transparent 100%)"></div>
+
       <!-- Caption bar -->
-      <div class="mx-auto max-w-7xl px-6 py-6">
+      <div class="mx-auto max-w-7xl px-6 py-6 relative z-10">
         <p class="font-body text-[11px] tracking-widest uppercase text-white/25 text-center">
           Click any image to expand
         </p>
@@ -447,6 +282,180 @@ const genderGuide = isFeminine
 
     </section>
   )}
+
+
+  <!-- ── DEEP DIVE: Description + visuals ─────────────────── -->
+  <section class="py-20 px-6 bg-primary" aria-label={`About ${data.name}`}>
+    <div class="mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 lg:grid-cols-[40fr_60fr] gap-14 lg:gap-20">
+
+        <!-- LEFT COLUMN (sticky): Color palette + Signature Pieces + Style Icons -->
+        <div class="h-fit lg:sticky lg:top-28 flex flex-col gap-10" style="overflow: visible;">
+
+          {visuals && (
+            <>
+              <!-- Color palette swatches -->
+              <div>
+                <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-5">
+                  Palette
+                </p>
+                <div class="flex flex-wrap gap-2.5">
+                  {visuals.palette.map((color) => (
+                    <div class="group relative">
+                      <div
+                        class="w-10 h-10 md:w-11 md:h-11 rounded-full border border-white/15
+                               cursor-default transition-transform duration-200 hover:scale-110"
+                        style={`background-color: ${color.hex};
+                                box-shadow: inset 0 2px 4px rgba(0,0,0,0.3),
+                                            inset 0 -1px 2px rgba(255,255,255,0.1);`}
+                        title={color.name}
+                      />
+                      <span class="absolute -bottom-7 left-1/2 -translate-x-1/2
+                                   font-body text-[10px] text-white/60 whitespace-nowrap
+                                   opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                                   pointer-events-none">
+                        {color.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Divider -->
+              <div class="w-full h-px bg-white/8"></div>
+
+              <!-- Signature Pieces — all items, 2-col grid -->
+              <div>
+                <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-5">
+                  Signature Pieces
+                </p>
+                <div class="grid grid-cols-2 gap-2">
+                  {visuals.signaturePieces.map((piece) => (
+                    <div class="flex flex-col items-center text-center p-3.5
+                                bg-white/[0.03] backdrop-blur-sm border border-white/[0.07]
+                                rounded-sm hover:bg-white/[0.06] transition-all duration-200">
+                      <svg
+                        class="w-7 h-7 text-accent/70 mb-2"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d={iconPaths[piece.icon]} />
+                      </svg>
+                      <span class="font-body text-[11px] text-white/65 leading-snug">{piece.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Divider -->
+              <div class="w-full h-px bg-white/8"></div>
+
+              <!-- Style Icons -->
+              {visuals.styleIcons.length > 0 && (
+                <div class="relative" style="overflow: visible; z-index: 60;">
+                  <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-5">
+                    Style Icons
+                  </p>
+                  <div class="flex flex-wrap gap-6" style="overflow: visible;">
+                    {visuals.styleIcons.map((icon) => (
+                      <div class="style-icon-group group flex flex-col items-center">
+                        <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden
+                                    border-2 border-white/15 group-hover:border-accent/50
+                                    transition-colors duration-300">
+                          <img
+                            src={icon.image}
+                            alt={icon.name}
+                            class="icon-img absolute inset-0 w-full h-full object-cover object-top"
+                            loading="lazy"
+                          />
+                          <div class="icon-fallback absolute inset-0 w-full h-full bg-white/10
+                                      flex items-center justify-center
+                                      font-heading text-2xl text-white/30">
+                            {icon.name[0]}
+                          </div>
+                        </div>
+                        <span class="style-icon-label mt-2 font-body text-[10px] text-white/50 whitespace-nowrap">
+                          {icon.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        <!-- RIGHT COLUMN: Description text + Guide Upsell -->
+        <div>
+          {visuals ? (
+            <>
+              <!-- Core description -->
+              <div class="font-body text-white/75 text-base md:text-lg leading-relaxed">
+                {visuals.bodyText.split('\n\n').map((paragraph) => (
+                  <p class="mb-4 last:mb-0">{paragraph}</p>
+                ))}
+              </div>
+
+              <!-- Style Guide Upsell Card -->
+              {genderGuide && (
+                <div class="mt-10 bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] rounded-sm p-5 md:p-6
+                            hover:bg-white/[0.05] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                  <div class="flex gap-5 items-start">
+                    <div class="shrink-0 w-20 md:w-24 aspect-[3/4] overflow-hidden rounded-sm border border-white/10">
+                      <img
+                        src={`/images/guides/${genderGuide.slug}-cover.webp`}
+                        alt={genderGuide.title}
+                        class="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-body text-[10px] tracking-widest uppercase text-accent mb-1.5">
+                        Style Guide
+                      </p>
+                      <h3 class="font-heading text-white text-base md:text-lg font-semibold leading-snug mb-1.5">
+                        {genderGuide.title}
+                      </h3>
+                      <p class="font-body text-white/50 text-sm leading-relaxed mb-4">
+                        Your complete archetype wardrobe blueprint — from {genderGuide.price}
+                      </p>
+                      <div class="flex flex-col sm:flex-row gap-2.5">
+                        <a
+                          href={genderGuide.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center justify-center px-5 py-2.5 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+                        >
+                          Get the Full Guide
+                          <svg class="w-3.5 h-3.5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                        <a
+                          href="/shop#style-guides"
+                          class="inline-flex items-center justify-center px-5 py-2.5 text-white/60 font-body text-xs tracking-widest uppercase hover:text-white transition-colors duration-200"
+                        >
+                          View Style Guides
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div class="font-body text-white/50 italic">Visual data coming soon.</div>
+          )}
+        </div>
+
+      </div>
+    </div>
+  </section>
 
 
   <!-- ── YOUR UNIQUE BLEND: Visual comparator ──────────────── -->
