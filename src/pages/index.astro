@@ -295,7 +295,7 @@ const calendlyURL = '/contact';
               {service.data.shortDescription ?? service.data.perfectFor}
             </p>
             <div class="mt-5 flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent-text">
-              <span>Learn More</span>
+              <span>View Service Details</span>
               <span class="group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </a>
@@ -541,7 +541,9 @@ const calendlyURL = '/contact';
         class="mt-10 flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
         data-todo="Replace with actual Brevo embedded form code"
       >
+        <label for="waitlist-email" class="sr-only">Email address</label>
         <input
+          id="waitlist-email"
           type="email"
           name="EMAIL"
           placeholder="Your email address"

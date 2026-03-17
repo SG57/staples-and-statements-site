@@ -7,26 +7,55 @@
  */
 
 /* ── CSS Custom Properties ─────────────────────────────── */
+/* Site tokens (--color-*) drive Tailwind v4 utility classes.
+   Federal DNA tokens (--brand-*, --surface-*, --text-*) are aliased
+   below in :root so both naming conventions are available in CSS.
+   See CONSTITUTION.md State Law 21 for the full mapping table. */
 @theme {
   /* Color palette — warm, editorial, luxury */
-  --color-primary: #1a1613;          /* warm charcoal / near-black */
-  --color-primary-light: #2d2926;    /* slightly lighter charcoal */
-  --color-secondary: #8c7e72;        /* warm taupe / stone */
-  --color-secondary-light: #a89b8f;  /* lighter taupe */
-  --color-accent: #b8977e;           /* muted warm gold — elevated, understated */
-  --color-accent-light: #cdb5a0;     /* lighter gold for hover states */
-  --color-accent-text: #8c6040;      /* darker accent for text on light backgrounds — 5:1 on cream */
-  --color-background: #faf7f4;       /* warm off-white / cream */
-  --color-surface: #f2ede8;          /* slightly darker cream for cards */
-  --color-surface-dark: #e8e0d8;     /* darker surface for borders/dividers */
-  --color-text: #1a1613;             /* primary text — warm charcoal */
-  --color-text-muted: #6b5e53;       /* muted text — warm brown-grey */
-  --color-text-light: #9c8e82;       /* light text — warm stone */
-  --color-white: #ffffff;
+  --color-primary: #1a1613;          /* warm charcoal / near-black    → DNA: --brand-primary */
+  --color-primary-light: #2d2926;    /* slightly lighter charcoal     → DNA: --brand-primary-light */
+  --color-secondary: #8c7e72;        /* warm taupe / stone            → DNA: --brand-secondary */
+  --color-secondary-light: #a89b8f;  /* lighter taupe                 → DNA: --brand-secondary-light */
+  --color-accent: #b8977e;           /* muted warm gold               → DNA: --brand-accent */
+  --color-accent-light: #cdb5a0;     /* lighter gold for hover states → DNA: --brand-accent-light */
+  --color-accent-text: #8c6040;      /* accessible accent on cream    → DNA: --brand-accent-text */
+  --color-background: #faf7f4;       /* warm off-white / cream        → DNA: --brand-background */
+  --color-surface: #f2ede8;          /* slightly darker cream         → DNA: --surface-card */
+  --color-surface-dark: #e8e0d8;     /* borders/dividers              → DNA: --surface-border */
+  --color-text: #1a1613;             /* primary text                  → DNA: --text-primary */
+  --color-text-muted: #6b5e53;       /* muted text                    → DNA: --text-muted */
+  --color-text-light: #9c8e82;       /* light text                    → DNA: --text-light */
+  --color-white: #ffffff;            /*                               → DNA: --brand-white */
 
   /* Font families */
   --font-heading: 'Cormorant Garamond', 'Georgia', serif;
   --font-body: 'DM Sans', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+/* ── Federal DNA Token Aliases ─────────────────────────────
+   These mirror design-tokens.css from staples-and-statements-dna.
+   Use either naming convention in custom CSS; Tailwind utilities
+   use the --color-* names above.                                */
+:root {
+  --brand-primary:          #1a1613;
+  --brand-primary-light:    #2d2926;
+  --brand-accent:           #b8977e;
+  --brand-accent-light:     #cdb5a0;
+  --brand-accent-text:      #8c6040;
+  --brand-background:       #faf7f4;
+  --brand-white:            #ffffff;
+  --brand-secondary:        #8c7e72;
+  --brand-secondary-light:  #a89b8f;
+  --surface-background:     #faf7f4;
+  --surface-card:           #f2ede8;
+  --surface-border:         #e8e0d8;
+  --text-primary:           #1a1613;
+  --text-muted:             #6b5e53;
+  --text-light:             #9c8e82;
+  --text-on-dark:           #ffffff;
+  --text-on-dark-muted:     rgba(255, 255, 255, 0.60);
+  --text-on-dark-light:     rgba(255, 255, 255, 0.40);
 }
 
 /* ── Base styles ───────────────────────────────────────────
