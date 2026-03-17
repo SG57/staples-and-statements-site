@@ -342,22 +342,43 @@ const genderGuide = isFeminine
                     </div>
                   ))}
                 </div>
-                {genderGuide && (
-                  <a
-                    href={genderGuide.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex items-center gap-2 text-accent/60 hover:text-accent transition-colors duration-200 group"
-                  >
-                    <span class="font-body text-[11px] tracking-widest uppercase">
-                      +{visuals.signaturePieces.length - 2} more in the style guide
-                    </span>
-                    <svg class="w-3 h-3 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </a>
-                )}
               </div>
+
+              <!-- Style Guide card — lives here so the teaser is immediately adjacent -->
+              {genderGuide && (
+                <div class="bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] rounded-sm p-4
+                            hover:bg-white/[0.05] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                  <div class="flex gap-4 items-start">
+                    <div class="shrink-0 w-14 aspect-[3/4] overflow-hidden rounded-sm border border-white/10">
+                      <img
+                        src={`/images/guides/${genderGuide.slug}-cover.webp`}
+                        alt={genderGuide.title}
+                        class="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-body text-[10px] tracking-widest uppercase text-accent mb-1">
+                        Style Guide
+                      </p>
+                      <h3 class="font-heading text-white text-sm font-semibold leading-snug mb-2">
+                        {genderGuide.title}
+                      </h3>
+                      <a
+                        href={genderGuide.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-1.5 text-accent/70 hover:text-accent transition-colors duration-200 group"
+                      >
+                        <span class="font-body text-[10px] tracking-widest uppercase">Get the full guide</span>
+                        <svg class="w-2.5 h-2.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <!-- Divider -->
               <div class="w-full h-px bg-white/8"></div>
@@ -398,64 +419,16 @@ const genderGuide = isFeminine
           )}
         </div>
 
-        <!-- RIGHT COLUMN: Description text + Guide Upsell -->
+        <!-- RIGHT COLUMN: Description text -->
         <div>
           {visuals ? (
-            <>
-              <!-- Core description -->
-              <div class="font-body text-white/75 text-base md:text-lg leading-relaxed">
-                {visuals.bodyText.split('\n\n').map((paragraph) => (
-                  <p class="mb-4 last:mb-0">{paragraph}</p>
-                ))}
-              </div>
-
-              <!-- Style Guide Upsell Card -->
-              {genderGuide && (
-                <div class="mt-10 bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] rounded-sm p-5 md:p-6
-                            hover:bg-white/[0.05] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
-                  <div class="flex gap-5 items-start">
-                    <div class="shrink-0 w-20 md:w-24 aspect-[3/4] overflow-hidden rounded-sm border border-white/10">
-                      <img
-                        src={`/images/guides/${genderGuide.slug}-cover.webp`}
-                        alt={genderGuide.title}
-                        class="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <p class="font-body text-[10px] tracking-widest uppercase text-accent mb-1.5">
-                        Style Guide
-                      </p>
-                      <h3 class="font-heading text-white text-base md:text-lg font-semibold leading-snug mb-1.5">
-                        {genderGuide.title}
-                      </h3>
-                      <p class="font-body text-white/50 text-sm leading-relaxed mb-4">
-                        Your complete archetype wardrobe blueprint — from {genderGuide.price}
-                      </p>
-                      <div class="flex flex-col sm:flex-row gap-2.5">
-                        <a
-                          href={genderGuide.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="inline-flex items-center justify-center px-5 py-2.5 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
-                        >
-                          Get the Full Guide
-                          <svg class="w-3.5 h-3.5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
-                          </svg>
-                        </a>
-                        <a
-                          href="/shop#style-guides"
-                          class="inline-flex items-center justify-center px-5 py-2.5 text-white/60 font-body text-xs tracking-widest uppercase hover:text-white transition-colors duration-200"
-                        >
-                          View Style Guides
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
+            <div class="description-prose">
+              {visuals.bodyText.split('\n\n').map((paragraph, i) => (
+                i === 0
+                  ? <p class="description-lede">{paragraph}</p>
+                  : <p class="description-body">{paragraph}</p>
+              ))}
+            </div>
           ) : (
             <div class="font-body text-white/50 italic">Visual data coming soon.</div>
           )}
@@ -666,6 +639,34 @@ const genderGuide = isFeminine
 
 
 <style>
+  /* ── Description prose ─────────────────────────────────── */
+
+  .description-prose {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* First paragraph: large editorial lede */
+  .description-lede {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.82);
+    font-style: italic;
+  }
+
+  /* Subsequent paragraphs: comfortable reading size */
+  .description-body {
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.62);
+    letter-spacing: 0.01em;
+  }
+
   /* ── Style icon image/fallback layering ────────────────── */
   .icon-img {
     z-index: 1;
