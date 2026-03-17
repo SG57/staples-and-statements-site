@@ -169,7 +169,8 @@ const pickCollections = allCollections.filter((c) => c.displayable && c.gender =
                       <span class="ltk-card-cta">Shop This Collection →</span>
                     </div>
                     <div class="ltk-card-name-overlay">
-                      {c.isBlend && <span class="ltk-blend-tag">Archetype Blend</span>}
+                      {c.isBlend && <span class="ltk-badge ltk-badge-blend">Blend</span>}
+                      {c.isCurvy && !c.isBlend && <span class="ltk-badge ltk-badge-curvy">Curvy</span>}
                       <h3 class="ltk-card-name">{c.title}</h3>
                       <span class="ltk-card-count">{c.product_count} items</span>
                     </div>
@@ -411,16 +412,22 @@ const pickCollections = allCollections.filter((c) => c.displayable && c.gender =
     color: var(--color-accent);
   }
 
-  /* "Archetype Blend" badge on blend collection cards */
-  .ltk-blend-tag {
+  /* Overlay badges: Blend / Curvy */
+  .ltk-badge {
     font-family: var(--font-body);
     font-size: 0.58rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-accent);
-    border: 1px solid rgba(var(--color-accent-rgb, 184,151,126), 0.5);
     padding: 0.15rem 0.5rem;
     line-height: 1.4;
+  }
+  .ltk-badge-blend {
+    color: var(--color-accent);
+    border: 1px solid rgba(184,151,126, 0.5);
+  }
+  .ltk-badge-curvy {
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.25);
   }
 
   /* Product count in card overlay */

@@ -88,6 +88,8 @@ export interface LtkCollection {
   gender: 'feminine' | 'masculine' | 'other';
   /** True when two or more archetypes are matched (e.g. "Warrior X Empress"). */
   isBlend: boolean;
+  /** True when title contains "curvy" — size-inclusive variant of a single archetype. */
+  isCurvy: boolean;
   /** False for personal/private collections (no archetype OR lifestyle terms). */
   displayable: boolean;
 }
@@ -110,6 +112,7 @@ function classifyTitle(title: string): Pick<
 
   const archetypes = matched.map((m) => m.slug);
   const isBlend    = archetypes.length >= 2;
+  const isCurvy    = lower.includes('curvy');
 
   // Gender from archetype matches, then title fallback
   let gender: LtkCollection['gender'] = 'other';
@@ -134,40 +137,59 @@ function classifyTitle(title: string): Pick<
     displayable = words.some((w) => LIFESTYLE_TERMS.has(w));
   }
 
-  return { archetypes, gender, isBlend, displayable };
+  return { archetypes, gender, isBlend, isCurvy, displayable };
 }
 
 // ── Fetch & cache ─────────────────────────────────────────────────────────────
 
 let _cache: LtkCollection[] | null = null;
 
+type RawCollection = {
+  collection_id: string;
+  title: string;
+  description: string;
+  cover_photo_urls: string[];
+  product_count: number;
+};
+
+type ApiResponse = {
+  shop_product_collections: RawCollection[];
+  meta: { next: string | null };
+};
+
 /**
- * Fetches all LTK shop product collections for Danielle's profile.
- * Results are cached in-module so the API is only hit once per build.
+ * Fetches ALL LTK shop product collections for Danielle's profile.
+ * Paginates automatically using the `next=` cursor until exhausted.
+ * Results are cached in-module — one set of API calls per build.
  * Returns an empty array on any failure (graceful degradation).
  */
 export async function fetchLtkCollections(): Promise<LtkCollection[]> {
   if (_cache !== null) return _cache;
 
+  const raw: RawCollection[] = [];
+  let cursor: string | null = null;
+  let page = 0;
+  const MAX_PAGES = 20; // safety guard against infinite loops
+
   try {
-    const res = await fetch(LTK_API_URL, { headers: LTK_HEADERS });
-    if (!res.ok) {
-      console.warn(`[ltk-api] API responded ${res.status} — showing no LTK collections`);
-      _cache = [];
-      return _cache;
-    }
+    do {
+      const url = cursor
+        ? `${LTK_API_URL}&next=${encodeURIComponent(cursor)}`
+        : LTK_API_URL;
 
-    const data = await res.json() as {
-      shop_product_collections: Array<{
-        collection_id: string;
-        title: string;
-        description: string;
-        cover_photo_urls: string[];
-        product_count: number;
-      }>;
-    };
+      const res = await fetch(url, { headers: LTK_HEADERS });
+      if (!res.ok) {
+        console.warn(`[ltk-api] API responded ${res.status} on page ${page + 1}`);
+        break;
+      }
 
-    _cache = (data.shop_product_collections ?? []).map((c) => ({
+      const data = await res.json() as ApiResponse;
+      raw.push(...(data.shop_product_collections ?? []));
+      cursor = data.meta?.next ?? null;
+      page++;
+    } while (cursor && page < MAX_PAGES);
+
+    _cache = raw.map((c) => ({
       collection_id:    c.collection_id,
       title:            c.title,
       description:      c.description,
@@ -178,6 +200,7 @@ export async function fetchLtkCollections(): Promise<LtkCollection[]> {
       ...classifyTitle(c.title),
     }));
 
+    console.log(`[ltk-api] Loaded ${_cache.length} collections across ${page} page(s)`);
     return _cache;
   } catch (err) {
     console.warn('[ltk-api] Fetch failed — showing no LTK collections:', err);
