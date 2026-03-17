@@ -249,13 +249,6 @@ const genderGuide = isFeminine
       <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-40"
            style="background: linear-gradient(to top, var(--color-primary, #0a0806) 0%, transparent 100%)"></div>
 
-      <!-- Caption bar -->
-      <div class="mx-auto max-w-7xl px-6 py-6 relative z-10">
-        <p class="font-body text-[11px] tracking-widest uppercase text-white/25 text-center">
-          Click any image to expand
-        </p>
-      </div>
-
       <!-- Lightbox -->
       <div
         id="gallery-lightbox"
@@ -324,13 +317,13 @@ const genderGuide = isFeminine
               <!-- Divider -->
               <div class="w-full h-px bg-white/8"></div>
 
-              <!-- Signature Pieces — all items, 2-col grid -->
+              <!-- Signature Pieces — teaser (2 shown, rest behind the guide) -->
               <div>
                 <p class="font-body text-[11px] tracking-widest uppercase text-accent mb-5">
                   Signature Pieces
                 </p>
-                <div class="grid grid-cols-2 gap-2">
-                  {visuals.signaturePieces.map((piece) => (
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                  {visuals.signaturePieces.slice(0, 2).map((piece) => (
                     <div class="flex flex-col items-center text-center p-3.5
                                 bg-white/[0.03] backdrop-blur-sm border border-white/[0.07]
                                 rounded-sm hover:bg-white/[0.06] transition-all duration-200">
@@ -349,6 +342,21 @@ const genderGuide = isFeminine
                     </div>
                   ))}
                 </div>
+                {genderGuide && (
+                  <a
+                    href={genderGuide.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2 text-accent/60 hover:text-accent transition-colors duration-200 group"
+                  >
+                    <span class="font-body text-[11px] tracking-widest uppercase">
+                      +{visuals.signaturePieces.length - 2} more in the style guide
+                    </span>
+                    <svg class="w-3 h-3 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </a>
+                )}
               </div>
 
               <!-- Divider -->
