@@ -8,6 +8,15 @@
  *
  * Edge fade mask gives the text an infinite-horizon feel (emerges from nothing,
  * recedes to nothing). Hover pauses. prefers-reduced-motion stops the animation.
+ *
+ * How it works:
+ *   1. One set of items is rendered in .marquee-seed (invisible, measures natural width).
+ *   2. On load, JS measures the seed width, calculates how many copies are needed
+ *      to always exceed viewport width, clones them into .marquee-track, and sets
+ *      --marquee-set-width to the exact pixel width of one logical set.
+ *   3. The animation translates by exactly --marquee-set-width — one full set scrolls
+ *      out while the next identical set takes its place. Perfectly seamless on any
+ *      viewport width, including ultrawide.
  */
 
 interface Props {
@@ -36,10 +45,9 @@ const items = [
 >
   <!-- Edge fade mask — text appears to emerge from and disappear into infinity -->
   <div class="marquee-fade-mask">
-    <!-- The track contains 2× the content. Animating to -50% = exactly one loop. -->
-    <div class="marquee-track">
 
-      <!-- Copy 1 -->
+    <!-- Seed: one set of items, used to measure natural width. Hidden after JS clones. -->
+    <div class="marquee-seed" style="display:flex;flex-wrap:nowrap;width:max-content;align-items:center;">
       {items.map((item) => (
         <>
           <span
@@ -61,31 +69,11 @@ const items = [
           </span>
         </>
       ))}
-
-      <!-- Copy 2 — identical, creates the seamless loop -->
-      {items.map((item) => (
-        <>
-          <span
-            class:list={[
-              'marquee-item font-body text-[0.65rem] tracking-[0.2em] uppercase',
-              variant === 'dark' ? 'text-white/38' : 'text-text-light',
-            ]}
-          >
-            {item}
-          </span>
-          <span
-            class:list={[
-              'marquee-sep',
-              variant === 'dark' ? 'text-accent/60' : 'text-accent/50',
-            ]}
-            aria-hidden="true"
-          >
-            ✦
-          </span>
-        </>
-      ))}
-
     </div>
+
+    <!-- Track: JS populates this with enough cloned sets to fill 2× viewport -->
+    <div class="marquee-track"></div>
+
   </div>
 </div>
 
@@ -109,15 +97,14 @@ const items = [
     overflow: hidden;
   }
 
-  /* Track: flex row, no wrap, width is the sum of both content copies */
+  /* Track: flex row, no wrap. Animation offset set via --marquee-set-width by JS. */
   .marquee-track {
     display: flex;
     flex-wrap: nowrap;
     width: max-content;
     align-items: center;
     gap: 0;
-    /* Scroll: 0% → -50% = exactly one content-width = seamless loop */
-    animation: marquee-scroll 36s linear infinite;
+    animation: marquee-scroll var(--marquee-dur, 36s) linear infinite;
     will-change: transform;
   }
 
@@ -138,7 +125,7 @@ const items = [
 
   @keyframes marquee-scroll {
     from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    to   { transform: translateX(calc(-1 * var(--marquee-set-width, 50%))); }
   }
 
   /* Reduced motion: stop scrolling entirely */
@@ -148,3 +135,48 @@ const items = [
     }
   }
 </style>
+
+<script>
+  function initMarquee(band: HTMLElement) {
+    const seed  = band.querySelector<HTMLElement>('.marquee-seed');
+    const track = band.querySelector<HTMLElement>('.marquee-track');
+    if (!seed || !track) return;
+
+    // Measure the natural width of one set of items
+    const setWidth = seed.offsetWidth;
+    if (setWidth === 0) return;
+
+    const vw = window.innerWidth;
+
+    // We need at least 2 logical sets (so one scrolls out while the other fills in).
+    // Each logical set must be >= viewport width so there's never a gap.
+    const copiesPerSet = Math.max(1, Math.ceil(vw / setWidth));
+    const totalCopies  = copiesPerSet * 2; // 2 logical sets
+
+    // Build the track content by cloning the seed's children
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < totalCopies; i++) {
+      for (const child of Array.from(seed.children)) {
+        fragment.appendChild(child.cloneNode(true));
+      }
+    }
+    track.appendChild(fragment);
+
+    // One logical set = copiesPerSet × setWidth. The animation scrolls exactly that far.
+    const logicalSetWidth = copiesPerSet * setWidth;
+    track.style.setProperty('--marquee-set-width', `${logicalSetWidth}px`);
+
+    // Scale duration so scroll speed stays constant regardless of content width.
+    // Base: 36s for the original ~single-set width. Speed = setWidth / 36.
+    const speed    = setWidth / 36; // px/s
+    const duration = logicalSetWidth / speed;
+    track.style.setProperty('--marquee-dur', `${duration.toFixed(1)}s`);
+
+    // Hide the seed — its job is done
+    seed.style.display = 'none';
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('.marquee-band').forEach(initMarquee);
+  });
+</script>
