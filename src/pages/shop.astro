@@ -10,9 +10,37 @@ const beaconsShopURL = BEACONS_SHOP;
 // ── Fetch all LTK collections (cached: one API call for the whole build) ──────
 const allCollections = await fetchLtkCollections();
 
-const femCollections  = allCollections.filter((c) => c.displayable && c.gender === 'feminine');
-const mascCollections = allCollections.filter((c) => c.displayable && c.gender === 'masculine');
-const pickCollections = allCollections.filter((c) => c.displayable && c.gender === 'other');
+// Canonical archetype order (matches content collection `order` field)
+const ARCHETYPE_ORDER: Record<string, number> = {
+  // Feminine
+  'the-siren': 1, 'the-muse': 2, 'the-warrior': 3, 'the-enchantress': 4,
+  'the-creator': 5, 'the-empress': 6, 'the-angelic-one': 7,
+  // Masculine
+  'the-protector': 1, 'the-maverick': 2, 'the-architect': 3,
+  'the-alchemist': 4, 'the-sovereign': 5,
+};
+
+// Sort key: [group, canonical-position, -product_count]
+// Group 0 = single archetype  |  1 = curvy variant  |  2 = blend  |  3 = other
+function sortKey(c: import('../data/ltk-api').LtkCollection): [number, number, number] {
+  const primaryOrder = c.archetypes.length > 0 ? (ARCHETYPE_ORDER[c.archetypes[0]] ?? 99) : 99;
+  if (!c.isBlend && !c.isCurvy && c.archetypes.length === 1) return [0, primaryOrder, -c.product_count];
+  if (!c.isBlend &&  c.isCurvy && c.archetypes.length === 1) return [1, primaryOrder, -c.product_count];
+  if (c.isBlend)                                              return [2, 0,            -c.product_count];
+  return [3, 0, -c.product_count];
+}
+
+function sortCollections(list: import('../data/ltk-api').LtkCollection[]) {
+  return [...list].sort((a, b) => {
+    const [ga, oa, pa] = sortKey(a);
+    const [gb, ob, pb] = sortKey(b);
+    return ga !== gb ? ga - gb : oa !== ob ? oa - ob : pa - pb;
+  });
+}
+
+const femCollections  = sortCollections(allCollections.filter((c) => c.displayable && c.gender === 'feminine'));
+const mascCollections = sortCollections(allCollections.filter((c) => c.displayable && c.gender === 'masculine'));
+const pickCollections = sortCollections(allCollections.filter((c) => c.displayable && c.gender === 'other'));
 ---
 
 <BaseLayout
