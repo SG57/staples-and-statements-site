@@ -603,16 +603,53 @@ const genderGuide = isFeminine
               ))}
             </div>
 
-            <!-- LTK blend collection widget — populated by JS when a shade is selected -->
-            <!-- Hidden data store: blend map keyed by secondary slug -->
-            <div
-              id="shade-ltk-data"
-              data-blend-map={JSON.stringify(blendMap)}
-              hidden
-              aria-hidden="true"
-            ></div>
-            <!-- Live region populated by JS -->
-            <div id="shade-ltk-widget" class="shade-ltk-widget shade-ltk-hidden" aria-live="polite"></div>
+            <!-- ── LTK Blend Collection Widget ──────────────────────────────
+                 Pre-rendered per secondary slug so Astro scoped CSS works.
+                 JS only toggles .is-active / has-content — no innerHTML.     -->
+            {Object.keys(blendMap).length > 0 && (
+              <div
+                id="shade-ltk-section"
+                class:list={[
+                  'shade-ltk-section',
+                  defaultShadeSlug in blendMap ? 'has-content' : '',
+                ]}
+                aria-live="polite"
+              >
+                <p class="shade-ltk-eyebrow">Shop this pairing on LTK</p>
+                {Object.entries(blendMap).map(([secondarySlug, cards]) => (
+                  <div
+                    class:list={[
+                      'shade-ltk-group',
+                      secondarySlug === defaultShadeSlug ? 'is-active' : '',
+                    ]}
+                    data-secondary-slug={secondarySlug}
+                  >
+                    <div class="shade-ltk-carousel">
+                      {cards.map((card) => (
+                        <a
+                          href={card.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="shade-ltk-card"
+                          aria-label={`${card.title} — ${card.count} items on LTK`}
+                        >
+                          <div class="shade-ltk-img-frame">
+                            {card.cover && (
+                              <img src={card.cover} alt={card.title} loading="lazy" />
+                            )}
+                          </div>
+                          <div class="shade-ltk-info">
+                            <span class="shade-ltk-name">{card.title}</span>
+                            <span class="shade-ltk-meta">{card.count} items</span>
+                            <span class="shade-ltk-cta">Shop on LTK →</span>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
           </div>
         </div>
@@ -1237,83 +1274,114 @@ const genderGuide = isFeminine
     /* Handled inline via JS with archetype color */
   }
 
-  /* ── LTK blend collection widget ────────────────────────────────────────── */
-  .shade-ltk-widget {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    transition: opacity 0.3s ease;
+  /* ── LTK Blend Collection Widget ─────────────────────────────────────────
+     Pre-rendered in Astro template — scoped CSS works correctly here.       */
+
+  /* Outer section: collapses/expands with max-height animation */
+  .shade-ltk-section {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
   }
-  .shade-ltk-widget.shade-ltk-hidden {
-    display: none;
+  .shade-ltk-section.has-content {
+    max-height: 180px;
+    opacity: 1;
   }
 
+  .shade-ltk-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 0.5rem;
+  }
+
+  /* Each blend group: hidden unless .is-active */
+  .shade-ltk-group {
+    display: none;
+  }
+  .shade-ltk-group.is-active {
+    display: block;
+  }
+
+  /* Horizontal carousel — snap scrolls if >1 card */
+  .shade-ltk-carousel {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .shade-ltk-carousel::-webkit-scrollbar { display: none; }
+
+  /* Card: image left, info right — full width of right column */
   .shade-ltk-card {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
-    padding: 0.7rem 0.9rem;
-    background: rgba(255,255,255,0.035);
-    border: 1px solid rgba(255,255,255,0.09);
+    gap: 0.875rem;
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 0.6rem 0.9rem 0.6rem 0.6rem;
     text-decoration: none;
     transition: background 0.25s ease, border-color 0.25s ease;
   }
   .shade-ltk-card:hover {
-    background: rgba(var(--color-accent-rgb, 184,151,126), 0.1);
+    background: rgba(184,151,126,0.09);
     border-color: var(--color-accent);
   }
 
-  .shade-ltk-thumb {
-    width: 2.8rem;
-    height: 3.6rem;
+  /* Fixed-size image frame — covers transparent product shot backgrounds */
+  .shade-ltk-img-frame {
+    width: 56px;
+    height: 75px;
     flex-shrink: 0;
     overflow: hidden;
-    background: rgba(255,255,255,0.05);
+    background: #1e1a1a;
   }
-  .shade-ltk-thumb img {
+  .shade-ltk-img-frame img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top center;
+    display: block;
   }
 
   .shade-ltk-info {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.18rem;
-    min-width: 0;
+    gap: 0.2rem;
   }
-  .shade-ltk-eyebrow {
-    font-family: var(--font-body);
-    font-size: 0.6rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .shade-ltk-title {
+  .shade-ltk-name {
     font-family: var(--font-heading);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
     color: #fff;
+    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .shade-ltk-count {
+  .shade-ltk-meta {
     font-family: var(--font-body);
     font-size: 0.62rem;
     letter-spacing: 0.05em;
-    color: rgba(255,255,255,0.38);
+    color: rgba(255,255,255,0.35);
   }
-  .shade-ltk-arrow {
+  /* Text-only CTA — no box */
+  .shade-ltk-cta {
     font-family: var(--font-body);
-    font-size: 0.85rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--color-accent);
-    transition: transform 0.2s ease;
-    flex-shrink: 0;
-  }
-  .shade-ltk-card:hover .shade-ltk-arrow {
-    transform: translateX(4px);
+    margin-top: 0.1rem;
   }
 
   /* Comparator image transition */
@@ -1478,40 +1546,19 @@ const genderGuide = isFeminine
   });
 
   function updateLtkBlendWidget(secondarySlug: string) {
-    const dataEl  = document.getElementById('shade-ltk-data');
-    const widget  = document.getElementById('shade-ltk-widget');
-    if (!dataEl || !widget) return;
-
-    type CardData = { title: string; url: string; cover: string; count: number };
-    let blendMap: Record<string, CardData[]> = {};
-    try { blendMap = JSON.parse(dataEl.dataset.blendMap ?? '{}'); } catch { return; }
-
-    const collections: CardData[] = blendMap[secondarySlug] ?? [];
-
-    if (collections.length === 0) {
-      widget.innerHTML = '';
-      widget.classList.add('shade-ltk-hidden');
-      return;
-    }
-
-    widget.innerHTML = collections.map((c) => `
-      <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="shade-ltk-card">
-        <div class="shade-ltk-thumb">
-          ${c.cover ? `<img src="${c.cover}" alt="${c.title}" loading="lazy" />` : ''}
-        </div>
-        <div class="shade-ltk-info">
-          <span class="shade-ltk-eyebrow">Shop this pairing on LTK</span>
-          <span class="shade-ltk-title">${c.title}</span>
-          <span class="shade-ltk-count">${c.count} items</span>
-        </div>
-        <span class="shade-ltk-arrow" aria-hidden="true">→</span>
-      </a>
-    `).join('');
-    widget.classList.remove('shade-ltk-hidden');
+    const section = document.getElementById('shade-ltk-section');
+    if (!section) return;
+    const groups = Array.from(section.querySelectorAll<HTMLElement>('.shade-ltk-group'));
+    const current = groups.find(g => g.classList.contains('is-active'));
+    const next = groups.find(g => g.dataset.secondarySlug === secondarySlug);
+    if (current === next) return;
+    if (current) current.classList.remove('is-active');
+    if (next) { next.classList.add('is-active'); section.classList.add('has-content'); }
+    else { section.classList.remove('has-content'); }
   }
 
   // Initialize widget for the default selected shade on page load
-  updateLtkBlendWidget(document.querySelector<HTMLElement>('[aria-checked="true"]')?.dataset.shadeSlug ?? '');
+  updateLtkBlendWidget(document.querySelector<HTMLElement>('.shade-thumb[aria-checked="true"]')?.dataset.shadeSlug ?? '');
 
   // Arrow-key navigation for shade thumb radiogroup
   const thumbGroup = document.querySelector<HTMLElement>('[role="radiogroup"]');
