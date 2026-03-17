@@ -802,11 +802,11 @@ const genderGuide = isFeminine
     }
   }
 
-  /* Auto-pan keyframe: image drifts top → bottom → top */
+  /* Auto-pan: simple from/to + ease-in-out + alternate = perfect sine drift.
+     No explicit keyframe pauses — those were causing the robotic lurch. */
   @keyframes gallery-pan {
-    0%, 8%   { transform: translateY(0); }
-    45%, 55% { transform: translateY(-37.5%); }
-    92%, 100%{ transform: translateY(0); }
+    from { transform: translateY(0%); }
+    to   { transform: translateY(-30%); }
   }
 
   .gallery-img {
@@ -819,12 +819,13 @@ const genderGuide = isFeminine
     display: block;
   }
 
-  /* Stagger each card so they're at different phases — feels organic, not synced */
-  .gallery-primary     .gallery-img { animation: gallery-pan 20s ease-in-out infinite; }
-  .gallery-secondary-1 .gallery-img { animation: gallery-pan 20s ease-in-out infinite -7s; }
-  .gallery-secondary-2 .gallery-img { animation: gallery-pan 20s ease-in-out infinite -14s; }
+  /* Each card gets its own duration so they drift at different speeds —
+     that slight desync is what makes it feel hand-held, not mechanical. */
+  .gallery-primary     .gallery-img { animation: gallery-pan 34s ease-in-out infinite alternate; }
+  .gallery-secondary-1 .gallery-img { animation: gallery-pan 42s ease-in-out infinite alternate; animation-delay: -18s; }
+  .gallery-secondary-2 .gallery-img { animation: gallery-pan 28s ease-in-out infinite alternate; animation-delay: -8s; }
 
-  /* Pause pan on hover so the overlay text is easy to read */
+  /* Pause on hover — overlay text needs to be readable */
   .gallery-item:hover .gallery-img {
     animation-play-state: paused;
     scale: 1.03;
@@ -955,7 +956,7 @@ const genderGuide = isFeminine
     flex-direction: row;
     align-items: stretch;
     max-height: 88dvh;
-    max-width: min(92vw, 1100px);
+    max-width: 95vw;
     width: 100%;
     gap: 0;
   }
@@ -987,7 +988,7 @@ const genderGuide = isFeminine
   /* Right panel: info */
   .gallery-lightbox-info-panel {
     flex: 1 1 0;
-    min-width: 280px;
+    min-width: min(400px, 40vw);
     display: flex;
     flex-direction: column;
     justify-content: center;
