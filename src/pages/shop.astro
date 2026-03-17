@@ -3,25 +3,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { guides, BEACONS_SHOP } from '../data/guides';
 import { fetchLtkCollections } from '../data/ltk-api';
 
-const calendlyURL  = '/contact';
-const ltkProfileURL = 'https://www.shopltk.com/explore/Staplesandstatementsss';
+const ltkProfileURL  = 'https://www.shopltk.com/explore/Staplesandstatementsss';
 const beaconsShopURL = BEACONS_SHOP;
+const calendlyURL    = '/contact';
 
 // ── Fetch all LTK collections (cached: one API call for the whole build) ──────
 const allCollections = await fetchLtkCollections();
 
 // Canonical archetype order (matches content collection `order` field)
 const ARCHETYPE_ORDER: Record<string, number> = {
-  // Feminine
   'the-siren': 1, 'the-muse': 2, 'the-warrior': 3, 'the-enchantress': 4,
   'the-creator': 5, 'the-empress': 6, 'the-angelic-one': 7,
-  // Masculine
   'the-protector': 1, 'the-maverick': 2, 'the-architect': 3,
   'the-alchemist': 4, 'the-sovereign': 5,
 };
 
-// Sort key: [group, canonical-position, -product_count]
-// Group 0 = single archetype  |  1 = curvy variant  |  2 = blend  |  3 = other
 function sortKey(c: import('../data/ltk-api').LtkCollection): [number, number, number] {
   const primaryOrder = c.archetypes.length > 0 ? (ARCHETYPE_ORDER[c.archetypes[0]] ?? 99) : 99;
   if (!c.isBlend && !c.isCurvy && c.archetypes.length === 1) return [0, primaryOrder, -c.product_count];
@@ -44,274 +40,310 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 ---
 
 <BaseLayout
-  title="Shop Style Guides & LTK Picks — Staples & Statements"
-  description="Shop Danielle Marie's curated style guides and LTK product collections, organized by archetype. Instant digital downloads and hand-picked fashion finds."
+  title="Shop Style Guides & Curated Picks — Staples & Statements"
+  description="Shop Danielle Marie's digital style guides and curated product collections, organized by archetype. Instant downloads and hand-picked fashion finds."
 >
 
-  <!-- ── PAGE HEADER ────────────────────────────────────── -->
-  <section class="pt-16 pb-14 px-6 bg-primary" aria-label="Shop header">
-    <div class="mx-auto max-w-7xl">
-      <p class="font-body text-xs tracking-widest uppercase text-accent mb-4">Curated for You</p>
-      <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold max-w-2xl leading-tight">
-        Shop My Picks
-      </h1>
-      <p class="mt-5 font-body text-white/60 text-lg max-w-xl leading-relaxed">
-        Digital style guides you can reference forever, and a curated LTK product library organized by archetype. Everything here is Danielle-approved.
-      </p>
+  <!-- ── PAGE HEADER ─────────────────────────────────────────────────────── -->
+  <section class="shop-header px-6 pt-16 pb-0 bg-primary" aria-label="Shop header">
+    <div class="mx-auto max-w-7xl shop-header-inner">
+
+      <!-- Left: headline + tagline -->
+      <div class="shop-header-text">
+        <p
+          class="font-body text-xs tracking-widest uppercase text-accent mb-4 shop-eyebrow"
+          data-guides="Digital Downloads · Curated Guides"
+          data-picks="LTK Collections · By Archetype"
+        >Digital Downloads · Curated Guides</p>
+        <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold leading-tight">
+          Shop My Picks
+        </h1>
+        <p class="mt-5 font-body text-white/60 text-lg max-w-xl leading-relaxed">
+          Digital style guides you can reference forever, and hand-picked product
+          collections organized by archetype. Everything Danielle-approved.
+        </p>
+      </div>
+
+      <!-- Right: mode toggle strip -->
+      <div
+        class="shop-mode-strip"
+        role="group"
+        aria-label="Select shop section"
+      >
+        <button
+          class="shop-mode-btn"
+          data-mode="guides"
+          aria-pressed="true"
+          type="button"
+        >Style Guides</button>
+        <button
+          class="shop-mode-btn"
+          data-mode="picks"
+          aria-pressed="false"
+          type="button"
+        >Curated Picks</button>
+      </div>
+
+    </div>
+
+    <!-- Subtle separator before content shell -->
+    <div class="mx-auto max-w-7xl mt-14">
+      <div class="w-full h-px bg-white/8"></div>
     </div>
   </section>
 
-  <!-- ── STYLE GUIDES ──────────────────────────────────── -->
-  <section class="py-20 px-6 bg-background" aria-label="Style guides" id="style-guides" data-compact-super="Digital Downloads" data-compact-title="Style Guides" data-compact-tagline="Instant download. Read on any device. Reference for life." data-compact-theme="light">
+  <!-- ── CONTENT SHELL ───────────────────────────────────────────────────── -->
+  <div class="shop-shell bg-primary px-6 pt-14 pb-24" id="shop-shell">
     <div class="mx-auto max-w-7xl">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
-        <div>
-          <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">Digital Downloads</p>
-          <h2 class="font-heading text-primary text-4xl">Style Guides</h2>
-          <p class="mt-2 font-body text-text-muted text-base max-w-lg leading-relaxed">
-            Instant download. Read on any device. Reference for life. Each guide is a concentrated dose of Danielle's expertise for a specific style challenge.
-          </p>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {guides.map((guide) => (
-          <div class="bg-surface flex flex-col group img-frame-card">
-            <!-- Guide cover -->
-            <div class="relative aspect-[3/4] bg-surface-dark overflow-hidden">
-              <img
-                src={`/images/guides/${guide.slug}-cover.webp`}
-                alt={`${guide.title} — digital style guide by Danielle Marie`}
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-                width="300"
-                height="400"
-                onerror="this.style.display='none'"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent flex items-end p-5">
-                <span class="font-heading text-white text-2xl font-semibold leading-tight">{guide.title}</span>
+      <!-- ╔══════════════════════════════════════════════════════╗ -->
+      <!-- ║  PANEL A — Style Guides                             ║ -->
+      <!-- ╚══════════════════════════════════════════════════════╝ -->
+      <div id="shop-panel-guides" class="shop-panel" data-panel="guides">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {guides.map((guide) => (
+            <div class="guide-card bg-surface flex flex-col group">
+
+              <!-- Cover image -->
+              <div class="relative aspect-[3/4] bg-surface-dark overflow-hidden">
+                <img
+                  src={`/images/guides/${guide.slug}-cover.webp`}
+                  alt={`${guide.title} — digital style guide by Danielle Marie`}
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  width="300"
+                  height="400"
+                  onerror="this.style.display='none'"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent flex items-end p-5">
+                  <span class="font-heading text-white text-2xl font-semibold leading-tight">{guide.title}</span>
+                </div>
+                <div class="absolute top-4 left-4 flex flex-wrap gap-1.5">
+                  {guide.tags.map((tag) => (
+                    <span class="font-body text-xs tracking-widest uppercase bg-accent/90 text-white px-2 py-0.5">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div class="absolute top-4 left-4 flex flex-wrap gap-1.5">
-                {guide.tags.map((tag) => (
-                  <span class="font-body text-xs tracking-widest uppercase bg-accent/90 text-white px-2 py-0.5">
-                    {tag}
-                  </span>
+
+              <!-- Card body -->
+              <div class="p-6 flex flex-col flex-1">
+                <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-2">
+                  {guide.price} · Digital PDF
+                </p>
+                <p class="font-body text-sm text-text-muted leading-relaxed flex-1 mb-5">
+                  {guide.description}
+                </p>
+                <a
+                  href={guide.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="block w-full text-center px-6 py-3 bg-primary text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+                >
+                  Get This Guide
+                </a>
+              </div>
+
+            </div>
+          ))}
+        </div>
+
+        <!-- Footer: Beacons shop link -->
+        <div class="mt-12 flex justify-end">
+          <a
+            href={beaconsShopURL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-body text-sm tracking-widest uppercase text-accent hover:text-accent-light transition-colors border-b border-accent pb-0.5"
+          >Browse All Guides →</a>
+        </div>
+
+      </div>
+      <!-- /panel-guides -->
+
+      <!-- ╔══════════════════════════════════════════════════════╗ -->
+      <!-- ║  PANEL B — Curated Picks (LTK)                      ║ -->
+      <!-- ╚══════════════════════════════════════════════════════╝ -->
+      <div id="shop-panel-picks" class="shop-panel" data-panel="picks" hidden>
+
+        <!-- Sub-strip: eyebrow left, gender toggle right -->
+        <div class="picks-sub-header mb-10">
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <p class="font-body text-xs tracking-widest uppercase text-white/40">
+              Hand-picked by archetype · Shoppable on LTK
+            </p>
+            <div
+              class="picks-gender-strip"
+              role="group"
+              aria-label="Select archetype gender"
+              id="ltk-gender-toggle"
+            >
+              <button
+                id="ltk-toggle-feminine"
+                type="button"
+                aria-pressed="true"
+                class="ltk-gender-btn font-body text-xs tracking-widest uppercase px-5 py-2.5 transition-all duration-300"
+              >Feminine</button>
+              <button
+                id="ltk-toggle-masculine"
+                type="button"
+                aria-pressed="false"
+                class="ltk-gender-btn font-body text-xs tracking-widest uppercase px-5 py-2.5 transition-all duration-300"
+              >Masculine</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Archetype grid panels -->
+        <div id="ltk-grid-wrapper">
+
+          <!-- FEMININE -->
+          <div id="ltk-grid-feminine" class="ltk-grid-panel" aria-label="Feminine LTK collections">
+            {femCollections.length > 0 ? (
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                {femCollections.map((c) => (
+                  <a
+                    href={c.collection_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="ltk-card group"
+                    aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
+                  >
+                    <div class="ltk-card-img-frame">
+                      {c.cover && (
+                        <img
+                          src={c.cover}
+                          alt={c.title}
+                          class="ltk-card-img"
+                          loading="lazy"
+                          onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
+                        />
+                      )}
+                      <div class="ltk-card-gradient"></div>
+                      <div class="ltk-card-hover-layer" aria-hidden="true">
+                        <span class="ltk-card-cta">Shop This Collection →</span>
+                      </div>
+                      <div class="ltk-card-name-overlay">
+                        {c.isBlend && <span class="ltk-badge ltk-badge-blend">Blend</span>}
+                        {c.isCurvy && !c.isBlend && <span class="ltk-badge ltk-badge-curvy">Curvy</span>}
+                        <h3 class="ltk-card-name">{c.title}</h3>
+                        <span class="ltk-card-count">{c.product_count} items</span>
+                      </div>
+                    </div>
+                  </a>
                 ))}
               </div>
+            ) : (
+              <p class="font-body text-white/35 text-sm py-8 text-center">
+                Feminine archetype collections coming soon.
+              </p>
+            )}
+          </div>
+
+          <!-- MASCULINE -->
+          <div id="ltk-grid-masculine" class="ltk-grid-panel" aria-label="Masculine LTK collections" hidden>
+            {mascCollections.length > 0 ? (
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                {mascCollections.map((c) => (
+                  <a
+                    href={c.collection_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="ltk-card group"
+                    aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
+                  >
+                    <div class="ltk-card-img-frame">
+                      {c.cover && (
+                        <img
+                          src={c.cover}
+                          alt={c.title}
+                          class="ltk-card-img"
+                          loading="lazy"
+                          onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
+                        />
+                      )}
+                      <div class="ltk-card-gradient"></div>
+                      <div class="ltk-card-hover-layer" aria-hidden="true">
+                        <span class="ltk-card-cta">Shop This Collection →</span>
+                      </div>
+                      <div class="ltk-card-name-overlay">
+                        <h3 class="ltk-card-name">{c.title}</h3>
+                        <span class="ltk-card-count">{c.product_count} items</span>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p class="font-body text-white/35 text-sm py-8 text-center">
+                Men's archetype collections coming soon.
+              </p>
+            )}
+          </div>
+
+        </div><!-- /ltk-grid-wrapper -->
+
+        <!-- More from Danielle (lifestyle / occasion picks) -->
+        {pickCollections.length > 0 && (
+          <div class="mt-16">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-8 h-px bg-white/20"></div>
+              <p class="font-body text-xs tracking-widest uppercase text-white/40">More from Danielle</p>
             </div>
-            <div class="p-6 flex flex-col flex-1">
-              <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-2">{guide.price} · Digital PDF</p>
-              <p class="font-body text-sm text-text-muted leading-relaxed flex-1 mb-5">{guide.description}</p>
-              <a
-                href={guide.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="block w-full text-center px-6 py-3 bg-primary text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
-              >
-                Get This Guide
-              </a>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {pickCollections.map((c) => (
+                <a
+                  href={c.collection_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ltk-card ltk-card-picks group"
+                  aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
+                >
+                  <div class="ltk-card-img-frame">
+                    {c.cover && (
+                      <img
+                        src={c.cover}
+                        alt={c.title}
+                        class="ltk-card-img"
+                        loading="lazy"
+                        onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
+                      />
+                    )}
+                    <div class="ltk-card-gradient"></div>
+                    <div class="ltk-card-hover-layer" aria-hidden="true">
+                      <span class="ltk-card-cta">Shop This →</span>
+                    </div>
+                    <div class="ltk-card-name-overlay">
+                      <h3 class="ltk-card-name">{c.title}</h3>
+                      <span class="ltk-card-count">{c.product_count} items</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
+        )}
 
-  <!-- ── LTK COLLECTIONS ───────────────────────────────── -->
-  <section
-    class="py-20 px-6 bg-primary"
-    aria-label="LTK curated picks"
-    id="ltk-picks"
-    data-compact-super="LTK Collections"
-    data-compact-title="Shop My Curated Picks"
-    data-compact-tagline="Hand-selected looks, organized by archetype."
-    data-compact-theme="dark"
-  >
-    <div class="mx-auto max-w-7xl">
-
-      <!-- Section header + toggle row -->
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-6">
-        <div>
-          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">LTK Collections</p>
-          <h2 class="font-heading text-white text-4xl">Shop My Curated Picks</h2>
-          <p class="mt-2 font-body text-white/60 text-base max-w-lg leading-relaxed">
-            Hand-selected looks, organized by archetype. Every piece Danielle-approved and shoppable directly on LTK.
-          </p>
-        </div>
-        <div class="flex items-center gap-4 shrink-0">
-          <!-- Gender toggle -->
-          <div class="inline-flex" role="group" aria-label="Select archetype gender" id="ltk-gender-toggle">
-            <button
-              id="ltk-toggle-feminine"
-              type="button"
-              aria-pressed="true"
-              class="ltk-gender-btn font-body text-xs tracking-widest uppercase px-6 py-2.5
-                     transition-all duration-300 text-white bg-white/15 backdrop-blur-sm border border-white/25"
-            >Feminine</button>
-            <button
-              id="ltk-toggle-masculine"
-              type="button"
-              aria-pressed="false"
-              class="ltk-gender-btn font-body text-xs tracking-widest uppercase px-6 py-2.5
-                     transition-all duration-300 text-white/40 bg-transparent border border-white/15
-                     hover:text-white/70"
-            >Masculine</button>
-          </div>
+        <!-- Full LTK profile -->
+        <div class="mt-10 flex justify-end">
           <a
             href={ltkProfileURL}
             target="_blank"
             rel="noopener noreferrer"
-            class="hidden md:block font-body text-sm tracking-widest uppercase text-accent
-                   hover:text-accent-light transition-colors border-b border-accent pb-0.5 shrink-0"
-          >Full Profile →</a>
+            class="font-body text-sm tracking-widest uppercase text-accent hover:text-accent-light transition-colors border-b border-accent pb-0.5"
+          >View Full LTK Profile →</a>
         </div>
+
       </div>
-
-      <!-- ── Archetype collection grids ── -->
-      <div id="ltk-grid-wrapper">
-
-        <!-- FEMININE PANEL -->
-        <div id="ltk-grid-feminine" class="ltk-grid-panel" aria-label="Feminine LTK collections">
-          {femCollections.length > 0 ? (
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {femCollections.map((c) => (
-                <a
-                  href={c.collection_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="ltk-card group"
-                  aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
-                >
-                  <div class="ltk-card-img-frame">
-                    {c.cover && (
-                      <img
-                        src={c.cover}
-                        alt={c.title}
-                        class="ltk-card-img"
-                        loading="lazy"
-                        onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
-                      />
-                    )}
-                    <div class="ltk-card-gradient"></div>
-                    <div class="ltk-card-hover-layer" aria-hidden="true">
-                      <span class="ltk-card-cta">Shop This Collection →</span>
-                    </div>
-                    <div class="ltk-card-name-overlay">
-                      {c.isBlend && <span class="ltk-badge ltk-badge-blend">Blend</span>}
-                      {c.isCurvy && !c.isBlend && <span class="ltk-badge ltk-badge-curvy">Curvy</span>}
-                      <h3 class="ltk-card-name">{c.title}</h3>
-                      <span class="ltk-card-count">{c.product_count} items</span>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          ) : (
-            <p class="font-body text-white/35 text-sm py-8 text-center">
-              Feminine archetype collections coming soon.
-            </p>
-          )}
-        </div>
-
-        <!-- MASCULINE PANEL -->
-        <div id="ltk-grid-masculine" class="ltk-grid-panel" aria-label="Masculine LTK collections" hidden>
-          {mascCollections.length > 0 ? (
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {mascCollections.map((c) => (
-                <a
-                  href={c.collection_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="ltk-card group"
-                  aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
-                >
-                  <div class="ltk-card-img-frame">
-                    {c.cover && (
-                      <img
-                        src={c.cover}
-                        alt={c.title}
-                        class="ltk-card-img"
-                        loading="lazy"
-                        onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
-                      />
-                    )}
-                    <div class="ltk-card-gradient"></div>
-                    <div class="ltk-card-hover-layer" aria-hidden="true">
-                      <span class="ltk-card-cta">Shop This Collection →</span>
-                    </div>
-                    <div class="ltk-card-name-overlay">
-                      <h3 class="ltk-card-name">{c.title}</h3>
-                      <span class="ltk-card-count">{c.product_count} items</span>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          ) : (
-            <p class="font-body text-white/35 text-sm py-8 text-center">
-              Men's archetype collections coming soon.
-            </p>
-          )}
-        </div>
-
-      </div><!-- /ltk-grid-wrapper -->
-
-      <!-- ── Curated Picks (lifestyle / occasion / non-archetype) ── -->
-      {pickCollections.length > 0 && (
-        <div class="mt-16">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-8 h-px bg-white/20"></div>
-            <p class="font-body text-xs tracking-widest uppercase text-white/40">More from Danielle</p>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-            {pickCollections.map((c) => (
-              <a
-                href={c.collection_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="ltk-card ltk-card-picks group"
-                aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
-              >
-                <div class="ltk-card-img-frame">
-                  {c.cover && (
-                    <img
-                      src={c.cover}
-                      alt={c.title}
-                      class="ltk-card-img"
-                      loading="lazy"
-                      onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
-                    />
-                  )}
-                  <div class="ltk-card-gradient"></div>
-                  <div class="ltk-card-hover-layer" aria-hidden="true">
-                    <span class="ltk-card-cta">Shop This →</span>
-                  </div>
-                  <div class="ltk-card-name-overlay">
-                    <h3 class="ltk-card-name">{c.title}</h3>
-                    <span class="ltk-card-count">{c.product_count} items</span>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <!-- Full profile link — mobile -->
-      <div class="mt-8 flex md:hidden justify-center">
-        <a
-          href={ltkProfileURL}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-body text-sm tracking-widest uppercase text-accent
-                 hover:text-accent-light transition-colors border-b border-accent pb-0.5"
-        >View Full LTK Profile →</a>
-      </div>
+      <!-- /panel-picks -->
 
     </div>
-  </section>
+  </div>
+  <!-- /shop-shell -->
 
-  <!-- ── PERSONALIZED CTA ──────────────────────────────── -->
+  <!-- ── PERSONALIZED CTA ────────────────────────────────────────────────── -->
   <section class="py-20 lg:py-28 px-6 bg-surface" aria-label="Personalized styling">
     <div class="mx-auto max-w-3xl text-center">
       <div class="w-8 h-px bg-accent mx-auto mb-8"></div>
@@ -319,7 +351,8 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
         Want a wardrobe curated just for you?
       </h2>
       <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
-        Style guides and LTK collections are a great starting point — but nothing compares to a wardrobe built specifically around your body, your colors, your life, and your archetype.
+        Style guides and curated picks are a great starting point — but nothing compares
+        to a wardrobe built specifically around your body, your colors, your life, and your archetype.
       </p>
       <a
         href={calendlyURL}
@@ -333,26 +366,119 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 </BaseLayout>
 
 <style>
-  /* ── LTK card ──────────────────────────────────────────────────────────── */
+  /* ── Header layout ────────────────────────────────────────────────────── */
+  .shop-header-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  @media (min-width: 768px) {
+    .shop-header-inner {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+  }
+
+  /* ── Mode toggle strip ────────────────────────────────────────────────── */
+  .shop-mode-strip {
+    display: inline-flex;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 3px;
+    gap: 0;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    align-self: flex-end;
+  }
+  .shop-mode-btn {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.65rem 1.6rem;
+    border: 1px solid transparent;
+    background: transparent;
+    color: rgba(255,255,255,0.35);
+    cursor: pointer;
+    transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    white-space: nowrap;
+  }
+  .shop-mode-btn[aria-pressed="true"] {
+    color: #fff;
+    background: rgba(255,255,255,0.11);
+    border-color: rgba(255,255,255,0.18);
+  }
+  .shop-mode-btn[aria-pressed="false"]:hover {
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* ── Content shell ────────────────────────────────────────────────────── */
+  .shop-shell {
+    min-height: 55vh;
+  }
+
+  /* ── Panels: slide-fade transitions ──────────────────────────────────── */
+  .shop-panel {
+    /* Inline style overrides handle the active transitions via JS */
+  }
+  .shop-panel[hidden] {
+    display: none;
+  }
+
+  /* ── Picks sub-header gender strip ───────────────────────────────────── */
+  .picks-gender-strip {
+    display: inline-flex;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .ltk-gender-btn {
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+  }
+  .ltk-gender-btn[aria-pressed="true"] {
+    color: #fff;
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.2);
+  }
+  .ltk-gender-btn[aria-pressed="false"] {
+    color: rgba(255,255,255,0.38);
+  }
+  .ltk-gender-btn[aria-pressed="false"]:hover {
+    color: rgba(255,255,255,0.68);
+  }
+
+  /* ── Guide cards ──────────────────────────────────────────────────────── */
+  .guide-card {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .guide-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  }
+
+  /* ── LTK card ─────────────────────────────────────────────────────────── */
   .ltk-card {
     display: flex;
     flex-direction: column;
     text-decoration: none;
     gap: 0.6rem;
   }
-
   .ltk-card-img-frame {
     position: relative;
     aspect-ratio: 3 / 4;
     overflow: hidden;
     background-color: var(--color-surface-dark, #1a1a1a);
   }
-
-  /* Gradient fallback when image is missing */
   .ltk-card-img-frame.ltk-img-missing {
     background: linear-gradient(160deg, #1e1a2e 0%, #0e0c1a 100%);
   }
-
   .ltk-card-img {
     position: absolute;
     inset: 0;
@@ -367,21 +493,17 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
   .ltk-card:hover .ltk-card-img {
     transform: scale(1.07);
   }
-
-  /* Always-on bottom gradient so name is readable */
   .ltk-card-gradient {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       to top,
       rgba(0,0,0,0.82) 0%,
-      rgba(0,0,0,0.3) 40%,
-      transparent 70%
+      rgba(0,0,0,0.28) 42%,
+      transparent 68%
     );
     pointer-events: none;
   }
-
-  /* Hover overlay (dark scrim + CTA anchored top-right) */
   .ltk-card-hover-layer {
     position: absolute;
     inset: 0;
@@ -397,7 +519,6 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
   .ltk-card:hover .ltk-card-hover-layer {
     opacity: 1;
   }
-
   .ltk-card-cta {
     font-family: var(--font-body);
     font-size: 0.6rem;
@@ -411,8 +532,6 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
   .ltk-card:hover .ltk-card-cta {
     transform: translateY(0);
   }
-
-  /* Archetype name overlaid on image bottom */
   .ltk-card-name-overlay {
     position: absolute;
     bottom: 0;
@@ -425,7 +544,6 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
     gap: 0.25rem;
     pointer-events: none;
   }
-
   .ltk-card-name {
     font-family: var(--font-heading);
     font-size: clamp(0.9rem, 1.5vw, 1.1rem);
@@ -438,8 +556,6 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
   .ltk-card:hover .ltk-card-name {
     color: var(--color-accent);
   }
-
-  /* Overlay badges: Blend / Curvy */
   .ltk-badge {
     font-family: var(--font-body);
     font-size: 0.58rem;
@@ -450,14 +566,12 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
   }
   .ltk-badge-blend {
     color: var(--color-accent);
-    border: 1px solid rgba(184,151,126, 0.5);
+    border: 1px solid rgba(184,151,126,0.5);
   }
   .ltk-badge-curvy {
     color: rgba(255,255,255,0.7);
     border: 1px solid rgba(255,255,255,0.25);
   }
-
-  /* Product count in card overlay */
   .ltk-card-count {
     font-family: var(--font-body);
     font-size: 0.6rem;
@@ -465,23 +579,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
     color: rgba(255,255,255,0.45);
   }
 
-  /* ── Gender toggle buttons ─────────────────────────────────────────────── */
-  .ltk-gender-btn[aria-pressed="true"] {
-    color: #fff;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(8px);
-    border-color: rgba(255,255,255,0.25);
-  }
-  .ltk-gender-btn[aria-pressed="false"] {
-    color: rgba(255,255,255,0.4);
-    background: transparent;
-    border-color: rgba(255,255,255,0.12);
-  }
-  .ltk-gender-btn[aria-pressed="false"]:hover {
-    color: rgba(255,255,255,0.7);
-  }
-
-  /* ── Grid panel transitions ────────────────────────────────────────────── */
+  /* ── Grid panel crossfade ─────────────────────────────────────────────── */
   .ltk-grid-panel {
     transition: opacity 0.4s ease;
   }
@@ -492,47 +590,119 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    const btnFem  = document.getElementById('ltk-toggle-feminine')  as HTMLButtonElement | null;
-    const btnMasc = document.getElementById('ltk-toggle-masculine') as HTMLButtonElement | null;
-    const gridFem  = document.getElementById('ltk-grid-feminine');
-    const gridMasc = document.getElementById('ltk-grid-masculine');
+    const modeButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('.shop-mode-btn')
+    );
+    const panelGuides = document.getElementById('shop-panel-guides');
+    const panelPicks  = document.getElementById('shop-panel-picks');
+    const eyebrow     = document.querySelector<HTMLElement>('.shop-eyebrow');
+    const btnFem      = document.getElementById('ltk-toggle-feminine')  as HTMLButtonElement | null;
+    const btnMasc     = document.getElementById('ltk-toggle-masculine') as HTMLButtonElement | null;
+    const gridFem     = document.getElementById('ltk-grid-feminine');
+    const gridMasc    = document.getElementById('ltk-grid-masculine');
 
-    if (!btnFem || !btnMasc || !gridFem || !gridMasc) return;
+    if (!panelGuides || !panelPicks) return;
 
-    function switchGender(gender: 'feminine' | 'masculine') {
-      const isFem = gender === 'feminine';
+    // ── Mode switching ──────────────────────────────────────────────────
+    function switchMode(mode: 'guides' | 'picks', animate = true) {
+      const outPanel = mode === 'guides' ? panelPicks  : panelGuides;
+      const inPanel  = mode === 'guides' ? panelGuides : panelPicks;
 
-      btnFem!.setAttribute('aria-pressed',  String(isFem));
-      btnMasc!.setAttribute('aria-pressed', String(!isFem));
+      // Update chip pressed state
+      modeButtons.forEach(btn => {
+        btn.setAttribute('aria-pressed', String(btn.dataset.mode === mode));
+      });
 
-      // Crossfade: fade out current, swap visibility, fade in new
-      const outPanel = isFem ? gridMasc! : gridFem!;
-      const inPanel  = isFem ? gridFem!  : gridMasc!;
+      // Update eyebrow text (Design A touch)
+      if (eyebrow) {
+        eyebrow.textContent = eyebrow.dataset[mode] ?? eyebrow.textContent;
+      }
 
-      outPanel.style.opacity = '0';
+      if (!animate) {
+        outPanel!.hidden = true;
+        inPanel!.hidden  = false;
+        return;
+      }
+
+      // Slide-down + fade out
+      outPanel!.style.opacity   = '0';
+      outPanel!.style.transform = 'translateY(10px)';
+
       setTimeout(() => {
-        outPanel.hidden = true;
-        outPanel.style.opacity = '';
-        inPanel.hidden = false;
-        inPanel.style.opacity = '0';
+        outPanel!.hidden = true;
+        outPanel!.style.opacity   = '';
+        outPanel!.style.transform = '';
+
+        inPanel!.hidden = false;
+        inPanel!.style.opacity    = '0';
+        inPanel!.style.transform  = 'translateY(-8px)';
         // Force reflow
-        inPanel.offsetHeight;
-        inPanel.style.opacity = '1';
-        setTimeout(() => { inPanel.style.opacity = ''; }, 400);
-      }, 350);
+        void inPanel!.offsetHeight;
+        inPanel!.style.transition = 'opacity 0.38s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+        inPanel!.style.opacity    = '1';
+        inPanel!.style.transform  = 'translateY(0)';
+
+        setTimeout(() => {
+          inPanel!.style.transition = '';
+          inPanel!.style.opacity    = '';
+          inPanel!.style.transform  = '';
+        }, 460);
+      }, 260);
+
+      try { localStorage.setItem('shop-mode', mode); } catch {}
+    }
+
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchMode(btn.dataset.mode as 'guides' | 'picks');
+      });
+    });
+
+    // ── Gender switching (inside picks panel) ───────────────────────────
+    function switchGender(gender: 'feminine' | 'masculine') {
+      if (!btnFem || !btnMasc || !gridFem || !gridMasc) return;
+      const isFem = gender === 'feminine';
+      btnFem.setAttribute('aria-pressed',  String(isFem));
+      btnMasc.setAttribute('aria-pressed', String(!isFem));
+
+      const outGrid = isFem ? gridMasc : gridFem;
+      const inGrid  = isFem ? gridFem  : gridMasc;
+
+      outGrid.style.opacity = '0';
+      setTimeout(() => {
+        outGrid.hidden = true;
+        outGrid.style.opacity = '';
+        inGrid.hidden = false;
+        inGrid.style.opacity = '0';
+        void inGrid.offsetHeight;
+        inGrid.style.opacity = '1';
+        setTimeout(() => { inGrid.style.opacity = ''; }, 400);
+      }, 300);
 
       try { localStorage.setItem('ltk-gender', gender); } catch {}
     }
 
-    // Restore preference
-    let saved: 'feminine' | 'masculine' = 'feminine';
+    btnFem?.addEventListener('click',  () => switchGender('feminine'));
+    btnMasc?.addEventListener('click', () => switchGender('masculine'));
+
+    // ── Restore preferences on load ─────────────────────────────────────
+    // Mode: hash takes priority, then localStorage, then default (guides)
+    let savedMode: 'guides' | 'picks' = 'guides';
+    try {
+      const v = localStorage.getItem('shop-mode');
+      if (v === 'picks') savedMode = 'picks';
+    } catch {}
+    const hash = location.hash;
+    if (hash === '#curated-picks' || hash === '#ltk-picks') savedMode = 'picks';
+    if (hash === '#style-guides')                           savedMode = 'guides';
+    switchMode(savedMode, false);
+
+    // Gender
+    let savedGender: 'feminine' | 'masculine' = 'feminine';
     try {
       const v = localStorage.getItem('ltk-gender');
-      if (v === 'masculine') saved = 'masculine';
+      if (v === 'masculine') savedGender = 'masculine';
     } catch {}
-    if (saved === 'masculine') switchGender('masculine');
-
-    btnFem.addEventListener('click',  () => switchGender('feminine'));
-    btnMasc.addEventListener('click', () => switchGender('masculine'));
+    if (savedGender === 'masculine') switchGender('masculine');
   });
 </script>
