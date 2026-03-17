@@ -381,15 +381,15 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
     pointer-events: none;
   }
 
-  /* Hover overlay (dark scrim + CTA) */
+  /* Hover overlay (dark scrim + CTA anchored top-right) */
   .ltk-card-hover-layer {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0,0,0,0.38);
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 4rem;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 0.75rem 0.75rem 0 0;
     opacity: 0;
     transition: opacity 0.35s ease;
     pointer-events: none;
@@ -400,14 +400,16 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 
   .ltk-card-cta {
     font-family: var(--font-body);
-    font-size: 0.65rem;
-    letter-spacing: 0.16em;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-accent);
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 2px;
-    transform: translateY(6px);
+    background: rgba(0,0,0,0.55);
+    padding: 0.3rem 0.55rem;
+    border: 1px solid rgba(184,151,126,0.4);
+    transform: translateY(-4px);
     transition: transform 0.35s ease;
+    white-space: nowrap;
   }
   .ltk-card:hover .ltk-card-cta {
     transform: translateY(0);
