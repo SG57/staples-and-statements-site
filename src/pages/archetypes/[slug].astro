@@ -367,7 +367,7 @@ const genderGuide = isFeminine
                       <p class="font-body text-[10px] tracking-widest uppercase text-accent mb-1">
                         Style Guide
                       </p>
-                      <h3 class="font-heading text-white text-sm font-semibold leading-snug mb-2">
+                      <h3 class="font-heading text-white text-base md:text-lg font-semibold leading-snug mb-2">
                         {genderGuide.title}
                       </h3>
                       <a
@@ -802,21 +802,32 @@ const genderGuide = isFeminine
     }
   }
 
+  /* Auto-pan keyframe: image drifts top → bottom → top */
+  @keyframes gallery-pan {
+    0%, 8%   { transform: translateY(0); }
+    45%, 55% { transform: translateY(-37.5%); }
+    92%, 100%{ transform: translateY(0); }
+  }
+
   .gallery-img {
     width: 100%;
-    height: 112%;
+    height: 160%;         /* extra headroom for pan travel */
     object-fit: cover;
     object-position: top center;
-    transform: translateY(0);
-    transition:
-      transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
-      scale 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: scale 700ms cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
     display: block;
   }
 
+  /* Stagger each card so they're at different phases — feels organic, not synced */
+  .gallery-primary     .gallery-img { animation: gallery-pan 20s ease-in-out infinite; }
+  .gallery-secondary-1 .gallery-img { animation: gallery-pan 20s ease-in-out infinite -7s; }
+  .gallery-secondary-2 .gallery-img { animation: gallery-pan 20s ease-in-out infinite -14s; }
+
+  /* Pause pan on hover so the overlay text is easy to read */
   .gallery-item:hover .gallery-img {
-    scale: 1.035;
+    animation-play-state: paused;
+    scale: 1.03;
   }
 
   /* Hover info overlay */
@@ -1043,15 +1054,18 @@ const genderGuide = isFeminine
     gap: 0.75rem;
   }
 
-  .gallery-lightbox-bullets li {
+  /* :global needed — these <li> elements are injected by JS and don't
+     receive Astro's scoped data attribute, so the normal scoped selector
+     .gallery-lightbox-bullets li[data-astro-cid-xxx] never matches them. */
+  :global(.gallery-lightbox-bullets li) {
     font-family: var(--font-body);
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.82);
     font-size: clamp(0.9rem, 1.2vw, 1.05rem);
     line-height: 1.6;
     letter-spacing: 0.02em;
   }
 
-  .gallery-lightbox-bullets li::before {
+  :global(.gallery-lightbox-bullets li::before) {
     content: '— ';
     color: var(--color-accent);
   }
@@ -1199,6 +1213,12 @@ const genderGuide = isFeminine
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .gallery-primary .gallery-img,
+    .gallery-secondary-1 .gallery-img,
+    .gallery-secondary-2 .gallery-img {
+      animation: none !important;
+    }
+
     .style-icon-group > div:first-child,
     .style-icon-label,
     .gallery-img,
@@ -1240,7 +1260,9 @@ const genderGuide = isFeminine
       if (rect.bottom < 0 || rect.top > viewH) return;
       const center = rect.top + rect.height / 2 - viewH / 2;
       const offset = (center * strength).toFixed(1);
-      img.style.transform = `translateY(${offset}px)`;
+      // Use individual `translate` CSS property so it composes with the
+      // animation's `transform` rather than overriding it.
+      img.style.translate = `0 ${offset}px`;
     });
     ticking = false;
   };
