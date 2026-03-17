@@ -1,81 +1,18 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { guides, BEACONS_SHOP } from '../data/guides';
-import { getCollection } from 'astro:content';
-import { getCardImages } from '../data/archetype-images';
+import { fetchLtkCollections } from '../data/ltk-api';
 
-const calendlyURL = '/contact';
+const calendlyURL  = '/contact';
 const ltkProfileURL = 'https://www.shopltk.com/explore/Staplesandstatementsss';
 const beaconsShopURL = BEACONS_SHOP;
 
-// ── LTK link registry ─────────────────────────────────────────────────────────
-// Keyed by archetype slug. Replace placeholder profile URLs with real productset
-// URLs as Danielle provides them. Variants = curvy / alternate collections.
-const LTK_LINKS: Record<string, { link: string; variants?: { label: string; link: string }[] }> = {
-  // ── Feminine ─────────────────────────────────────────────────────────────
-  'the-siren':       { link: ltkProfileURL },
-  'the-muse':        { link: ltkProfileURL },
-  'the-warrior':     { link: ltkProfileURL },
-  'the-enchantress': {
-    link: 'https://www.shopltk.com/explore/Staplesandstatementsss/productsets/11f0d0626517305f827e0242ac110024',
-    variants: [
-      { label: 'Curvy', link: 'https://www.shopltk.com/explore/Staplesandstatementsss/productsets/11f10167c4061e189b700242ac11001a' },
-    ],
-  },
-  'the-creator':     { link: ltkProfileURL },
-  'the-empress':     { link: ltkProfileURL },
-  'the-angelic-one': { link: ltkProfileURL },
-  // ── Masculine ─────────────────────────────────────────────────────────────
-  'the-protector':   { link: ltkProfileURL },
-  'the-maverick':    { link: ltkProfileURL },
-  'the-architect':   { link: ltkProfileURL },
-  'the-alchemist':   { link: ltkProfileURL },
-  'the-sovereign':   { link: ltkProfileURL },
-};
+// ── Fetch all LTK collections (cached: one API call for the whole build) ──────
+const allCollections = await fetchLtkCollections();
 
-// ── Build typed collection cards ──────────────────────────────────────────────
-type CollCard = {
-  name: string;
-  slug: string;
-  description: string;
-  link: string;
-  cover: string;            // archetype card image (user replaces with /images/ltk/ covers)
-  archetypeSlug: string;    // source slug for archetype detail page link
-  variant?: string;         // e.g. "Curvy"
-};
-
-const allArchetypes = await getCollection('archetypes');
-const femSorted = allArchetypes
-  .filter(a => a.data.gender === 'feminine')
-  .sort((a, b) => a.data.order - b.data.order);
-const mascSorted = allArchetypes
-  .filter(a => a.data.gender === 'masculine')
-  .sort((a, b) => a.data.order - b.data.order);
-
-function buildCards(archetypes: typeof femSorted): CollCard[] {
-  return archetypes.flatMap(a => {
-    const cover = getCardImages(a.data.slug)[0] ?? '';
-    const info  = LTK_LINKS[a.data.slug];
-    const base: CollCard = {
-      name: a.data.name,
-      slug: a.data.slug,
-      archetypeSlug: a.data.slug,
-      description: a.data.description,
-      link: info?.link ?? ltkProfileURL,
-      cover,
-    };
-    const variants: CollCard[] = (info?.variants ?? []).map(v => ({
-      ...base,
-      slug: `${a.data.slug}-${v.label.toLowerCase()}`,
-      link: v.link,
-      variant: v.label,
-    }));
-    return [base, ...variants];
-  });
-}
-
-const femCards  = buildCards(femSorted);
-const mascCards = buildCards(mascSorted);
+const femCollections  = allCollections.filter((c) => c.displayable && c.gender === 'feminine');
+const mascCollections = allCollections.filter((c) => c.displayable && c.gender === 'masculine');
+const pickCollections = allCollections.filter((c) => c.displayable && c.gender === 'other');
 ---
 
 <BaseLayout
@@ -170,26 +107,19 @@ const mascCards = buildCards(mascSorted);
           <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">LTK Collections</p>
           <h2 class="font-heading text-white text-4xl">Shop My Curated Picks</h2>
           <p class="mt-2 font-body text-white/60 text-base max-w-lg leading-relaxed">
-            Hand-selected looks, organized by archetype. Every piece Danielle-vetted and shoppable directly on LTK.
+            Hand-selected looks, organized by archetype. Every piece Danielle-approved and shoppable directly on LTK.
           </p>
         </div>
         <div class="flex items-center gap-4 shrink-0">
           <!-- Gender toggle -->
-          <div
-            class="inline-flex"
-            role="group"
-            aria-label="Select archetype gender"
-            id="ltk-gender-toggle"
-          >
+          <div class="inline-flex" role="group" aria-label="Select archetype gender" id="ltk-gender-toggle">
             <button
               id="ltk-toggle-feminine"
               type="button"
               aria-pressed="true"
               class="ltk-gender-btn font-body text-xs tracking-widest uppercase px-6 py-2.5
                      transition-all duration-300 text-white bg-white/15 backdrop-blur-sm border border-white/25"
-            >
-              Feminine
-            </button>
+            >Feminine</button>
             <button
               id="ltk-toggle-masculine"
               type="button"
@@ -197,103 +127,148 @@ const mascCards = buildCards(mascSorted);
               class="ltk-gender-btn font-body text-xs tracking-widest uppercase px-6 py-2.5
                      transition-all duration-300 text-white/40 bg-transparent border border-white/15
                      hover:text-white/70"
-            >
-              Masculine
-            </button>
+            >Masculine</button>
           </div>
-          <!-- Full profile link -->
           <a
             href={ltkProfileURL}
             target="_blank"
             rel="noopener noreferrer"
             class="hidden md:block font-body text-sm tracking-widest uppercase text-accent
                    hover:text-accent-light transition-colors border-b border-accent pb-0.5 shrink-0"
-          >
-            Full Profile →
-          </a>
+          >Full Profile →</a>
         </div>
       </div>
 
-      <!-- Collection grids — toggled by JS -->
+      <!-- ── Archetype collection grids ── -->
       <div id="ltk-grid-wrapper">
 
-        <!-- FEMININE GRID -->
+        <!-- FEMININE PANEL -->
         <div id="ltk-grid-feminine" class="ltk-grid-panel" aria-label="Feminine LTK collections">
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-            {femCards.map((card) => (
-              <a
-                href={card.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="ltk-card group"
-                aria-label={`Shop ${card.name}${card.variant ? ' ' + card.variant : ''} collection on LTK`}
-              >
-                <!-- Image frame -->
-                <div class="ltk-card-img-frame">
-                  <img
-                    src={card.cover}
-                    alt={`${card.name}${card.variant ? ' — ' + card.variant : ''}`}
-                    class="ltk-card-img"
-                    loading="lazy"
-                    onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
-                  />
-                  <!-- Always-on bottom gradient -->
-                  <div class="ltk-card-gradient"></div>
-                  <!-- Hover overlay -->
-                  <div class="ltk-card-hover-layer" aria-hidden="true">
-                    <span class="ltk-card-cta">Shop This Collection →</span>
-                  </div>
-                  <!-- Archetype name on image -->
-                  <div class="ltk-card-name-overlay">
-                    {card.variant && (
-                      <span class="ltk-variant-tag">{card.variant}</span>
+          {femCollections.length > 0 ? (
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {femCollections.map((c) => (
+                <a
+                  href={c.collection_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ltk-card group"
+                  aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
+                >
+                  <div class="ltk-card-img-frame">
+                    {c.cover && (
+                      <img
+                        src={c.cover}
+                        alt={c.title}
+                        class="ltk-card-img"
+                        loading="lazy"
+                        onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
+                      />
                     )}
-                    <h3 class="ltk-card-name">{card.name}</h3>
+                    <div class="ltk-card-gradient"></div>
+                    <div class="ltk-card-hover-layer" aria-hidden="true">
+                      <span class="ltk-card-cta">Shop This Collection →</span>
+                    </div>
+                    <div class="ltk-card-name-overlay">
+                      {c.isBlend && <span class="ltk-blend-tag">Archetype Blend</span>}
+                      <h3 class="ltk-card-name">{c.title}</h3>
+                      <span class="ltk-card-count">{c.product_count} items</span>
+                    </div>
                   </div>
-                </div>
-                <!-- Description below image -->
-                <p class="ltk-card-desc">{card.description}</p>
-              </a>
-            ))}
-          </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p class="font-body text-white/35 text-sm py-8 text-center">
+              Feminine archetype collections coming soon.
+            </p>
+          )}
         </div>
 
-        <!-- MASCULINE GRID -->
+        <!-- MASCULINE PANEL -->
         <div id="ltk-grid-masculine" class="ltk-grid-panel" aria-label="Masculine LTK collections" hidden>
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-            {mascCards.map((card) => (
-              <a
-                href={card.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="ltk-card group"
-                aria-label={`Shop ${card.name} collection on LTK`}
-              >
-                <div class="ltk-card-img-frame">
-                  <img
-                    src={card.cover}
-                    alt={card.name}
-                    class="ltk-card-img"
-                    loading="lazy"
-                    onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
-                  />
-                  <div class="ltk-card-gradient"></div>
-                  <div class="ltk-card-hover-layer" aria-hidden="true">
-                    <span class="ltk-card-cta">Shop This Collection →</span>
+          {mascCollections.length > 0 ? (
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {mascCollections.map((c) => (
+                <a
+                  href={c.collection_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ltk-card group"
+                  aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
+                >
+                  <div class="ltk-card-img-frame">
+                    {c.cover && (
+                      <img
+                        src={c.cover}
+                        alt={c.title}
+                        class="ltk-card-img"
+                        loading="lazy"
+                        onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
+                      />
+                    )}
+                    <div class="ltk-card-gradient"></div>
+                    <div class="ltk-card-hover-layer" aria-hidden="true">
+                      <span class="ltk-card-cta">Shop This Collection →</span>
+                    </div>
+                    <div class="ltk-card-name-overlay">
+                      <h3 class="ltk-card-name">{c.title}</h3>
+                      <span class="ltk-card-count">{c.product_count} items</span>
+                    </div>
                   </div>
-                  <div class="ltk-card-name-overlay">
-                    <h3 class="ltk-card-name">{card.name}</h3>
-                  </div>
-                </div>
-                <p class="ltk-card-desc">{card.description}</p>
-              </a>
-            ))}
-          </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p class="font-body text-white/35 text-sm py-8 text-center">
+              Men's archetype collections coming soon.
+            </p>
+          )}
         </div>
 
       </div><!-- /ltk-grid-wrapper -->
 
-      <!-- Full profile link — mobile only -->
+      <!-- ── Curated Picks (lifestyle / occasion / non-archetype) ── -->
+      {pickCollections.length > 0 && (
+        <div class="mt-16">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-8 h-px bg-white/20"></div>
+            <p class="font-body text-xs tracking-widest uppercase text-white/40">More from Danielle</p>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            {pickCollections.map((c) => (
+              <a
+                href={c.collection_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ltk-card ltk-card-picks group"
+                aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
+              >
+                <div class="ltk-card-img-frame">
+                  {c.cover && (
+                    <img
+                      src={c.cover}
+                      alt={c.title}
+                      class="ltk-card-img"
+                      loading="lazy"
+                      onerror="this.closest('.ltk-card-img-frame').classList.add('ltk-img-missing')"
+                    />
+                  )}
+                  <div class="ltk-card-gradient"></div>
+                  <div class="ltk-card-hover-layer" aria-hidden="true">
+                    <span class="ltk-card-cta">Shop This →</span>
+                  </div>
+                  <div class="ltk-card-name-overlay">
+                    <h3 class="ltk-card-name">{c.title}</h3>
+                    <span class="ltk-card-count">{c.product_count} items</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Full profile link — mobile -->
       <div class="mt-8 flex md:hidden justify-center">
         <a
           href={ltkProfileURL}
@@ -301,9 +276,7 @@ const mascCards = buildCards(mascSorted);
           rel="noopener noreferrer"
           class="font-body text-sm tracking-widest uppercase text-accent
                  hover:text-accent-light transition-colors border-b border-accent pb-0.5"
-        >
-          View Full LTK Profile →
-        </a>
+        >View Full LTK Profile →</a>
       </div>
 
     </div>
@@ -438,28 +411,24 @@ const mascCards = buildCards(mascSorted);
     color: var(--color-accent);
   }
 
-  .ltk-variant-tag {
+  /* "Archetype Blend" badge on blend collection cards */
+  .ltk-blend-tag {
     font-family: var(--font-body);
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-accent);
-    border: 1px solid var(--color-accent);
-    padding: 0.15rem 0.45rem;
+    border: 1px solid rgba(var(--color-accent-rgb, 184,151,126), 0.5);
+    padding: 0.15rem 0.5rem;
     line-height: 1.4;
   }
 
-  .ltk-card-desc {
+  /* Product count in card overlay */
+  .ltk-card-count {
     font-family: var(--font-body);
-    font-size: 0.75rem;
-    line-height: 1.55;
-    color: rgba(255,255,255,0.5);
-    margin: 0;
-    /* clamp to 2 lines */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.45);
   }
 
   /* ── Gender toggle buttons ─────────────────────────────────────────────── */

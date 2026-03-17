@@ -5,6 +5,7 @@ import { getShadesForPrimary } from '../../data/archetype-shades';
 import { getVisualsForSlug, iconPaths } from '../../data/archetype-visuals';
 import { guides } from '../../data/guides';
 import { getCardImages, getWallpaper } from '../../data/archetype-images';
+import { fetchLtkCollections, getBlendCollections, getCollectionsForArchetype } from '../../data/ltk-api';
 
 export async function getStaticPaths() {
   const archetypes = await getCollection('archetypes');
@@ -44,6 +45,27 @@ const otherArchetypesWithImages = otherArchetypes.map((a) => ({
   archetype: a,
   image: getCardImages(a.data.slug)[0] ?? `/images/archetypes/${a.data.slug}-1.webp`,
 }));
+
+/* ── LTK blend map ── */
+const _ltkAll = await fetchLtkCollections();
+// blendMap: secondarySlug → array of collections matching BOTH primary + secondary
+type LtkCardData = { title: string; url: string; cover: string; count: number };
+const blendMap: Record<string, LtkCardData[]> = {};
+for (const other of otherArchetypes) {
+  const matches = getBlendCollections(_ltkAll, data.slug, other.data.slug);
+  if (matches.length > 0) {
+    blendMap[other.data.slug] = matches.map((c) => ({
+      title: c.title,
+      url:   c.collection_url,
+      cover: c.cover,
+      count: c.product_count,
+    }));
+  }
+}
+// Single-archetype collections for this page (non-blend)
+const archetypeCollections = getCollectionsForArchetype(_ltkAll, data.slug)
+  .filter((c) => !c.isBlend)
+  .map((c) => ({ title: c.title, url: c.collection_url, cover: c.cover, count: c.product_count }));
 
 /* Determine gender label for cross-linking */
 const isFeminine = data.gender === 'feminine';
@@ -580,6 +602,17 @@ const genderGuide = isFeminine
                 </div>
               ))}
             </div>
+
+            <!-- LTK blend collection widget — populated by JS when a shade is selected -->
+            <!-- Hidden data store: blend map keyed by secondary slug -->
+            <div
+              id="shade-ltk-data"
+              data-blend-map={JSON.stringify(blendMap)}
+              hidden
+              aria-hidden="true"
+            ></div>
+            <!-- Live region populated by JS -->
+            <div id="shade-ltk-widget" class="shade-ltk-widget shade-ltk-hidden" aria-live="polite"></div>
 
           </div>
         </div>
@@ -1204,6 +1237,85 @@ const genderGuide = isFeminine
     /* Handled inline via JS with archetype color */
   }
 
+  /* ── LTK blend collection widget ────────────────────────────────────────── */
+  .shade-ltk-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: opacity 0.3s ease;
+  }
+  .shade-ltk-widget.shade-ltk-hidden {
+    display: none;
+  }
+
+  .shade-ltk-card {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.9rem;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.09);
+    text-decoration: none;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .shade-ltk-card:hover {
+    background: rgba(var(--color-accent-rgb, 184,151,126), 0.1);
+    border-color: var(--color-accent);
+  }
+
+  .shade-ltk-thumb {
+    width: 2.8rem;
+    height: 3.6rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+  }
+  .shade-ltk-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .shade-ltk-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+  .shade-ltk-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .shade-ltk-title {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .shade-ltk-count {
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.38);
+  }
+  .shade-ltk-arrow {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .shade-ltk-card:hover .shade-ltk-arrow {
+    transform: translateX(4px);
+  }
+
   /* Comparator image transition */
   #shade-comparison-img {
     transition: opacity 300ms ease;
@@ -1359,8 +1471,47 @@ const genderGuide = isFeminine
         content.classList.toggle('hidden', !isMatch);
         content.classList.toggle('block', isMatch);
       });
+
+      // ── LTK blend widget ──────────────────────────────────────────────────
+      updateLtkBlendWidget(slug);
     });
   });
+
+  function updateLtkBlendWidget(secondarySlug: string) {
+    const dataEl  = document.getElementById('shade-ltk-data');
+    const widget  = document.getElementById('shade-ltk-widget');
+    if (!dataEl || !widget) return;
+
+    type CardData = { title: string; url: string; cover: string; count: number };
+    let blendMap: Record<string, CardData[]> = {};
+    try { blendMap = JSON.parse(dataEl.dataset.blendMap ?? '{}'); } catch { return; }
+
+    const collections: CardData[] = blendMap[secondarySlug] ?? [];
+
+    if (collections.length === 0) {
+      widget.innerHTML = '';
+      widget.classList.add('shade-ltk-hidden');
+      return;
+    }
+
+    widget.innerHTML = collections.map((c) => `
+      <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="shade-ltk-card">
+        <div class="shade-ltk-thumb">
+          ${c.cover ? `<img src="${c.cover}" alt="${c.title}" loading="lazy" />` : ''}
+        </div>
+        <div class="shade-ltk-info">
+          <span class="shade-ltk-eyebrow">Shop this pairing on LTK</span>
+          <span class="shade-ltk-title">${c.title}</span>
+          <span class="shade-ltk-count">${c.count} items</span>
+        </div>
+        <span class="shade-ltk-arrow" aria-hidden="true">→</span>
+      </a>
+    `).join('');
+    widget.classList.remove('shade-ltk-hidden');
+  }
+
+  // Initialize widget for the default selected shade on page load
+  updateLtkBlendWidget(document.querySelector<HTMLElement>('[aria-checked="true"]')?.dataset.shadeSlug ?? '');
 
   // Arrow-key navigation for shade thumb radiogroup
   const thumbGroup = document.querySelector<HTMLElement>('[role="radiogroup"]');
