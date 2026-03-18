@@ -103,7 +103,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {guides.map((guide) => (
-            <div class="guide-card bg-surface flex flex-col group">
+            <div class="guide-card bg-surface flex flex-col group img-frame-card">
 
               <!-- Cover image -->
               <div class="relative aspect-[3/4] bg-surface-dark overflow-hidden">
@@ -454,13 +454,12 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
     color: rgba(255,255,255,0.68);
   }
 
-  /* ── Guide cards ──────────────────────────────────────────────────────── */
+  /* ── Guide cards — elevation via img-frame-card in global.css ────────── */
   .guide-card {
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: transform 0.3s ease;
   }
   .guide-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 48px rgba(26,22,19,0.5);
   }
 
   /* ── LTK card ─────────────────────────────────────────────────────────── */

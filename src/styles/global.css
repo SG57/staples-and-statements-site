@@ -397,6 +397,13 @@
     0  calc(var(--img-elev) * 4px)  calc(var(--img-elev) * 20px) rgba(26, 22, 19, calc(var(--img-elev) * 0.07)),
     0  calc(var(--img-elev) * 1px)  calc(var(--img-elev) * 4px)  rgba(26, 22, 19, calc(var(--img-elev) * 0.05));
 }
+/* Dark-bg variant: warm accent glow (same logic as img-frame) */
+.bg-primary .img-frame-card,
+.bg-primary-light .img-frame-card {
+  box-shadow:
+    0  calc(var(--img-elev) * 4px)  calc(var(--img-elev) * 20px) rgba(184, 151, 126, calc(var(--img-elev) * 0.09)),
+    0  calc(var(--img-elev) * 1px)  calc(var(--img-elev) * 4px)  rgba(184, 151, 126, calc(var(--img-elev) * 0.06));
+}
 
 /* ── img-frame-circle: circular avatar headshots ───────────
    Soft ring + directional shadow to lift off any background. */

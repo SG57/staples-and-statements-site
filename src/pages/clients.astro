@@ -63,7 +63,7 @@ const rendered = await Promise.all(
         {rendered.map(({ t, Content }, index) => (
           <article
             class:list={[
-              "flex flex-col p-10",
+              "flex flex-col p-10 img-frame-card",
               index % 3 === 0 ? "bg-surface" : "bg-primary",
             ]}
           >

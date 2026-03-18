@@ -285,7 +285,7 @@ const calendlyURL = '/contact';
         {featuredServices.map((service) => (
           <a
             href={`/services/${service.data.slug}`}
-            class="group block bg-surface p-7 hover:bg-surface-dark transition-colors duration-200"
+            class="group block bg-surface p-7 hover:bg-surface-dark transition-colors duration-200 img-frame-card"
           >
             <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">{service.data.price}</p>
             <h3 class="font-heading text-xl font-semibold text-primary mb-3 group-hover:text-accent transition-colors">
@@ -370,7 +370,7 @@ const calendlyURL = '/contact';
         {featuredTestimonials.map((t) => {
           const quote = t.body.trim().replace(/^"|"$/g, '');
           return (
-            <div class="bg-surface border border-surface-dark p-7 flex flex-col">
+            <div class="bg-surface border border-surface-dark p-7 flex flex-col img-frame-card">
               <!-- Decorative quote mark -->
               <div class="font-heading text-4xl text-accent/25 leading-none mb-4 select-none" aria-hidden="true">"</div>
               <!-- Quote — clamped to 4 lines so all cards align -->
@@ -437,24 +437,33 @@ const calendlyURL = '/contact';
           Follow on Instagram →
         </a>
       </div>
-      <!-- Portfolio grid — 6 image slots
-           Add photos to public/images/portfolio-1.webp through portfolio-6.jpg -->
+      <!-- Portfolio grid — local images linked to specific Instagram posts
+           Each image slowly pans up/down at a different speed + staggered start
+           so the grid feels alive and cinematic, never mechanical. -->
       <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
+        {[
+          { img: 1, post: 'https://www.instagram.com/p/DURBEbyEu3-/', dur: 30, delay: 0 },
+          { img: 2, post: 'https://www.instagram.com/p/DUMH5sVkiHD/', dur: 38, delay: -14 },
+          { img: 3, post: 'https://www.instagram.com/p/DU2AVX5Edqc/', dur: 26, delay: -6 },
+          { img: 4, post: 'https://www.instagram.com/p/DV_gbajESNR/', dur: 42, delay: -22 },
+          { img: 5, post: 'https://www.instagram.com/p/DVeOiP4jxqN/', dur: 34, delay: -10 },
+          { img: 6, post: 'https://www.instagram.com/p/DQe3MoAj5Gi/', dur: 28, delay: -19 },
+        ].map(({ img, post, dur, delay }) => (
           <a
-            href="https://instagram.com/littledanniii"
+            href={post}
             target="_blank"
             rel="noopener noreferrer"
-            class="relative overflow-hidden aspect-square bg-surface-dark group img-frame-grid"
-            aria-label={`View Instagram portfolio image ${i}`}
+            class="relative overflow-hidden aspect-[3/4] bg-surface-dark group ig-post-cell img-frame"
+            aria-label={`View this post on Instagram`}
           >
             <img
-              src={`/images/portfolio-${i}.webp`}
-              alt={`Styling portfolio image ${i}`}
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              src={`/images/portfolio-${img}.webp`}
+              alt={`Styling portfolio image ${img}`}
+              class="ig-post-img"
+              style={`animation-duration: ${dur}s; animation-delay: ${delay}s;`}
               loading="lazy"
               width="400"
-              height="400"
+              height="600"
               onerror="this.style.display='none'"
             />
             <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-300 pointer-events-none"></div>
@@ -463,6 +472,32 @@ const calendlyURL = '/contact';
       </div>
     </div>
   </section>
+
+  <style is:global>
+    @keyframes ig-pan {
+      from { transform: translateY(0%); }
+      to   { transform: translateY(-25%); }
+    }
+    .ig-post-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 150%;            /* extra headroom for pan travel */
+      object-fit: cover;
+      object-position: top center;
+      will-change: transform;
+      animation: ig-pan ease-in-out infinite alternate;
+    }
+    .ig-post-cell:hover .ig-post-img {
+      animation-play-state: paused;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ig-post-img {
+        animation: none;
+        height: 100%;
+      }
+    }
+  </style>
 
   <!-- ── SHOP PREVIEW ──────────────────────────────────── -->
   <section class="py-24 lg:py-32 px-6 bg-background" aria-label="Style guides preview"
@@ -488,7 +523,7 @@ const calendlyURL = '/contact';
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {featuredGuides.map((guide) => (
-          <div class="bg-surface p-7 flex flex-col group">
+          <div class="bg-surface p-7 flex flex-col group img-frame-card">
             <div class="aspect-[3/4] bg-surface-dark mb-6 overflow-hidden relative">
               <img
                 src={`/images/guides/${guide.slug}-cover.webp`}
