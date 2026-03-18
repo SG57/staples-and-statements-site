@@ -58,6 +58,19 @@
   --text-on-dark-light:     rgba(255, 255, 255, 0.40);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   CUSTOM SCROLLBAR — editorial luxury, overlay (no gutter)
+   Uses ONLY the standard scrollbar-width / scrollbar-color
+   properties. Do NOT add ::-webkit-scrollbar rules — those
+   force Chrome into "classic" mode which reserves a gutter.
+   Modern Chrome/Edge/Safari/Firefox all support the standard
+   properties and render a thin overlay scrollbar natively.
+   ═══════════════════════════════════════════════════════════ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(140, 126, 114, 0.45) transparent;
+}
+
 /* ── Base styles ───────────────────────────────────────────
    IMPORTANT: Everything here is in @layer base so that Tailwind
    utility classes (text-white, text-accent, etc.) in @layer utilities

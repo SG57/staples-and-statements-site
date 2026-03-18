@@ -164,76 +164,132 @@ const calendlyURL = '/contact';
 
   <!-- ── HERO CAROUSEL SCRIPT ────────────────────────── -->
   <script define:vars={{ heroBannerImages }}>
-    // ── Hero mosaic auto-carousel — with global deduplication ──────────────
-    // Each mosaic cell cycles through the full hero-banners pool.
-    // A shared active-images registry guarantees NO TWO CELLS ever show
-    // the same image at the same time — looks intentional, never amateur.
-    // Respects prefers-reduced-motion: disables cycling entirely.
+    // ── Hero mosaic — cinematic crossfade + Ken Burns + ZERO duplicates ──
+    //
+    // CRITICAL: no two cells may EVER show the same image simultaneously.
+    //
+    // Strategy: pure index-based tracking. Every image is identified by its
+    // integer index in the IMAGES array — no string matching, no path
+    // normalization, no URL resolution. A boolean[] tracks which indices
+    // are currently on-screen. checkOut() picks from available indices only.
+    // checkIn() frees them. Impossible to desync.
+    //
+    // Ken Burns: each cell slowly scales 1.0 → 1.08 during its hold period,
+    // resetting on each crossfade for continuous cinematic motion.
 
-    const IMAGES  = heroBannerImages;
-    const HOLD_MS = 12_000;  // how long each image shows (ms)
-    const STAGGER = 2_200;   // ms delay between each cell's first cycle
+    const IMAGES   = heroBannerImages;
+    const HOLD_MS  = 12_000;
+    const FADE_MS  = 1500;
+    const STAGGER  = 2_200;
+    const KB_SCALE = 1.08;   // Ken Burns zoom target
 
     if (IMAGES.length < 2) {
-      // Pool too small to deduplicate — nothing to cycle
+      // nothing to cycle
     } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
-      // ── Shared active-images registry ──────────────────────────────────
-      // Maps imagePath → number of cells currently displaying it.
-      // Reservations are made BEFORE loading starts so two concurrent cells
-      // can't both race to claim the same image.
-      const active = new Map();
+      // ── Index pool ────────────────────────────────────────────────────
+      const inUse = new Array(IMAGES.length).fill(false);
 
-      function normalize(src) {
-        // Browsers resolve src to full URL; we store just the pathname for lookup.
-        try { return new URL(src, location.href).pathname; } catch { return src; }
-      }
-      function register(src)   {
-        const k = normalize(src);
-        active.set(k, (active.get(k) || 0) + 1);
-      }
-      function unregister(src) {
-        const k = normalize(src);
-        const n = (active.get(k) || 1) - 1;
-        if (n <= 0) active.delete(k); else active.set(k, n);
-      }
-      function isActive(src)   { return (active.get(normalize(src)) || 0) > 0; }
+      // Map filename → IMAGES index for initial HTML → index resolution
+      const fileIndex = {};
+      IMAGES.forEach((path, i) => {
+        const name = path.split('/').pop();
+        fileIndex[name] = i;
+        fileIndex[path] = i;   // also map full path
+      });
 
-      function pickUnique(currentSrc) {
-        // First choice: images not shown ANYWHERE on the page
-        const free = IMAGES.filter(s => !isActive(s));
-        if (free.length > 0)
-          return free[Math.floor(Math.random() * free.length)];
-        // Fallback: at minimum, avoid the cell's own current image
-        const notSelf = IMAGES.filter(s => normalize(s) !== normalize(currentSrc));
-        return notSelf.length > 0
-          ? notSelf[Math.floor(Math.random() * notSelf.length)]
-          : IMAGES[0];
+      function srcToIndex(src) {
+        if (!src) return -1;
+        if (fileIndex[src] !== undefined) return fileIndex[src];
+        const name = src.split('/').pop();
+        return fileIndex[name] !== undefined ? fileIndex[name] : -1;
       }
 
-      function startCell(cell, startDelay) {
+      function checkOut() {
+        const free = [];
+        for (let i = 0; i < IMAGES.length; i++) {
+          if (!inUse[i]) free.push(i);
+        }
+        if (free.length === 0) return -1;
+        const pick = free[Math.floor(Math.random() * free.length)];
+        inUse[pick] = true;
+        return pick;
+      }
+
+      function checkIn(idx) {
+        if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false;
+      }
+
+      // ── Register initial images ───────────────────────────────────────
+      const cells = [...document.querySelectorAll('[data-hero-cell]')];
+      const cellIdx = [];   // which IMAGES index each cell currently shows
+
+      cells.forEach((cell, i) => {
+        const layerA = cell.querySelector('[data-layer="a"]');
+        const src = layerA ? layerA.getAttribute('src') : '';
+        const idx = srcToIndex(src);
+        if (idx >= 0) inUse[idx] = true;
+        cellIdx[i] = idx;
+      });
+
+      // ── Ken Burns helper ──────────────────────────────────────────────
+      function applyKenBurns(img) {
+        img.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+        img.style.transform  = `scale(${KB_SCALE})`;
+      }
+      function resetKenBurns(img) {
+        // Remove transition so scale resets instantly (no visible snap-back)
+        img.style.transition = 'none';
+        img.style.transform  = 'scale(1)';
+        // Force reflow so the reset takes effect before we re-enable transition
+        img.offsetHeight;
+      }
+
+      // ── Kick off Ken Burns on initial visible images ──────────────────
+      requestAnimationFrame(() => {
+        cells.forEach(cell => {
+          const a = cell.querySelector('[data-layer="a"]');
+          if (a) {
+            a.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+            a.style.transform  = `scale(${KB_SCALE})`;
+          }
+        });
+      });
+
+      // ── Cycle a cell ──────────────────────────────────────────────────
+      function startCell(cell, ci, startDelay) {
         const layerA = cell.querySelector('[data-layer="a"]');
         const layerB = cell.querySelector('[data-layer="b"]');
         if (!layerA || !layerB) return;
 
         let frontIsA = true;
-        // Register starting image so other cells know it's taken
-        register(layerA.getAttribute('src') || '');
 
         function nextImage() {
           const front = frontIsA ? layerA : layerB;
           const back  = frontIsA ? layerB : layerA;
-          const currentSrc = front.getAttribute('src') || '';
-          const nextSrc    = pickUnique(currentSrc);
 
-          // Reserve BEFORE loading — prevents race with other cell timers
-          register(nextSrc);
-          back.src = nextSrc;
+          const nextIdx = checkOut();
+          if (nextIdx < 0) {
+            setTimeout(nextImage, HOLD_MS);
+            return;
+          }
+
+          // Prep the back layer: reset scale, load new image, keep hidden
+          resetKenBurns(back);
+          back.style.opacity = '0';
+          back.src = IMAGES[nextIdx];
 
           const doFade = () => {
-            back.style.opacity  = '1';
-            front.style.opacity = '0';
-            unregister(currentSrc);   // release the outgoing image
+            // Crossfade: show back, hide front
+            back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+            back.style.opacity    = '1';
+            back.style.transform  = `scale(${KB_SCALE})`;
+            front.style.opacity   = '0';
+
+            // Release old image back to pool
+            checkIn(cellIdx[ci]);
+            cellIdx[ci] = nextIdx;
+
             frontIsA = !frontIsA;
             setTimeout(nextImage, HOLD_MS);
           };
@@ -243,7 +299,7 @@ const calendlyURL = '/contact';
           } else {
             back.onload  = doFade;
             back.onerror = () => {
-              unregister(nextSrc);    // load failed — release reservation
+              checkIn(nextIdx);
               setTimeout(nextImage, HOLD_MS);
             };
           }
@@ -252,10 +308,10 @@ const calendlyURL = '/contact';
         setTimeout(nextImage, startDelay + HOLD_MS);
       }
 
-      // Wait for first paint so eager images are visible before cycling begins
+      // Wait for first paint then start staggered cycling
       requestAnimationFrame(() => {
-        document.querySelectorAll('[data-hero-cell]').forEach((cell, i) => {
-          startCell(cell, i * STAGGER);
+        cells.forEach((cell, i) => {
+          startCell(cell, i, i * STAGGER);
         });
       });
     }

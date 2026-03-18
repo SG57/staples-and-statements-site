@@ -36,15 +36,15 @@ const items = [
 
 <div
   class:list={[
-    'marquee-band overflow-hidden select-none',
+    'marquee-band overflow-hidden select-none flex items-center',
     variant === 'dark'
-      ? 'bg-primary border-y border-white/[0.07] py-3.5'
-      : 'bg-surface border-y border-surface-dark py-3',
+      ? 'bg-primary border-y border-white/[0.07] h-12'
+      : 'bg-surface border-y border-surface-dark h-10',
   ]}
   aria-hidden="true"
 >
   <!-- Edge fade mask — text appears to emerge from and disappear into infinity -->
-  <div class="marquee-fade-mask">
+  <div class="marquee-fade-mask w-full">
 
     <!-- Seed: one set of items, used to measure natural width. Hidden after JS clones. -->
     <div class="marquee-seed" style="display:flex;flex-wrap:nowrap;width:max-content;align-items:center;">
