@@ -399,11 +399,11 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
       "The Empress radiates warmth the moment she enters a room. Your style isn't about commanding attention \u2014 it's about creating an atmosphere of grounded abundance. You gravitate toward luxe, elevated basics: pieces that feel as good as they look, built with quality that speaks for itself. Your wardrobe is an extension of your nurturing energy \u2014 every piece chosen with care, stability, and timeless intention.\n\nYou don't need trends. Your closet is full of high-quality neutrals that layer beautifully, silk that drapes just right, and gold that catches the light. You dress for how you want to feel: warm, capable, and elegantly put together without trying too hard.",
     galleryLooks: [
       {
-        title: 'The Foundation',
+        title: 'The Presence',
         bullets: [
-          'Silk that drapes with quiet, earned authority',
-          'Gold catching light at every angle — naturally',
-          'Grounded luxury that needs no announcement',
+          'Elevated basics assembled with complete intention',
+          'Rich neutral palette that feels like an atmosphere',
+          'The look that makes every room feel warmer',
         ],
       },
       {
@@ -415,11 +415,11 @@ export const archetypeVisuals: ArchetypeVisuals[] = [
         ],
       },
       {
-        title: 'The Presence',
+        title: 'The Foundation',
         bullets: [
-          'Elevated basics assembled with complete intention',
-          'Rich neutral palette that feels like an atmosphere',
-          'The look that makes every room feel warmer',
+          'Silk that drapes with quiet, earned authority',
+          'Gold catching light at every angle — naturally',
+          'Grounded luxury that needs no announcement',
         ],
       },
     ],
