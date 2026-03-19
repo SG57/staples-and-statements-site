@@ -140,7 +140,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
                   href={guide.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="block w-full text-center px-6 py-3 bg-primary text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
+                  class="block w-full text-center px-6 py-3.5 bg-primary text-white font-body text-xs font-medium tracking-widest uppercase hover:bg-primary-light transition-colors duration-200"
                 >
                   Get This Guide
                 </a>
@@ -399,6 +399,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
     letter-spacing: 0.15em;
     text-transform: uppercase;
     padding: 0.65rem 1.6rem;
+    min-height: 44px;
     border: 1px solid transparent;
     background: transparent;
     color: rgba(255,255,255,0.35);
@@ -441,6 +442,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
     border: 1px solid transparent;
     background: transparent;
     cursor: pointer;
+    min-height: 44px;
   }
   .ltk-gender-btn[aria-pressed="true"] {
     color: #fff;

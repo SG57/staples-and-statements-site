@@ -98,37 +98,37 @@ const genderGuide = isFeminine
     <div class="absolute top-0 left-0 right-0 h-40 pointer-events-none z-[5]"
          style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)"></div>
 
-    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-20 pt-36 lg:pt-44 w-full">
+    <div class="relative z-10 mx-auto max-w-7xl px-6 pb-16 sm:pb-20 pt-32 sm:pt-36 lg:pt-44 w-full">
       <!-- Archetype badge -->
-      <div class="flex items-center gap-3 mb-6">
+      <div class="flex items-center gap-3 mb-5 sm:mb-6">
         <div class="w-10 h-10 flex items-center justify-center rounded-full border border-accent/40 bg-accent/10 backdrop-blur-sm">
           <span class="text-lg text-accent">{data.icon}</span>
         </div>
-        <p class="font-body text-xs tracking-widest uppercase text-accent">
+        <p class="font-body text-xs tracking-widest uppercase text-accent text-bloom-sm">
           {isFeminine ? 'Feminine' : 'Masculine'} Archetype
         </p>
       </div>
 
       <!-- Archetype name -->
-      <h1 class="font-heading text-white text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] max-w-3xl mb-4">
+      <h1 class="font-heading text-white text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] max-w-3xl mb-3 sm:mb-4 text-bloom">
         {data.name}
       </h1>
 
       <!-- Tagline as subtitle -->
       {visuals && (
-        <p class="font-heading text-white/60 text-xl md:text-2xl italic max-w-xl leading-relaxed mb-6">
+        <p class="font-heading text-white/60 text-lg sm:text-xl md:text-2xl italic max-w-xl leading-relaxed mb-5 sm:mb-6 text-bloom-sm">
           {visuals.tagline}
         </p>
       )}
 
       <!-- Accent line in archetype color -->
-      <div class="w-16 h-1 mb-10" style={`background-color: ${data.color}`}></div>
+      <div class="w-12 sm:w-16 h-1 mb-8 sm:mb-10" style={`background-color: ${data.color}`}></div>
 
       <!-- Hero CTAs -->
       <div class="flex flex-col sm:flex-row gap-3">
         <a
           href="/archetypes#archetypes"
-          class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+          class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200 min-h-[48px]"
         >
           Find Your Archetype
         </a>
@@ -137,7 +137,7 @@ const genderGuide = isFeminine
             href={data.guideLink}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200"
+            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200 min-h-[48px]"
           >
             Shop This Style
           </a>
@@ -155,12 +155,12 @@ const genderGuide = isFeminine
       aria-label={`${data.name} signature looks`}
     >
       <!-- Section header — tight top padding so it reads as hero continuation -->
-      <div class="mx-auto max-w-7xl px-6 pt-10 pb-10">
+      <div class="mx-auto max-w-7xl px-6 pt-8 sm:pt-10 pb-8 sm:pb-10">
         <div class="flex items-center gap-4 mb-3">
           <div class="w-8 h-px bg-accent"></div>
           <p class="font-body text-xs tracking-widest uppercase text-accent">Editorial</p>
         </div>
-        <h2 class="font-heading text-white text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
+        <h2 class="font-heading text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
           Signature {data.name} Looks
         </h2>
       </div>
@@ -306,9 +306,9 @@ const genderGuide = isFeminine
 
 
   <!-- ── DEEP DIVE: Description + visuals ─────────────────── -->
-  <section class="py-20 px-6 bg-primary" aria-label={`About ${data.name}`}>
+  <section class="py-14 sm:py-20 px-6 bg-primary" aria-label={`About ${data.name}`}>
     <div class="mx-auto max-w-7xl">
-      <div class="grid grid-cols-1 lg:grid-cols-[40fr_60fr] gap-14 lg:gap-20">
+      <div class="grid grid-cols-1 lg:grid-cols-[40fr_60fr] gap-10 sm:gap-14 lg:gap-20">
 
         <!-- LEFT COLUMN (sticky): Color palette + Signature Pieces + Style Icons -->
         <div class="h-fit lg:sticky lg:top-28 flex flex-col gap-10" style="overflow: visible;">
@@ -471,7 +471,7 @@ const genderGuide = isFeminine
   {shades.length > 0 && (
     <section
       id="shades"
-      class="py-24 px-6 bg-primary border-t border-white/8"
+      class="py-16 sm:py-24 px-6 bg-primary border-t border-white/8"
       aria-label="Explore archetype blends"
       data-compact-super="Your Unique Blend"
       data-compact-title="Discover Your Blend"
@@ -480,7 +480,7 @@ const genderGuide = isFeminine
       <div class="mx-auto max-w-7xl">
 
         <!-- Section header -->
-        <div class="text-center mb-14">
+        <div class="text-center mb-10 sm:mb-14">
           <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
           <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Your Unique Blend</p>
           <h2 class="font-heading text-white text-3xl md:text-4xl font-semibold mb-4">
@@ -581,7 +581,7 @@ const genderGuide = isFeminine
             </div>
 
             <!-- Shade description -->
-            <div class="shade-display bg-white/3 border border-white/10 rounded-sm p-6 md:p-8 backdrop-blur-sm">
+            <div class="shade-display bg-white/3 border border-white/10 rounded-sm p-5 sm:p-6 md:p-8 backdrop-blur-sm">
               {shades.map((shade) => (
                 <div
                   class:list={[
@@ -590,13 +590,13 @@ const genderGuide = isFeminine
                   ]}
                   data-shade-for={shade.secondary}
                 >
-                  <div class="flex items-center gap-2 mb-4">
+                  <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mb-4">
                     <span class="text-accent text-lg">{data.icon}</span>
-                    <span class="font-heading text-white text-xl font-semibold">{data.name}</span>
-                    <span class="text-white/30 mx-1">&times;</span>
-                    <span class="font-heading text-white/70 text-xl">{shade.secondaryName}</span>
+                    <span class="font-heading text-white text-lg sm:text-xl font-semibold">{data.name}</span>
+                    <span class="text-white/30 mx-0.5 sm:mx-1">&times;</span>
+                    <span class="font-heading text-white/70 text-lg sm:text-xl">{shade.secondaryName}</span>
                   </div>
-                  <p class="font-body text-white/70 text-base leading-relaxed italic">
+                  <p class="font-body text-white/70 text-[0.95rem] sm:text-base leading-relaxed italic">
                     {shade.description}
                   </p>
                 </div>
@@ -660,7 +660,7 @@ const genderGuide = isFeminine
 
 
   <!-- ── EXPLORE MORE ─────────────────────────────────────── -->
-  <section class="py-20 px-6 bg-primary border-t border-white/8" aria-label="Explore more archetypes" data-compact-super="Keep Exploring" data-compact-title="Discover More Archetypes" data-compact-theme="dark">
+  <section class="py-14 sm:py-20 px-6 bg-primary border-t border-white/8" aria-label="Explore more archetypes" data-compact-super="Keep Exploring" data-compact-title="Discover More Archetypes" data-compact-theme="dark">
     <div class="mx-auto max-w-7xl">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8 py-10">
         <div>
@@ -671,13 +671,13 @@ const genderGuide = isFeminine
         <div class="flex flex-col sm:flex-row gap-3 shrink-0">
           <a
             href="/archetypes"
-            class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+            class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200 min-h-[48px]"
           >
             All Archetypes
           </a>
           <a
             href="/contact"
-            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200"
+            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200 min-h-[48px]"
           >
             Book a Consultation
           </a>
@@ -919,7 +919,8 @@ const genderGuide = isFeminine
     align-items: flex-end;
   }
 
-  .gallery-item:hover .gallery-overlay {
+  .gallery-item:hover .gallery-overlay,
+  .gallery-item.is-tapped .gallery-overlay {
     opacity: 1;
   }
 
@@ -929,8 +930,54 @@ const genderGuide = isFeminine
     transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .gallery-item:hover .gallery-overlay-inner {
+  .gallery-item:hover .gallery-overlay-inner,
+  .gallery-item.is-tapped .gallery-overlay-inner {
     transform: translateY(0);
+  }
+
+  /* On mobile: show a subtle bottom info bar so users know to tap */
+  @media (max-width: 767px) {
+    .gallery-overlay-inner {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+
+    /* Show a persistent hint gradient at the bottom on mobile */
+    .gallery-overlay {
+      opacity: 1;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.15) 30%,
+        transparent 50%
+      );
+    }
+
+    /* But hide the detailed text until tapped */
+    .gallery-overlay-inner {
+      transform: translateY(0);
+    }
+
+    .gallery-bullets {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 350ms ease, opacity 250ms ease;
+    }
+
+    .gallery-item.is-tapped .gallery-overlay {
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.88) 0%,
+        rgba(0, 0, 0, 0.45) 35%,
+        rgba(0, 0, 0, 0.05) 65%,
+        rgba(0, 0, 0, 0) 100%
+      );
+    }
+
+    .gallery-item.is-tapped .gallery-bullets {
+      max-height: 200px;
+      opacity: 1;
+    }
   }
 
   .gallery-look-tag {
@@ -985,9 +1032,21 @@ const genderGuide = isFeminine
       transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .gallery-item:hover .gallery-expand-hint {
+  .gallery-item:hover .gallery-expand-hint,
+  .gallery-item.is-tapped .gallery-expand-hint {
     opacity: 1;
     transform: scale(1);
+  }
+
+  /* On mobile: always show expand hint so users know to tap */
+  @media (max-width: 767px) {
+    .gallery-expand-hint {
+      opacity: 0.7;
+      transform: scale(1);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
   }
 
   /* ── Lightbox ──────────────────────────────────────────── */
@@ -1018,34 +1077,34 @@ const genderGuide = isFeminine
     cursor: pointer;
   }
 
-  /* Two-column content shell */
+  /* Two-column content shell — centred 2/3-width editorial layout */
   .gallery-lightbox-content {
     position: relative;
     z-index: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
     max-height: 88dvh;
-    max-width: 95vw;
+    max-width: min(64vw, 960px);
     width: 100%;
     gap: 0;
   }
 
-  /* Left panel: image */
+  /* Left panel: image — right-aligned within its column */
   .gallery-lightbox-img-panel {
-    flex: 0 0 auto;
     display: flex;
     align-items: center;
-    justify-content: center;
-    max-width: 60vw;
+    justify-content: flex-end;
+    padding-right: 2rem;
   }
 
   .gallery-lightbox-img {
     display: block;
-    height: 88dvh;
+    height: auto;
+    max-height: 78dvh;
     width: auto;
-    max-width: 60vw;
-    object-fit: cover;
+    max-width: 100%;
+    object-fit: contain;
     transform: scale(0.93) translateX(-10px);
     transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 40px 80px rgba(26, 22, 19, 0.7);
@@ -1055,32 +1114,36 @@ const genderGuide = isFeminine
     transform: scale(1) translateX(0);
   }
 
-  /* Right panel: info */
+  /* Right panel: info — left-aligned, vertically centred */
   .gallery-lightbox-info-panel {
-    flex: 1 1 0;
-    min-width: min(400px, 40vw);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 3rem 3rem 3rem 3.5rem;
+    padding: 3rem 2rem 3rem 2.5rem;
     position: relative;
     border-left: 1px solid rgba(255, 255, 255, 0.07);
   }
 
+  /* Close button — top-right of the content area */
   .gallery-lightbox-close {
     position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    color: rgba(255, 255, 255, 0.4);
+    top: 0;
+    right: 0;
+    /* Offset to sit at the top-right corner of the content grid */
+    transform: translate(50%, -50%);
+    color: rgba(255, 255, 255, 0.5);
     width: 2.25rem;
     height: 2.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background: transparent;
+    background: rgba(10, 8, 6, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10;
     transition:
       color 200ms ease,
       border-color 200ms ease,
@@ -1089,8 +1152,8 @@ const genderGuide = isFeminine
 
   .gallery-lightbox-close:hover {
     color: white;
-    border-color: rgba(255, 255, 255, 0.4);
-    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.45);
+    background-color: rgba(255, 255, 255, 0.08);
   }
 
   .gallery-lightbox-info {
@@ -1141,22 +1204,32 @@ const genderGuide = isFeminine
     color: var(--color-accent);
   }
 
+  /* Tablet: widen the content shell slightly */
+  @media (max-width: 1024px) and (min-width: 641px) {
+    .gallery-lightbox-content {
+      max-width: min(82vw, 960px);
+    }
+  }
+
   /* Mobile: stack vertically */
   @media (max-width: 640px) {
     .gallery-lightbox-content {
+      display: flex;
       flex-direction: column;
       max-height: 95dvh;
+      max-width: 92vw;
       overflow-y: auto;
     }
 
     .gallery-lightbox-img-panel {
-      max-width: 100%;
+      justify-content: center;
+      padding-right: 0;
+      padding: 1rem 1rem 0;
     }
 
     .gallery-lightbox-img {
-      height: auto;
-      max-height: 55dvh;
-      width: 100%;
+      max-height: 50dvh;
+      width: auto;
       max-width: 100%;
       transform: scale(0.93) translateY(10px);
     }
@@ -1166,15 +1239,20 @@ const genderGuide = isFeminine
     }
 
     .gallery-lightbox-info-panel {
-      min-width: 0;
-      padding: 1.5rem;
+      position: static; /* let close button escape to content shell */
+      padding: 1.25rem 1.5rem 1.5rem;
       border-left: none;
       border-top: 1px solid rgba(255, 255, 255, 0.07);
     }
 
+    /* On mobile the close button positions against .gallery-lightbox-content
+       (the nearest positioned ancestor once info-panel becomes static) */
     .gallery-lightbox-close {
-      top: 0.75rem;
-      right: 0.75rem;
+      top: 0.5rem;
+      right: 0.5rem;
+      transform: none;
+      width: 2rem;
+      height: 2rem;
     }
   }
 
@@ -1262,12 +1340,22 @@ const genderGuide = isFeminine
     gap: 0.5rem;
   }
 
+  /* On small mobile with many shades, drop to 2-up for better touch targets */
+  @media (max-width: 379px) {
+    .shade-thumb-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.375rem;
+    }
+  }
+
   .shade-thumb {
     aspect-ratio: 3 / 4;
     display: block;
     background: transparent;
     border: none;
     padding: 0;
+    /* Ensure minimum touch target on mobile */
+    min-height: 80px;
   }
 
   .shade-thumb[aria-checked="true"] .shade-thumb-ring {
@@ -1285,7 +1373,7 @@ const genderGuide = isFeminine
     transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
   }
   .shade-ltk-section.has-content {
-    max-height: 270px;
+    max-height: 320px;
     opacity: 1;
   }
 
@@ -1364,24 +1452,41 @@ const genderGuide = isFeminine
     font-weight: 500;
     color: #fff;
     line-height: 1.2;
-    white-space: nowrap;
+    /* Allow wrapping on mobile — truncation loses too much context on small screens */
     overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
   }
   .shade-ltk-meta {
     font-family: var(--font-body);
-    font-size: 0.62rem;
+    font-size: 0.68rem;
     letter-spacing: 0.05em;
     color: rgba(255,255,255,0.35);
   }
   /* Text-only CTA — no box */
   .shade-ltk-cta {
     font-family: var(--font-body);
-    font-size: 0.62rem;
+    font-size: 0.68rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-accent);
-    margin-top: 0.1rem;
+    margin-top: 0.25rem;
+  }
+
+  /* LTK cards on mobile: ensure minimum touch target height */
+  @media (max-width: 767px) {
+    .shade-ltk-card {
+      min-height: 48px;
+      padding: 0.875rem 1rem 0.875rem 0.875rem;
+    }
+
+    .shade-ltk-img-frame {
+      width: 72px;
+      height: 96px;
+    }
   }
 
   /* Comparator image transition */
@@ -1482,11 +1587,25 @@ const genderGuide = isFeminine
     document.body.style.overflow = '';
   };
 
+  // Detect touch device — first tap reveals overlay, second opens lightbox
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
   document.querySelectorAll<HTMLElement>('.gallery-item').forEach((item) => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (e) => {
       const src     = item.dataset.lookSrc ?? '';
       const title   = item.dataset.lookTitle ?? '';
       const bullets = JSON.parse(item.dataset.lookBullets ?? '[]') as string[];
+
+      if (isTouchDevice && !item.classList.contains('is-tapped')) {
+        // First tap: reveal overlay, clear sibling tapped states
+        e.preventDefault();
+        document.querySelectorAll<HTMLElement>('.gallery-item.is-tapped').forEach((el) => {
+          if (el !== item) el.classList.remove('is-tapped');
+        });
+        item.classList.add('is-tapped');
+        return;
+      }
+
       openLightbox(src, title, bullets);
     });
   });

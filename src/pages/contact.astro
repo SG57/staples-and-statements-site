@@ -62,7 +62,7 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
             absolute positioning if applied directly — causing the layout bug
             where skeleton and widget stack vertically instead of overlapping.
           -->
-          <div class="relative" style="min-height:680px;">
+          <div class="relative" style="min-height:min(680px, calc(100dvh - 4rem));">
 
             <!-- Skeleton: absolute overlay, no s-sk on this element -->
             <div
@@ -109,7 +109,7 @@ const CALENDLY_URL = 'https://calendly.com/staplesandstatements/30min';
               class="calendly-inline-widget"
               data-url={CALENDLY_URL}
               data-resize="true"
-              style="min-width:320px; min-height:680px; opacity:0; transition: opacity 600ms ease;"
+              style="min-width:280px; min-height:min(680px, calc(100dvh - 4rem)); opacity:0; transition: opacity 600ms ease;"
             ></div>
 
           </div>

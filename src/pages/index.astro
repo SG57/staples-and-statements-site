@@ -59,8 +59,10 @@ const calendlyURL = '/contact';
   <section class="relative overflow-hidden bg-primary" aria-label="Hero">
     <!-- Transparent nav: no spacer in the flow, hero starts at top of viewport.
          Desktop: hero = 100vh - marquee (~2.75rem) so marquee peeks in first view.
-         Mobile: 90vh — marquee below the fold intentionally. -->
-    <div class="relative min-h-[90vh] lg:min-h-[calc(100vh-3rem)] flex flex-col lg:flex-row">
+         Mobile: 100svh so hero fills the screen exactly (svh = small viewport height,
+         accounts for mobile browser chrome). Mosaic fills the frame, text overlays
+         at the bottom with a cinematic gradient scrim for legibility. -->
+    <div class="relative min-h-[100svh] lg:min-h-[calc(100vh-3rem)] flex flex-col lg:flex-row">
 
       <!--
         Mosaic hero grid — auto-cycling carousel
@@ -68,11 +70,15 @@ const calendlyURL = '/contact';
         The client script picks random images from the full hero-banners pool,
         staggers the cells so they never all change at once, and cycles every 12s.
         Initial images are set here for fast first paint (no JS required).
-      -->
-      <div id="hero-mosaic" class="order-1 lg:order-none lg:absolute lg:inset-0 grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 lg:w-full lg:h-full">
 
-        <!-- Cell 0 — large portrait (2 rows) -->
-        <div data-hero-cell="0" class="col-span-1 row-span-2 lg:col-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
+        Mobile: 2-column, 2-row grid. Cell 0 is row-span-1 (equal with cells 1/2).
+        The mosaic is absolutely positioned to fill the hero, with the text overlaid.
+        Desktop: 3-column, 2-row grid. Cell 0 is row-span-2 (tall portrait).
+      -->
+      <div id="hero-mosaic" class="absolute inset-0 grid grid-cols-2 grid-rows-2 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 w-full h-full">
+
+        <!-- Cell 0 — portrait on desktop (2 rows), equal cell on mobile (1 row) -->
+        <div data-hero-cell="0" class="col-span-1 row-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
           <img data-layer="a" src={heroStart[0]} alt="Wardrobe styling by Danielle Marie"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="600" height="900" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
@@ -98,10 +104,10 @@ const calendlyURL = '/contact';
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
         </div>
 
-        <!-- Cell 3 — desktop only -->
-        <div data-hero-cell="3" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
+        <!-- Cell 3 — visible on both mobile (fills 2×2 grid) and desktop -->
+        <div data-hero-cell="3" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
           <img data-layer="a" src={heroStart[3]} alt="Luxury personal styling"
-               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+               class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
           <img data-layer="b" src="" alt="" aria-hidden="true"
                class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
@@ -127,32 +133,40 @@ const calendlyURL = '/contact';
 
       </div>
 
-      <!-- Nav-hood scrim: dark gradient covering the top ~160px of the hero.
+      <!-- Nav-hood scrim: dark gradient covering the top of the hero.
            Guarantees nav link legibility regardless of image brightness.
-           z-[5] sits above mosaic images but below hero text (z-10). -->
-      <div class="hidden lg:block absolute top-0 left-0 right-0 h-40 pointer-events-none z-[5]"
-           style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, transparent 100%)"></div>
+           z-[5] sits above mosaic images but below hero text (z-10).
+           Mobile: shorter (h-24) + slightly stronger. Desktop: taller (h-40). -->
+      <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
+           style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
 
-      <!-- Hero text overlay -->
-      <div class="order-2 lg:order-none lg:absolute lg:inset-0 flex items-end lg:items-center justify-start p-8 lg:px-20 pb-16 lg:pb-0 z-10">
+      <!-- Bottom scrim: gradient that ensures hero text is always readable
+           over the mosaic images. Covers bottom ~55% of the hero. -->
+      <div class="absolute bottom-0 left-0 right-0 h-[60%] lg:h-[50%] pointer-events-none z-[5]"
+           style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.45) 35%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
+
+      <!-- Hero text overlay — always overlaid on the mosaic (both mobile + desktop).
+           Mobile: pinned to bottom with generous safe area above the fold.
+           Desktop: vertically centered on the left side. -->
+      <div class="absolute inset-0 flex items-end lg:items-center justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-0 pt-20 z-10">
         <div class="max-w-lg">
-          <div class="w-8 h-px bg-accent mb-6"></div>
-          <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-bloom">
+          <div class="w-8 h-px bg-accent mb-4 lg:mb-6"></div>
+          <h1 class="font-heading text-white text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-bloom">
             Your wardrobe,<br /><em class="not-italic text-accent">elevated.</em>
           </h1>
-          <p class="mt-6 font-body text-white/70 text-lg leading-relaxed max-w-sm text-bloom-sm">
+          <p class="mt-4 lg:mt-6 font-body text-white/80 text-base sm:text-lg leading-relaxed max-w-sm text-bloom-sm">
             Expert wardrobe styling and archetype-based personal style guidance by Danielle Marie.
           </p>
-          <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <div class="mt-6 lg:mt-8 flex flex-col sm:flex-row gap-3">
             <a
               href={calendlyURL}
-              class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+              class="inline-flex items-center justify-center px-7 sm:px-8 py-3.5 sm:py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
             >
               Book Free Consultation
             </a>
             <a
               href="/services"
-              class="inline-flex items-center justify-center px-8 py-4 border border-white/40 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/10 transition-colors duration-200"
+              class="inline-flex items-center justify-center px-7 sm:px-8 py-3.5 sm:py-4 border border-white/40 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/10 transition-colors duration-200"
             >
               Explore Services
             </a>
@@ -369,7 +383,7 @@ const calendlyURL = '/contact';
       <div class="text-center mb-14">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
         <p class="font-body text-xs tracking-widest uppercase text-accent mb-3"><span class="text-accent/40 mr-2">02 /</span>The Framework</p>
-        <h2 class="font-heading text-white text-4xl lg:text-5xl">Discover Your Style Archetype</h2>
+        <h2 class="font-heading text-white text-3xl sm:text-4xl lg:text-5xl">Discover Your Style Archetype</h2>
         <p class="mt-5 font-body text-white/60 text-lg max-w-xl mx-auto leading-relaxed">
           Every great wardrobe starts with knowing who you are. Danielle's 7 Feminine Archetypes framework is the foundation of every styling engagement.
         </p>
@@ -496,7 +510,7 @@ const calendlyURL = '/contact';
       <!-- Portfolio grid — local images linked to specific Instagram posts
            Each image slowly pans up/down at a different speed + staggered start
            so the grid feels alive and cinematic, never mechanical. -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-2">
         {[
           { img: 1, post: 'https://www.instagram.com/p/DURBEbyEu3-/', dur: 30, delay: 0 },
           { img: 2, post: 'https://www.instagram.com/p/DUMH5sVkiHD/', dur: 38, delay: -14 },
@@ -617,7 +631,7 @@ const calendlyURL = '/contact';
     <div class="mx-auto max-w-2xl text-center">
       <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
       <p class="font-body text-xs tracking-widest uppercase text-accent/60 mb-4">Coming Soon</p>
-      <h2 class="font-heading text-white text-4xl lg:text-5xl leading-tight">
+      <h2 class="font-heading text-white text-3xl sm:text-4xl lg:text-5xl leading-tight">
         Something new is coming.
       </h2>
       <p class="mt-5 font-body text-white/60 text-lg leading-relaxed">
@@ -657,7 +671,7 @@ const calendlyURL = '/contact';
     <div class="mx-auto max-w-3xl text-center">
       <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
       <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-4">Start Here</p>
-      <h2 class="font-heading text-primary text-4xl lg:text-5xl">Ready to elevate your wardrobe?</h2>
+      <h2 class="font-heading text-primary text-3xl sm:text-4xl lg:text-5xl">Ready to elevate your wardrobe?</h2>
       <p class="mt-5 font-body text-text-muted text-lg leading-relaxed max-w-lg mx-auto">
         Every journey starts with a free 20-minute consultation. No commitment. Just a conversation about where you are and where you want to go.
       </p>

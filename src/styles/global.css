@@ -649,6 +649,34 @@
   -webkit-backdrop-filter: blur(8px) !important;
 }
 
+/* ── Transparent nav: solid backdrop while mobile menu is open ── */
+/* Without this, mobile menu text floats over the hero image,
+   unreadable. Forces the same solid appearance as nav-scrolled. */
+.nav-transparent.nav-menu-open {
+  background: color-mix(in srgb, var(--color-background) 97%, transparent) !important;
+  border-bottom-color: var(--color-surface-dark) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+.nav-transparent.nav-menu-open .nav-link,
+.nav-transparent.nav-menu-open .nav-brand {
+  text-shadow: none;
+}
+.nav-transparent.nav-menu-open .nav-brand {
+  color: var(--color-primary);
+}
+.nav-transparent.nav-menu-open .nav-bar {
+  background-color: var(--color-primary);
+}
+
+/* ── Mobile menu collapse animation ────────────────────────── */
+#mobile-menu {
+  transition:
+    max-height 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity    220ms ease;
+  overflow: hidden;
+}
+
 
 /* ── Respect prefers-reduced-motion ────────────────────── */
 @media (prefers-reduced-motion: reduce) {

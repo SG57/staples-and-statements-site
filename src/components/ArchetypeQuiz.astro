@@ -452,7 +452,7 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
   <!-- ── CALCULATING OVERLAY ─────────────────────────────── -->
   <div class="quiz-calculating hidden" aria-label="Calculating your result">
-    <div class="flex flex-col items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] bg-primary">
+    <div class="flex flex-col items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] quiz-bloom-bg">
       <!-- "Discovering" text -->
       <p class="quiz-calc-text font-heading text-white text-2xl md:text-3xl mb-8 opacity-0">
         Discovering your archetype...
@@ -466,14 +466,14 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
 
   <!-- ── TEASER WORDS OVERLAY ────────────────────────────── -->
   <div class="quiz-teaser hidden" aria-label="Teaser words">
-    <div class="flex items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] bg-primary">
+    <div class="flex items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] quiz-bloom-bg">
       <span class="quiz-teaser-word font-heading text-white text-4xl md:text-6xl opacity-0"></span>
     </div>
   </div>
 
   <!-- ── "YOU ARE" REVEAL TEXT ────────────────────────────── -->
   <div class="quiz-youare hidden" aria-label="You are reveal">
-    <div class="flex items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] bg-primary">
+    <div class="flex items-center justify-center h-[calc(100dvh-10rem)] max-h-[720px] quiz-bloom-bg">
       <span class="quiz-youare-text font-body text-accent text-sm md:text-base tracking-widest uppercase opacity-0">You are...</span>
     </div>
   </div>
@@ -637,6 +637,18 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   .quiz-chip[aria-checked="true"] .quiz-chip-check {
     background: rgba(184, 151, 126, 0.85);
     color: rgba(255, 255, 255, 1);
+  }
+
+  /* ── Bloom spotlight background for reveal phases ──────── */
+  .quiz-bloom-bg {
+    background-color: #1a1613;
+    background:
+      radial-gradient(ellipse 80% 70% at 50% 48%,
+        rgba(184, 151, 126, 0.07) 0%,
+        rgba(184, 151, 126, 0.03) 25%,
+        rgba(26, 22, 19, 0.97) 55%,
+        rgba(26, 22, 19, 1) 75%
+      );
   }
 
   /* ── Calculating overlay shimmer ────────────────────────── */

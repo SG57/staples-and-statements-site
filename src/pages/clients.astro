@@ -63,13 +63,13 @@ const rendered = await Promise.all(
         {rendered.map(({ t, Content }, index) => (
           <article
             class:list={[
-              "flex flex-col p-10 img-frame-card",
+              "flex flex-col p-6 sm:p-10 img-frame-card",
               index % 3 === 0 ? "bg-surface" : "bg-primary",
             ]}
           >
             <!-- Quote mark -->
             <div class:list={[
-              "font-heading text-6xl leading-none mb-5",
+              "font-heading text-5xl sm:text-6xl leading-none mb-4 sm:mb-5",
               index % 3 === 0 ? "text-accent/20" : "text-accent/30",
             ]}>
               "
@@ -85,7 +85,7 @@ const rendered = await Promise.all(
 
             <!-- Attribution -->
             <div class:list={[
-              "mt-8 pt-6 border-t flex items-end justify-between gap-4",
+              "mt-6 sm:mt-8 pt-5 sm:pt-6 border-t flex items-end justify-between gap-4",
               index % 3 === 0 ? "border-surface-dark" : "border-white/10",
             ]}>
               <div>
@@ -127,7 +127,7 @@ const rendered = await Promise.all(
   <!-- ── PROCESS REMINDER ──────────────────────────────── -->
   <section class="py-16 px-6 bg-surface" aria-label="The process">
     <div class="mx-auto max-w-5xl">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-center">
         {[
           {
             icon: "✦",

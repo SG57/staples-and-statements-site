@@ -203,10 +203,6 @@ const calendlyURL = '/contact';
                     {archetype.data.description}
                   </p>
                   <div class="flex flex-col gap-2">
-                    <a href={`/archetypes/${archetype.data.slug}`}
-                       class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
-                      Deep Dive →
-                    </a>
                     {archetype.data.guideLink && (
                       <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
                          class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
@@ -398,10 +394,6 @@ const calendlyURL = '/contact';
                       {archetype.data.description}
                     </p>
                     <div class="flex flex-col gap-2">
-                      <a href={`/archetypes/${archetype.data.slug}`}
-                         class="font-body text-xs tracking-widest uppercase text-accent hover:text-accent-light transition-colors">
-                        Deep Dive →
-                      </a>
                       {archetype.data.guideLink && (
                         <a href={archetype.data.guideLink} target="_blank" rel="noopener noreferrer"
                            class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
@@ -1062,8 +1054,8 @@ const calendlyURL = '/contact';
         card.addEventListener('click', (e: MouseEvent) => {
           if ((e.target as Element).closest('a, button')) return;
           spawnRipple(card, e);
-          const advance = (card as any)._advanceCarousel;
-          if (advance) advance();
+          const slug = card.dataset.slug;
+          if (slug) window.location.href = `/archetypes/${slug}`;
         });
       });
     });

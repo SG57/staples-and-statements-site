@@ -111,16 +111,23 @@ const currentPath = Astro.url.pathname;
     </div>
 
     <!-- ── Mobile menu ─────────────────────────────────────── -->
-    <div id="mobile-menu" class="lg:hidden hidden">
+    <div
+      id="mobile-menu"
+      class="lg:hidden overflow-hidden"
+      style="display:none;"
+    >
       <ul class="flex flex-col pb-6 pt-2 gap-1">
-        {[...leftItems, ...rightItems].map((item) => {
+        {[...leftItems, ...rightItems].map((item, i) => {
           const isActive = currentPath.startsWith(item.href);
           return (
-            <li>
+            <li
+              class="mobile-menu-item"
+              style={`--item-i:${i}`}
+            >
               <a
                 href={item.href}
                 class:list={[
-                  'block py-3 px-2 font-body text-sm tracking-widest uppercase transition-colors duration-200 border-l-2',
+                  'block py-3.5 px-4 font-body text-sm tracking-widest uppercase transition-colors duration-200 border-l-2',
                   isActive
                     ? 'text-accent font-medium border-accent bg-surface/50'
                     : 'text-text-muted hover:text-primary border-transparent hover:border-secondary-light hover:bg-surface/30',
@@ -153,6 +160,7 @@ const currentPath = Astro.url.pathname;
     const barTop     = document.getElementById('bar-top')        as HTMLElement | null;
     const barMid     = document.getElementById('bar-mid')        as HTMLElement | null;
     const barBottom  = document.getElementById('bar-bottom')     as HTMLElement | null;
+    const nav        = document.getElementById('site-nav')       as HTMLElement | null;
 
     if (!menuBtn || !mobileMenu) return;
 
@@ -160,9 +168,81 @@ const currentPath = Astro.url.pathname;
     if (menuBtn.dataset.menuInitialized === 'true') return;
     menuBtn.dataset.menuInitialized = 'true';
 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function openMenu(): void {
+      menuBtn!.setAttribute('aria-expanded', 'true');
+      // Show the menu (display:block) then animate
+      mobileMenu!.style.display = '';
+
+      if (prefersReducedMotion) {
+        // Instant open — no animation
+        mobileMenu!.style.maxHeight = 'none';
+        mobileMenu!.style.opacity   = '1';
+      } else {
+        mobileMenu!.style.maxHeight = '0';
+        mobileMenu!.style.opacity  = '0';
+        // Force layout so the transition triggers from 0
+        void mobileMenu!.offsetHeight;
+        mobileMenu!.style.maxHeight = mobileMenu!.scrollHeight + 'px';
+        mobileMenu!.style.opacity   = '1';
+      }
+
+      // Stagger the menu items in (skip animation if reduced motion)
+      mobileMenu!.querySelectorAll<HTMLElement>('.mobile-menu-item').forEach((li) => {
+        if (prefersReducedMotion) {
+          li.style.opacity   = '1';
+          li.style.transform = 'none';
+          return;
+        }
+        li.style.opacity   = '0';
+        li.style.transform = 'translateY(8px)';
+        const i = parseInt(li.style.getPropertyValue('--item-i') || '0', 10);
+        setTimeout(() => {
+          li.style.transition = 'opacity 250ms ease, transform 250ms cubic-bezier(0.16, 1, 0.3, 1)';
+          li.style.opacity    = '1';
+          li.style.transform  = 'translateY(0)';
+        }, 40 + i * 40);
+      });
+
+      // If transparent nav, force solid backdrop while menu is open
+      if (nav?.classList.contains('nav-transparent')) {
+        nav.classList.add('nav-menu-open');
+      }
+
+      if (barTop && barMid && barBottom) {
+        barTop.style.transform    = 'translateY(8px) rotate(45deg)';
+        barMid.style.opacity      = '0';
+        barBottom.style.transform = 'translateY(-8px) rotate(-45deg)';
+      }
+    }
+
     function closeMenu(): void {
-      menuBtn.setAttribute('aria-expanded', 'false');
-      mobileMenu.classList.add('hidden');
+      menuBtn!.setAttribute('aria-expanded', 'false');
+
+      if (prefersReducedMotion) {
+        mobileMenu!.style.display = 'none';
+      } else {
+        mobileMenu!.style.maxHeight = '0';
+        mobileMenu!.style.opacity   = '0';
+
+        // After the collapse transition, hide to remove from layout
+        let done = false;
+        const onDone = () => {
+          if (done) return;
+          done = true;
+          mobileMenu!.style.display = 'none';
+        };
+        mobileMenu!.addEventListener('transitionend', onDone, { once: true });
+        // Fallback timeout in case transitionend doesn't fire
+        setTimeout(onDone, 400);
+      }
+
+      // Restore transparent nav appearance
+      if (nav?.classList.contains('nav-transparent')) {
+        nav.classList.remove('nav-menu-open');
+      }
+
       if (barTop && barMid && barBottom) {
         barTop.style.transform    = '';
         barMid.style.opacity      = '';
@@ -172,22 +252,10 @@ const currentPath = Astro.url.pathname;
 
     menuBtn.addEventListener('click', () => {
       const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
-      const willOpen = !isOpen;
-
-      menuBtn.setAttribute('aria-expanded', String(willOpen));
-      mobileMenu.classList.toggle('hidden', !willOpen);
-
-      // Animate hamburger → X and back with explicit CSS
-      if (barTop && barMid && barBottom) {
-        if (willOpen) {
-          barTop.style.transform    = 'translateY(8px) rotate(45deg)';
-          barMid.style.opacity      = '0';
-          barBottom.style.transform = 'translateY(-8px) rotate(-45deg)';
-        } else {
-          barTop.style.transform    = '';
-          barMid.style.opacity      = '';
-          barBottom.style.transform = '';
-        }
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
       }
     });
 
