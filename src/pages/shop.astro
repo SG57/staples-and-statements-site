@@ -50,11 +50,12 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 
       <!-- Left: headline + tagline -->
       <div class="shop-header-text">
+        <div class="w-8 h-px bg-accent mb-4"></div>
         <p
-          class="font-body text-xs tracking-widest uppercase text-accent mb-4 shop-eyebrow"
-          data-guides="Digital Downloads · Curated Guides"
-          data-picks="LTK Collections · By Archetype"
-        >Digital Downloads · Curated Guides</p>
+          class="font-body text-xs tracking-widest uppercase text-accent mb-3 shop-eyebrow"
+          data-guides="— Digital Downloads · Curated Guides"
+          data-picks="— LTK Collections · By Archetype"
+        >— Digital Downloads · Curated Guides</p>
         <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold leading-tight">
           Shop My Picks
         </h1>
@@ -211,7 +212,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
                     class="ltk-card group"
                     aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
                   >
-                    <div class="ltk-card-img-frame">
+                    <div class="ltk-card-img-frame img-frame-grid">
                       {c.cover && (
                         <img
                           src={c.cover}
@@ -254,7 +255,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
                     class="ltk-card group"
                     aria-label={`Shop ${c.title} on LTK — ${c.product_count} items`}
                   >
-                    <div class="ltk-card-img-frame">
+                    <div class="ltk-card-img-frame img-frame-grid">
                       {c.cover && (
                         <img
                           src={c.cover}
@@ -288,9 +289,9 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
         <!-- More from Danielle (lifestyle / occasion picks) -->
         {pickCollections.length > 0 && (
           <div class="mt-16">
-            <div class="flex items-center gap-4 mb-6">
-              <div class="w-8 h-px bg-white/20"></div>
-              <p class="font-body text-xs tracking-widest uppercase text-white/40">More from Danielle</p>
+            <div class="mb-6">
+              <div class="w-8 h-px bg-white/20 mb-4"></div>
+              <p class="font-body text-xs tracking-widest uppercase text-white/40">— More from Danielle</p>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
               {pickCollections.map((c) => (
@@ -346,7 +347,8 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
   <!-- ── PERSONALIZED CTA ────────────────────────────────────────────────── -->
   <section class="py-20 lg:py-28 px-6 bg-surface" aria-label="Personalized styling">
     <div class="mx-auto max-w-3xl text-center">
-      <div class="w-8 h-px bg-accent mx-auto mb-8"></div>
+      <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
+      <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">— Personalized Styling</p>
       <h2 class="font-heading text-primary text-4xl lg:text-5xl">
         Want a wardrobe curated just for you?
       </h2>

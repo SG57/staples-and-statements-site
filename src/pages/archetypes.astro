@@ -11,6 +11,26 @@ const masculineArchetypes = await getCollection('archetypes', ({ data }) => data
 const masculineSorted = masculineArchetypes.sort((a, b) => a.data.order - b.data.order);
 
 const calendlyURL = '/contact';
+
+// Pre-compute icon arc data for quiz CTA cards
+// (Avoids inline `<` comparisons in JSX which confuse the Astro compiler)
+function buildIconArc(sorted: typeof feminineSorted) {
+  const count = sorted.length;
+  const mid = (count - 1) / 2;
+  return sorted.map((a, i) => {
+    const dist = Math.abs(i - mid);
+    const isCenter = dist < 0.5;
+    const isNear = dist <= 1.5;
+    return {
+      icon: a.data.icon ?? '✦',
+      size: isCenter ? 'text-3xl' : isNear ? 'text-2xl' : 'text-xl',
+      opacity: isCenter ? 'text-accent/50' : isNear ? 'text-accent/35' : 'text-accent/25',
+      lift: isCenter ? '-0.5rem' : isNear ? '-0.25rem' : '0',
+    };
+  });
+}
+const femIconArc = buildIconArc(feminineSorted);
+const mascIconArc = buildIconArc(masculineSorted);
 ---
 
 <BaseLayout
@@ -75,7 +95,7 @@ const calendlyURL = '/contact';
 
       <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
         <div class="hero-cin-item w-8 h-px bg-accent mb-4" style="--item-delay: 0"></div>
-        <p class="hero-cin-item font-body text-xs tracking-widest uppercase text-accent mb-4" style="--item-delay: 0">The Framework</p>
+        <p class="hero-cin-item font-body text-xs tracking-widest uppercase text-accent mb-4" style="--item-delay: 0">— The Framework</p>
         <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl">
           <span class="hero-cin-line block" style="--line-delay: 0">Find Your</span>
           <em class="hero-cin-line not-italic text-accent block" style="--line-delay: 1">Style Archetype</em>
@@ -86,7 +106,7 @@ const calendlyURL = '/contact';
         <div class="hero-cin-item mt-10" style="--item-delay: 10">
           <a
             href="#archetypes"
-            class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+            class="inline-flex items-center justify-center px-6 sm:px-10 py-4 bg-accent text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200"
           >
             Explore the Archetypes ↓
           </a>
@@ -133,7 +153,7 @@ const calendlyURL = '/contact';
         <!-- FULL header (normal flow — the "large and in charge" version) -->
         <div class="section-header-full mb-10 transition-opacity duration-500" data-section-full="feminine">
           <div class="w-8 h-px bg-accent mb-4"></div>
-          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">The Seven Types</p>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">— The Seven Types</p>
           <h2 class="font-heading text-white text-4xl lg:text-5xl">The Feminine Archetypes</h2>
           <p class="mt-4 font-body text-white/60 text-base max-w-xl leading-relaxed">
             Every woman is a blend — but most have one dominant archetype. Which one resonates with you?
@@ -224,21 +244,34 @@ const calendlyURL = '/contact';
 
           <!-- "Find Your Archetype" quiz CTA card -->
           <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[374px]
-                      flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
+                      flex flex-col justify-between p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
                data-quiz-trigger="fem">
-            <div class="w-8 h-0.5 bg-accent mb-4"></div>
-            <h3 class="font-heading text-xl font-semibold text-white mb-3">Not sure which one is you?</h3>
-            <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
-              Find your archetype in under 2 minutes.
-            </p>
-            <button
-              type="button"
-              class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase whitespace-nowrap hover:bg-accent-light transition-colors duration-200
-                     focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
-              data-quiz-trigger="fem"
-            >
-              Find Your Archetype &rarr;
-            </button>
+            <!-- Archetype symbol arc -->
+            <div class="flex items-end justify-center gap-1.5 pt-4 pb-2" aria-hidden="true">
+              {femIconArc.map((item) => (
+                <span
+                  class={`inline-block ${item.size} ${item.opacity} transition-transform duration-300`}
+                  style={`transform: translateY(${item.lift})`}
+                >
+                  {item.icon}
+                </span>
+              ))}
+            </div>
+            <div>
+              <div class="w-8 h-0.5 bg-accent mb-4"></div>
+              <h3 class="font-heading text-xl font-semibold text-white mb-3">Not sure which one is you?</h3>
+              <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
+                Find your archetype in under 2 minutes.
+              </p>
+              <button
+                type="button"
+                class="quiz-cta-btn inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200
+                       focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+                data-quiz-trigger="fem"
+              >
+                Find Your Archetype &rarr;
+              </button>
+            </div>
           </div>
         </div>
 
@@ -277,7 +310,7 @@ const calendlyURL = '/contact';
 
       <div class="relative z-10 mx-auto max-w-7xl px-6 pt-36 lg:pt-44 pb-20">
         <div class="hero-cin-item w-8 h-px bg-accent mb-4" style="--item-delay: 0"></div>
-        <p class="hero-cin-item font-body text-xs tracking-widest uppercase text-accent mb-4" style="--item-delay: 0">The Framework</p>
+        <p class="hero-cin-item font-body text-xs tracking-widest uppercase text-accent mb-4" style="--item-delay: 0">— The Framework</p>
         <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-8xl font-semibold leading-tight max-w-2xl">
           <span class="hero-cin-line block" style="--line-delay: 0">Find Your</span>
           <em class="hero-cin-line not-italic text-accent block" style="--line-delay: 1">Style Archetype</em>
@@ -288,7 +321,7 @@ const calendlyURL = '/contact';
         <div class="hero-cin-item mt-10" style="--item-delay: 10">
           <a
             href="#masculine-archetypes"
-            class="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+            class="inline-flex items-center justify-center px-6 sm:px-10 py-4 bg-accent text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200"
           >
             Explore the Archetypes ↓
           </a>
@@ -325,7 +358,7 @@ const calendlyURL = '/contact';
         <!-- FULL header -->
         <div class="section-header-full mb-10 transition-opacity duration-500" data-section-full="masculine">
           <div class="w-8 h-px bg-accent mb-4"></div>
-          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">The Archetypes</p>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">— The Archetypes</p>
           <h2 class="font-heading text-white text-4xl lg:text-5xl">The Masculine Archetypes</h2>
           <p class="mt-4 font-body text-white/60 text-base max-w-xl leading-relaxed">
             Every man's style is rooted in an archetype. Find the one that captures how you move through the world.
@@ -415,21 +448,34 @@ const calendlyURL = '/contact';
 
             <!-- "Find Your Archetype" quiz CTA card -->
             <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[374px]
-                        flex flex-col justify-end p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
+                        flex flex-col justify-between p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
                  data-quiz-trigger="masc">
-              <div class="w-8 h-0.5 bg-accent mb-4"></div>
-              <h3 class="font-heading text-xl font-semibold text-white mb-3">Not sure which one is you?</h3>
-              <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
-                Find your archetype in under 2 minutes.
-              </p>
-              <button
-                type="button"
-                class="quiz-cta-btn inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase whitespace-nowrap hover:bg-accent-light transition-colors duration-200
-                       focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
-                data-quiz-trigger="masc"
-              >
-                Find Your Archetype &rarr;
-              </button>
+              <!-- Archetype symbol arc -->
+              <div class="flex items-end justify-center gap-2.5 pt-4 pb-2" aria-hidden="true">
+                {mascIconArc.map((item) => (
+                  <span
+                    class={`inline-block ${item.size} ${item.opacity} transition-transform duration-300`}
+                    style={`transform: translateY(${item.lift})`}
+                  >
+                    {item.icon}
+                  </span>
+                ))}
+              </div>
+              <div>
+                <div class="w-8 h-0.5 bg-accent mb-4"></div>
+                <h3 class="font-heading text-xl font-semibold text-white mb-3">Not sure which one is you?</h3>
+                <p class="font-body text-sm text-white/60 leading-relaxed mb-4">
+                  Find your archetype in under 2 minutes.
+                </p>
+                <button
+                  type="button"
+                  class="quiz-cta-btn inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200
+                         focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+                  data-quiz-trigger="masc"
+                >
+                  Find Your Archetype &rarr;
+                </button>
+              </div>
             </div>
           </div>
 
@@ -446,7 +492,7 @@ const calendlyURL = '/contact';
             </p>
             <a
               href={calendlyURL}
-              class="inline-flex items-center justify-center px-10 py-4 border border-accent text-accent font-body text-sm font-medium tracking-widest uppercase hover:bg-accent hover:text-white transition-colors duration-200"
+              class="inline-flex items-center justify-center px-6 sm:px-10 py-4 border border-accent text-accent font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:bg-accent hover:text-white transition-colors duration-200"
             >
               Book a Consultation
             </a>
@@ -466,7 +512,7 @@ const calendlyURL = '/contact';
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 py-10 border-t border-b border-white/10">
           <div>
             <div class="w-8 h-px bg-accent mb-4"></div>
-            <p class="font-body text-xs tracking-widest uppercase text-accent mb-2">Digital Guides</p>
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">— Digital Guides</p>
             <h2 class="font-heading text-white text-3xl font-semibold">Take Your Archetype Home</h2>
             <p class="mt-2 font-body text-white/55 text-base max-w-md leading-relaxed">
               In-depth style guides for your archetype — from $15. Instant download.
@@ -479,13 +525,13 @@ const calendlyURL = '/contact';
         <div class="flex flex-col sm:flex-row gap-3 shrink-0">
           <a
             href="/shop"
-            class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200"
+            class="inline-flex items-center justify-center px-4 sm:px-8 py-4 bg-accent text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200"
           >
             Shop Style Guides
           </a>
           <a
             href={calendlyURL}
-            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200"
+            class="inline-flex items-center justify-center px-4 sm:px-8 py-4 border border-white/25 text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:border-white hover:bg-white/8 transition-colors duration-200"
           >
             Book Personalized Styling
           </a>

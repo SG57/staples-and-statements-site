@@ -153,13 +153,14 @@ const genderGuide = isFeminine
     <section
       class="relative bg-primary overflow-hidden"
       aria-label={`${data.name} signature looks`}
+      data-compact-super="Editorial"
+      data-compact-title={`Signature ${data.name} Looks`}
+      data-compact-theme="dark"
     >
       <!-- Section header — tight top padding so it reads as hero continuation -->
       <div class="mx-auto max-w-7xl px-6 pt-8 sm:pt-10 pb-8 sm:pb-10">
-        <div class="flex items-center gap-4 mb-3">
-          <div class="w-8 h-px bg-accent"></div>
-          <p class="font-body text-xs tracking-widest uppercase text-accent">Editorial</p>
-        </div>
+        <div class="w-8 h-px bg-accent mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">— Editorial</p>
         <h2 class="font-heading text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
           Signature {data.name} Looks
         </h2>
@@ -482,7 +483,7 @@ const genderGuide = isFeminine
         <!-- Section header -->
         <div class="text-center mb-10 sm:mb-14">
           <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
-          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Your Unique Blend</p>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">— Your Unique Blend</p>
           <h2 class="font-heading text-white text-3xl md:text-4xl font-semibold mb-4">
             {data.name} <span class="text-white/40">with shades of...</span>
           </h2>
@@ -665,7 +666,7 @@ const genderGuide = isFeminine
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8 py-10">
         <div>
           <div class="w-8 h-px bg-accent mb-4"></div>
-          <p class="font-body text-xs tracking-widest uppercase text-accent mb-2">Keep Exploring</p>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">— Keep Exploring</p>
           <h2 class="font-heading text-white text-3xl font-semibold">Discover More Archetypes</h2>
         </div>
         <div class="flex flex-col sm:flex-row gap-3 shrink-0">
@@ -689,7 +690,7 @@ const genderGuide = isFeminine
         {otherArchetypes.map((other) => (
           <a
             href={`/archetypes/${other.data.slug}`}
-            class="group relative overflow-hidden aspect-[3/4] block"
+            class="group relative overflow-hidden aspect-[3/4] block img-frame-grid"
           >
             <img
               src={`/images/archetypes/${other.data.slug}-1.webp`}
