@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { readdirSync } from 'fs';
+import { join } from 'path';
 
 const allServices = await getCollection('services');
 const activeServices = allServices
@@ -8,75 +10,357 @@ const activeServices = allServices
   .sort((a, b) => a.data.order - b.data.order);
 
 const calendlyURL = '/contact';
+
+// ── Hero mosaic: scan service-banners at build time ─────────────
+let bannerImages: string[] = [];
+try {
+  const dir = join(process.cwd(), 'public/images/service-banners');
+  bannerImages = readdirSync(dir)
+    .filter(f => /\.(webp|jpg|jpeg|png)$/i.test(f))
+    .sort()
+    .map(f => `/images/service-banners/${f}`);
+} catch { /* folder doesn't exist yet — graceful fallback */ }
+
+// Pick 6 random unique starting images (same pattern as home hero)
+function sampleUnique(arr: string[], n: number): string[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, n);
+}
+const heroStart = bannerImages.length >= 6
+  ? sampleUnique(bannerImages, 6)
+  : bannerImages.length >= 2
+    ? [...bannerImages, ...bannerImages, ...bannerImages].slice(0, 6)
+    : [];
+
+const hasMosaic = heroStart.length >= 2;
+
+// ── Tiered service grouping ─────────────────────────────────────
+const tier1Slugs = ['consultation', 'micro-styling'];
+const tier2Slugs = ['color-analysis', 'body-analysis', 'wardrobe-revamp', 'photoshoot-styling'];
+const tier3Slugs = ['master-style-moodboard', 'sourcing', 'vip'];
+
+const tier1 = activeServices.filter(s => tier1Slugs.includes(s.data.slug)).sort((a,b) => tier1Slugs.indexOf(a.data.slug) - tier1Slugs.indexOf(b.data.slug));
+const tier2 = activeServices.filter(s => tier2Slugs.includes(s.data.slug)).sort((a,b) => tier2Slugs.indexOf(a.data.slug) - tier2Slugs.indexOf(b.data.slug));
+const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort((a,b) => tier3Slugs.indexOf(a.data.slug) - tier3Slugs.indexOf(b.data.slug));
 ---
 
 <BaseLayout
   title="Styling Services — Staples & Statements"
   description="Explore Danielle Marie's full range of wardrobe styling services — from free consultations to year-round VIP styling packages. San Diego & virtual."
+  transparentNav={hasMosaic}
 >
 
-  <!-- ── PAGE HEADER ────────────────────────────────────── -->
-  <section class="pt-16 pb-16 px-6 bg-primary">
-    <div class="mx-auto max-w-7xl">
-      <div class="w-8 h-px bg-accent mb-4"></div>
-      <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Expert Styling Services</p>
-      <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold max-w-3xl leading-tight">
-        Every wardrobe journey starts here.
-      </h1>
-      <p class="mt-6 font-body text-white/60 text-lg max-w-xl leading-relaxed">
-        Starting a new wardrobe journey can feel daunting. That's why every service begins with a free consultation — so you invest in exactly what you need, nothing more.
-      </p>
-    </div>
-  </section>
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 1 — HERO BANNER
+       Mosaic image grid with crossfade carousel (mirrors home page).
+       Falls back to flat bg-primary layout if < 2 banner images.
+       ══════════════════════════════════════════════════════════════ -->
+  {hasMosaic ? (
+    <section class="relative overflow-hidden bg-primary" aria-label="Services hero"
+             data-compact-super="Expert Styling" data-compact-title="Services" data-compact-theme="dark">
+      <div class="relative min-h-[70svh] lg:min-h-[60vh] flex flex-col">
 
-  <!-- ── SERVICE CARDS ─────────────────────────────────── -->
-  <section class="py-20 px-6 bg-background" aria-label="All services">
+        <!-- Mosaic grid — 2×2 mobile, 3×2 desktop -->
+        <div id="svc-hero-mosaic" class="absolute inset-0 grid grid-cols-2 grid-rows-2 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 w-full h-full">
+
+          {/* Cell 0 — portrait on desktop (2 rows), equal on mobile */}
+          <div data-svc-cell="0" class="col-span-1 row-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
+            <img data-layer="a" src={heroStart[0]} alt="Wardrobe styling by Danielle Marie"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="600" height="900" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 1 */}
+          <div data-svc-cell="1" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+            <img data-layer="a" src={heroStart[1]} alt="Editorial styling"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 2 */}
+          <div data-svc-cell="2" class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+            <img data-layer="a" src={heroStart[2] ?? heroStart[0]} alt="Personal styling session"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 3 */}
+          <div data-svc-cell="3" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
+            <img data-layer="a" src={heroStart[3] ?? heroStart[1]} alt="Luxury personal styling"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 4 — desktop only */}
+          <div data-svc-cell="4" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+            <img data-layer="a" src={heroStart[4] ?? heroStart[0]} alt="Editorial wardrobe styling"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 5 — desktop only */}
+          <div data-svc-cell="5" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+            <img data-layer="a" src={heroStart[5] ?? heroStart[1]} alt="Style consultation"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+        </div>
+
+        <!-- Top scrim for nav legibility -->
+        <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
+             style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
+
+        <!-- Bottom scrim for text legibility -->
+        <div class="absolute bottom-0 left-0 right-0 h-[65%] lg:h-[55%] pointer-events-none z-[5]"
+             style="background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
+
+        <!-- Hero text overlay -->
+        <div class="absolute inset-0 flex items-end justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-16 pt-20 z-10">
+          <div class="max-w-xl">
+            <div class="w-8 h-px bg-accent mb-4"></div>
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3 text-bloom-sm">Expert Styling Services</p>
+            <h1 class="font-heading text-white text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-bloom">
+              Every wardrobe journey starts here.
+            </h1>
+            <p class="mt-4 lg:mt-6 font-body text-white/80 text-base sm:text-lg leading-relaxed max-w-md text-bloom-sm">
+              Starting a new wardrobe journey can feel daunting. That's why every service begins with a free consultation — so you invest in exactly what you need, nothing more.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hero carousel script -->
+    <script define:vars={{ bannerImages }}>
+      const IMAGES   = bannerImages;
+      const HOLD_MS  = 12_000;
+      const FADE_MS  = 1500;
+      const STAGGER  = 2_200;
+      const KB_SCALE = 1.08;
+
+      if (IMAGES.length < 2) {
+        // nothing to cycle
+      } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const inUse = new Array(IMAGES.length).fill(false);
+        const fileIndex = {};
+        IMAGES.forEach((path, i) => {
+          const name = path.split('/').pop();
+          fileIndex[name] = i;
+          fileIndex[path] = i;
+        });
+
+        function srcToIndex(src) {
+          if (!src) return -1;
+          if (fileIndex[src] !== undefined) return fileIndex[src];
+          const name = src.split('/').pop();
+          return fileIndex[name] !== undefined ? fileIndex[name] : -1;
+        }
+
+        function checkOut() {
+          const free = [];
+          for (let i = 0; i < IMAGES.length; i++) {
+            if (!inUse[i]) free.push(i);
+          }
+          if (free.length === 0) return -1;
+          const pick = free[Math.floor(Math.random() * free.length)];
+          inUse[pick] = true;
+          return pick;
+        }
+
+        function checkIn(idx) {
+          if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false;
+        }
+
+        const cells = [...document.querySelectorAll('[data-svc-cell]')];
+        const cellIdx = [];
+
+        cells.forEach((cell, i) => {
+          const layerA = cell.querySelector('[data-layer="a"]');
+          const src = layerA ? layerA.getAttribute('src') : '';
+          const idx = srcToIndex(src);
+          if (idx >= 0) inUse[idx] = true;
+          cellIdx[i] = idx;
+        });
+
+        function applyKenBurns(img) {
+          img.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+          img.style.transform  = `scale(${KB_SCALE})`;
+        }
+        function resetKenBurns(img) {
+          img.style.transition = 'none';
+          img.style.transform  = 'scale(1)';
+          img.offsetHeight;
+        }
+
+        requestAnimationFrame(() => {
+          cells.forEach(cell => {
+            const a = cell.querySelector('[data-layer="a"]');
+            if (a) {
+              a.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+              a.style.transform  = `scale(${KB_SCALE})`;
+            }
+          });
+        });
+
+        function startCell(cell, ci, startDelay) {
+          const layerA = cell.querySelector('[data-layer="a"]');
+          const layerB = cell.querySelector('[data-layer="b"]');
+          if (!layerA || !layerB) return;
+
+          let frontIsA = true;
+
+          function nextImage() {
+            const front = frontIsA ? layerA : layerB;
+            const back  = frontIsA ? layerB : layerA;
+
+            const nextIdx = checkOut();
+            if (nextIdx < 0) {
+              setTimeout(nextImage, HOLD_MS);
+              return;
+            }
+
+            resetKenBurns(back);
+            back.style.opacity = '0';
+            back.src = IMAGES[nextIdx];
+
+            const doFade = () => {
+              if (!back.naturalWidth) {
+                checkIn(nextIdx);
+                setTimeout(nextImage, 500);
+                return;
+              }
+
+              back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+              back.style.opacity    = '1';
+              back.style.transform  = `scale(${KB_SCALE})`;
+              front.style.opacity   = '0';
+
+              checkIn(cellIdx[ci]);
+              cellIdx[ci] = nextIdx;
+
+              frontIsA = !frontIsA;
+              setTimeout(nextImage, HOLD_MS);
+            };
+
+            if (back.complete && back.naturalWidth > 0) {
+              doFade();
+            } else {
+              back.onload  = doFade;
+              back.onerror = () => {
+                checkIn(nextIdx);
+                setTimeout(nextImage, 500);
+              };
+            }
+          }
+
+          setTimeout(nextImage, startDelay + HOLD_MS);
+        }
+
+        requestAnimationFrame(() => {
+          cells.forEach((cell, i) => {
+            startCell(cell, i, i * STAGGER);
+          });
+        });
+      }
+    </script>
+  ) : (
+    /* Fallback: flat bg-primary hero (no mosaic images available) */
+    <section class="pt-16 pb-16 px-6 bg-primary" aria-label="Services hero"
+             data-compact-super="Expert Styling" data-compact-title="Services" data-compact-theme="dark">
+      <div class="mx-auto max-w-7xl">
+        <div class="w-8 h-px bg-accent mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Expert Styling Services</p>
+        <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold max-w-3xl leading-tight">
+          Every wardrobe journey starts here.
+        </h1>
+        <p class="mt-6 font-body text-white/60 text-lg max-w-xl leading-relaxed">
+          Starting a new wardrobe journey can feel daunting. That's why every service begins with a free consultation — so you invest in exactly what you need, nothing more.
+        </p>
+      </div>
+    </section>
+  )}
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 2 — TIERED SERVICE CARDS
+       Three tiers: Start Here → Core Services → Signature Experiences
+       ══════════════════════════════════════════════════════════════ -->
+
+  <!-- ── TIER 1: Start Here ──────────────────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="Start here services"
+           data-compact-super="Start Here" data-compact-title="Getting Started" data-compact-theme="light">
     <div class="mx-auto max-w-7xl">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {activeServices.map((service) => (
+      <div class="mb-12">
+        <div class="w-8 h-px bg-accent mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">Start Here</p>
+        <h2 class="font-heading text-primary text-3xl sm:text-4xl">Where every journey begins.</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {tier1.map((service) => (
           <a
             href={`/services/${service.data.slug}`}
-            class="group flex flex-col bg-surface hover:bg-surface-dark transition-colors duration-200 p-8 img-frame-card"
+            class:list={[
+              "group flex flex-col bg-primary text-white img-frame-card overflow-hidden transition-colors duration-200",
+              service.data.slug === 'consultation' && "border-l-2 border-accent",
+            ]}
           >
-            <!-- Price tag -->
-            <div class="flex items-start justify-between mb-5">
-              <span class="font-body text-xs tracking-widest uppercase text-accent-text font-medium">
-                {service.data.price}
-              </span>
-              {service.data.featured && (
-                <span class="font-body text-xs tracking-widest uppercase text-primary/40 bg-surface-dark px-2 py-1">
-                  Popular
+            {/* Top image banner */}
+            <div class="h-[60px] w-full overflow-hidden relative bg-gradient-to-r from-secondary/40 to-primary-light">
+              <img
+                src={`/images/services/${service.data.slug}.webp`}
+                alt=""
+                class="w-full h-full object-cover"
+                loading="lazy"
+                onerror="this.style.display='none'"
+              />
+            </div>
+
+            <div class="flex flex-col flex-1 p-8">
+              {/* Price badge */}
+              <div class="flex items-start justify-between mb-5">
+                <span class="font-body text-xs tracking-widest uppercase text-accent font-medium">
+                  {service.data.price}
                 </span>
-              )}
-            </div>
+                {service.data.featured && (
+                  <span class="font-body text-xs tracking-widest uppercase text-white/40 bg-white/10 px-2 py-1">
+                    Popular
+                  </span>
+                )}
+              </div>
 
-            <!-- Service name -->
-            <h2 class="font-heading text-2xl font-semibold text-primary mb-3 group-hover:text-accent transition-colors">
-              {service.data.title}
-            </h2>
+              {/* Title */}
+              <h3 class="font-heading text-2xl font-semibold text-white mb-3 group-hover:text-accent transition-colors">
+                {service.data.title}
+              </h3>
 
-            <!-- Duration -->
-            {service.data.duration && (
-              <p class="font-body text-xs text-text-light uppercase tracking-wide mb-4">
-                {service.data.duration}
+              {/* Description */}
+              <p class="font-body text-sm text-white/60 leading-relaxed flex-1 mb-6">
+                {service.data.shortDescription ?? service.data.perfectFor}
               </p>
-            )}
 
-            <!-- Description -->
-            <p class="font-body text-sm text-text-muted leading-relaxed flex-1 mb-6">
-              {service.data.shortDescription ?? service.data.perfectFor}
-            </p>
-
-            <!-- Perfect for -->
-            <div class="border-t border-surface-dark pt-5 mb-5">
-              <p class="font-body text-xs tracking-widest uppercase text-text-light mb-2">Perfect For</p>
-              <p class="font-body text-sm text-text-muted leading-relaxed">{service.data.perfectFor}</p>
-            </div>
-
-            <!-- CTA -->
-            <div class="flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent-text">
-              <span>View Service Details</span>
-              <span class="group-hover:translate-x-1 transition-transform">→</span>
+              {/* CTA */}
+              <div class="flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent">
+                <span>View Details</span>
+                <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+              </div>
             </div>
           </a>
         ))}
@@ -84,8 +368,186 @@ const calendlyURL = '/contact';
     </div>
   </section>
 
-  <!-- ── HOW IT WORKS ──────────────────────────────────── -->
-  <section class="py-20 px-6 bg-surface" aria-label="How it works" data-compact-super="The Process" data-compact-title="How It Works" data-compact-theme="surface">
+  <!-- ── TIER 2: Core Services ───────────────────────────────── -->
+  <section class="py-20 px-6 bg-surface" aria-label="Core services"
+           data-compact-super="Core Services" data-compact-title="Core Services" data-compact-theme="surface">
+    <div class="mx-auto max-w-7xl">
+      <div class="mb-12">
+        <div class="w-8 h-px bg-accent mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">Core Services</p>
+        <h2 class="font-heading text-primary text-3xl sm:text-4xl">The foundation of your style evolution.</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {tier2.map((service, idx) => {
+          const isDark = idx % 2 !== 0;
+          return (
+            <a
+              href={`/services/${service.data.slug}`}
+              class:list={[
+                "group flex flex-col img-frame-card overflow-hidden transition-colors duration-200",
+                isDark ? "bg-primary text-white" : "bg-background",
+              ]}
+            >
+              {/* Top image banner */}
+              <div class:list={[
+                "h-[60px] w-full overflow-hidden relative",
+                isDark ? "bg-gradient-to-r from-secondary/40 to-primary-light" : "bg-gradient-to-r from-surface-dark to-secondary/20",
+              ]}>
+                <img
+                  src={`/images/services/${service.data.slug}.webp`}
+                  alt=""
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  onerror="this.style.display='none'"
+                />
+              </div>
+
+              <div class="flex flex-col flex-1 p-8">
+                {/* Price badge */}
+                <div class="flex items-start justify-between mb-5">
+                  <span class:list={[
+                    "font-body text-xs tracking-widest uppercase font-medium",
+                    isDark ? "text-accent" : "text-accent-text",
+                  ]}>
+                    {service.data.price}
+                  </span>
+                  {service.data.featured && (
+                    <span class:list={[
+                      "font-body text-xs tracking-widest uppercase px-2 py-1",
+                      isDark ? "text-white/40 bg-white/10" : "text-primary/40 bg-surface-dark",
+                    ]}>
+                      Popular
+                    </span>
+                  )}
+                </div>
+
+                {/* Title */}
+                <h3 class:list={[
+                  "font-heading text-2xl font-semibold mb-3 group-hover:text-accent transition-colors",
+                  isDark ? "text-white" : "text-primary",
+                ]}>
+                  {service.data.title}
+                </h3>
+
+                {/* Description */}
+                <p class:list={[
+                  "font-body text-sm leading-relaxed flex-1 mb-6",
+                  isDark ? "text-white/60" : "text-text-muted",
+                ]}>
+                  {service.data.shortDescription ?? service.data.perfectFor}
+                </p>
+
+                {/* CTA */}
+                <div class:list={[
+                  "flex items-center gap-2 font-body text-xs tracking-widest uppercase",
+                  isDark ? "text-accent" : "text-accent-text",
+                ]}>
+                  <span>View Details</span>
+                  <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TIER 3: Signature Experiences ───────────────────────── -->
+  <section class="py-20 px-6 bg-background" aria-label="Signature experiences"
+           data-compact-super="Signature" data-compact-title="Signature Experiences" data-compact-theme="light">
+    <div class="mx-auto max-w-7xl">
+      <div class="mb-12">
+        <div class="w-8 h-px bg-accent mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">Signature Experiences</p>
+        <h2 class="font-heading text-primary text-3xl sm:text-4xl">For the client who wants more.</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {tier3.map((service) => {
+          const isVip = service.data.slug === 'vip';
+          return (
+            <a
+              href={`/services/${service.data.slug}`}
+              class:list={[
+                "group flex flex-col img-frame-card overflow-hidden transition-colors duration-200",
+                isVip ? "bg-primary text-white border-l-2 border-accent" : "bg-surface",
+              ]}
+              style={isVip ? "box-shadow: 0 8px 40px rgba(184, 151, 126, 0.15), 0 2px 8px rgba(184, 151, 126, 0.10);" : undefined}
+            >
+              {/* Top image banner */}
+              <div class:list={[
+                "h-[60px] w-full overflow-hidden relative",
+                isVip ? "bg-gradient-to-r from-accent/30 to-primary-light" : "bg-gradient-to-r from-surface-dark to-secondary/20",
+              ]}>
+                <img
+                  src={`/images/services/${service.data.slug}.webp`}
+                  alt=""
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  onerror="this.style.display='none'"
+                />
+              </div>
+
+              <div class="flex flex-col flex-1 p-8">
+                {/* Price badge */}
+                <div class="flex items-start justify-between mb-5">
+                  <span class:list={[
+                    "font-body text-xs tracking-widest uppercase font-medium",
+                    isVip ? "text-accent" : "text-accent-text",
+                  ]}>
+                    {service.data.price}
+                  </span>
+                  {service.data.featured && (
+                    <span class:list={[
+                      "font-body text-xs tracking-widest uppercase px-2 py-1",
+                      isVip ? "text-white/40 bg-white/10" : "text-primary/40 bg-surface-dark",
+                    ]}>
+                      Popular
+                    </span>
+                  )}
+                </div>
+
+                {/* Title */}
+                <h3 class:list={[
+                  "font-heading text-2xl font-semibold mb-3 group-hover:text-accent transition-colors",
+                  isVip ? "text-white" : "text-primary",
+                ]}>
+                  {service.data.title}
+                </h3>
+
+                {/* Description */}
+                <p class:list={[
+                  "font-body text-sm leading-relaxed flex-1 mb-6",
+                  isVip ? "text-white/60" : "text-text-muted",
+                ]}>
+                  {service.data.shortDescription ?? service.data.perfectFor}
+                </p>
+
+                {/* CTA */}
+                <div class:list={[
+                  "flex items-center gap-2 font-body text-xs tracking-widest uppercase",
+                  isVip ? "text-accent" : "text-accent-text",
+                ]}>
+                  <span>View Details</span>
+                  <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 3 — HOW IT WORKS TIMELINE
+       Horizontal connected nodes on desktop, vertical steps on mobile.
+       ══════════════════════════════════════════════════════════════ -->
+  <section class="py-20 px-6 bg-surface" aria-label="How it works"
+           data-compact-super="The Process" data-compact-title="How It Works" data-compact-theme="surface">
     <div class="mx-auto max-w-5xl">
       <div class="text-center mb-14">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
@@ -93,25 +555,78 @@ const calendlyURL = '/contact';
         <h2 class="font-heading text-primary text-4xl">How It Works</h2>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {[
-          { step: "01", title: "Book a Free Consultation", body: "A 20-minute call to discuss your goals, challenges, and lifestyle. Danielle will recommend exactly which services make sense for where you are right now." },
-          { step: "02", title: "Your Styling Session", body: "In-person or virtual, depending on the service. Danielle arrives prepared and focused on building something that actually works for your life." },
-          { step: "03", title: "Your Elevated Wardrobe", body: "You leave with a clearer vision, specific next steps, and a wardrobe that works harder for you every single day." },
-        ].map(({ step, title, body }) => (
-          <div class="text-center p-6">
-            <p class="font-heading text-5xl font-semibold text-surface-dark mb-5">{step}</p>
-            <h3 class="font-heading text-xl font-semibold text-primary mb-3">{title}</h3>
-            <p class="font-body text-sm text-text-muted leading-relaxed">{body}</p>
+      <div class="relative">
+        {/* Connecting line — desktop only, behind the nodes */}
+        <div class="hidden lg:block absolute top-7 left-[16.67%] right-[16.67%] h-px bg-accent/30"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-0">
+
+          {/* Step 1: Book */}
+          <div class="flex flex-col items-center text-center relative">
+            <div class="w-14 h-14 rounded-full border-2 border-accent/40 flex items-center justify-center bg-surface relative z-10 mb-5">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent">
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+                <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" />
+              </svg>
+            </div>
+            <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-2">Step 01</p>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-3">Book a Free Consultation</h3>
+            <p class="font-body text-sm text-text-muted leading-relaxed max-w-xs">
+              A 20-minute call to discuss your goals, challenges, and lifestyle. Danielle will recommend exactly which services make sense for where you are right now.
+            </p>
           </div>
-        ))}
+
+          {/* Step 2: Session */}
+          <div class="flex flex-col items-center text-center relative">
+            <div class="w-14 h-14 rounded-full border-2 border-accent/40 flex items-center justify-center bg-surface relative z-10 mb-5">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent">
+                <path d="M12 2L9 9H3l5.5 4.5L6.5 22 12 17.5 17.5 22l-2-8.5L21 9h-6L12 2z" />
+              </svg>
+            </div>
+            <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-2">Step 02</p>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-3">Your Styling Session</h3>
+            <p class="font-body text-sm text-text-muted leading-relaxed max-w-xs">
+              In-person or virtual, depending on the service. Danielle arrives prepared and focused on building something that actually works for your life.
+            </p>
+          </div>
+
+          {/* Step 3: Wardrobe */}
+          <div class="flex flex-col items-center text-center relative">
+            <div class="w-14 h-14 rounded-full border-2 border-accent/40 flex items-center justify-center bg-surface relative z-10 mb-5">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent">
+                <path d="M12 3l1.5 3.5L17 8l-3.5 1.5L12 13l-1.5-3.5L7 8l3.5-1.5L12 3z" />
+                <path d="M5 16l1 2.5L8.5 20 6 21l-1 2.5L4 21l-2.5-1L4 18.5 5 16z" />
+                <path d="M19 16l1 2.5 2.5 1.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1.5 1-2.5z" />
+              </svg>
+            </div>
+            <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-2">Step 03</p>
+            <h3 class="font-heading text-xl font-semibold text-primary mb-3">Your Elevated Wardrobe</h3>
+            <p class="font-body text-sm text-text-muted leading-relaxed max-w-xs">
+              You leave with a clearer vision, specific next steps, and a wardrobe that works harder for you every single day.
+            </p>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ── NOT SURE CTA ──────────────────────────────────── -->
-  <section class="py-20 lg:py-28 px-6 bg-primary" aria-label="Book consultation">
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 4 — FINAL CTA
+       Dark bg + testimonial quote + booking button
+       ══════════════════════════════════════════════════════════════ -->
+  <section class="py-20 lg:py-28 px-6 bg-primary" aria-label="Book consultation"
+           data-compact-super="Book Now" data-compact-title="Get Started" data-compact-theme="dark">
     <div class="mx-auto max-w-3xl text-center">
+      {/* Testimonial quote */}
+      <p class="font-body text-sm italic text-white/40 mb-8 max-w-md mx-auto leading-relaxed">
+        "Danielle completely changed how I think about getting dressed."<span class="not-italic"> — Client</span>
+      </p>
+
       <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
       <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Not Sure Where to Start?</p>
       <h2 class="font-heading text-white text-4xl lg:text-5xl">
