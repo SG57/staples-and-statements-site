@@ -163,7 +163,20 @@ const calendlyURL = '/contact';
         <blockquote class="font-body text-text-muted text-lg leading-relaxed italic">
           {relatedTestimonial.body.trim().replace(/^"|"$/g, '')}
         </blockquote>
-        <p class="mt-6 font-heading text-xl font-semibold text-primary">— {relatedTestimonial.data.name}</p>
+        <div class="mt-6 flex items-center justify-center gap-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden shrink-0 img-frame-circle">
+            <img
+              src={`/images/testimonials/${relatedTestimonial.data.name.toLowerCase()}.webp`}
+              alt={relatedTestimonial.data.name}
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="40"
+              height="40"
+              onerror="this.parentElement.style.display='none'"
+            />
+          </div>
+          <p class="font-heading text-xl font-semibold text-primary">{relatedTestimonial.data.name}</p>
+        </div>
         <a
           href="/clients"
           class="mt-4 inline-block font-body text-xs tracking-widest uppercase text-accent hover:text-primary transition-colors"
