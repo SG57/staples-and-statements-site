@@ -1,24 +1,277 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { readdirSync } from 'fs';
+import { join } from 'path';
 
 const calendlyURL = '/contact';
+
+// ── Hero mosaic: scan about-banners at build time ─────────────
+let bannerImages: string[] = [];
+try {
+  const dir = join(process.cwd(), 'public/images/about-banners');
+  bannerImages = readdirSync(dir)
+    .filter(f => /\.(webp|jpg|jpeg|png)$/i.test(f))
+    .sort()
+    .map(f => `/images/about-banners/${f}`);
+} catch { /* folder doesn't exist yet — graceful fallback */ }
+
+// Pick 6 random unique starting images
+function sampleUnique(arr: string[], n: number): string[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, n);
+}
+const heroStart = bannerImages.length >= 6
+  ? sampleUnique(bannerImages, 6)
+  : bannerImages.length >= 2
+    ? [...bannerImages, ...bannerImages, ...bannerImages].slice(0, 6)
+    : [];
+
+const hasMosaic = heroStart.length >= 2;
 ---
 
 <BaseLayout
   title="About Danielle Marie — Staples & Statements"
   description="Meet Danielle Marie, wardrobe stylist and creative director behind Staples & Statements. Learn about her archetype-based approach to personal style."
+  transparentNav={hasMosaic}
 >
 
-  <!-- ── PAGE HEADER ────────────────────────────────────── -->
-  <section class="pt-16 pb-12 px-6 bg-background border-b border-surface-dark">
-    <div class="mx-auto max-w-7xl">
-      <div class="w-8 h-px bg-accent mb-4"></div>
-      <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">The Woman Behind the Wardrobe</p>
-      <h1 class="font-heading text-primary text-5xl md:text-6xl lg:text-7xl font-semibold max-w-2xl leading-tight">
-        About Danielle Marie
-      </h1>
-    </div>
-  </section>
+  <!-- ══════════════════════════════════════════════════════════════
+       HERO — Mosaic image grid with crossfade carousel
+       Falls back to flat bg-background layout if < 2 banner images.
+       ══════════════════════════════════════════════════════════════ -->
+  {hasMosaic ? (
+    <section class="relative overflow-hidden bg-primary" aria-label="About hero">
+      <div class="relative min-h-[70svh] lg:min-h-[60vh] flex flex-col">
+
+        <!-- Mosaic grid — 2×2 mobile, 3×2 desktop -->
+        <div id="about-hero-mosaic" class="absolute inset-0 grid grid-cols-2 grid-rows-2 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 w-full h-full">
+
+          {/* Cell 0 — portrait on desktop (2 rows), equal on mobile */}
+          <div data-about-cell="0" class="col-span-1 row-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
+            <img data-layer="a" src={heroStart[0]} alt="Danielle Marie — wardrobe stylist"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="600" height="900" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 1 */}
+          <div data-about-cell="1" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+            <img data-layer="a" src={heroStart[1]} alt="Danielle Marie styling"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 2 */}
+          <div data-about-cell="2" class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+            <img data-layer="a" src={heroStart[2] ?? heroStart[0]} alt="Danielle Marie personal style"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 3 */}
+          <div data-about-cell="3" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
+            <img data-layer="a" src={heroStart[3] ?? heroStart[1]} alt="Danielle Marie fashion"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 4 — desktop only */}
+          <div data-about-cell="4" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
+            <img data-layer="a" src={heroStart[4] ?? heroStart[0]} alt="Danielle Marie creative direction"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+          {/* Cell 5 — desktop only */}
+          <div data-about-cell="5" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
+            <img data-layer="a" src={heroStart[5] ?? heroStart[1]} alt="Danielle Marie behind the scenes"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
+            <img data-layer="b" src="" alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          </div>
+
+        </div>
+
+        <!-- Top scrim for nav legibility -->
+        <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
+             style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
+
+        <!-- Bottom scrim for text legibility -->
+        <div class="absolute bottom-0 left-0 right-0 h-[65%] lg:h-[55%] pointer-events-none z-[5]"
+             style="background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
+
+        <!-- Hero text overlay -->
+        <div class="absolute inset-0 flex items-end justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-16 pt-20 z-10">
+          <div class="max-w-xl">
+            <div class="w-8 h-px bg-accent mb-4"></div>
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3 text-bloom-sm">The Woman Behind the Wardrobe</p>
+            <h1 class="font-heading text-white text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-bloom">
+              Danielle Marie
+            </h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hero carousel script -->
+    <script define:vars={{ bannerImages }}>
+      const IMAGES   = bannerImages;
+      const HOLD_MS  = 12_000;
+      const FADE_MS  = 1500;
+      const STAGGER  = 2_200;
+      const KB_SCALE = 1.08;
+
+      if (IMAGES.length < 2) {
+        // nothing to cycle
+      } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const inUse = new Array(IMAGES.length).fill(false);
+        const fileIndex = {};
+        IMAGES.forEach((path, i) => {
+          const name = path.split('/').pop();
+          fileIndex[name] = i;
+          fileIndex[path] = i;
+        });
+
+        function srcToIndex(src) {
+          if (!src) return -1;
+          if (fileIndex[src] !== undefined) return fileIndex[src];
+          const name = src.split('/').pop();
+          return fileIndex[name] !== undefined ? fileIndex[name] : -1;
+        }
+
+        function checkOut() {
+          const free = [];
+          for (let i = 0; i < IMAGES.length; i++) {
+            if (!inUse[i]) free.push(i);
+          }
+          if (free.length === 0) return -1;
+          const pick = free[Math.floor(Math.random() * free.length)];
+          inUse[pick] = true;
+          return pick;
+        }
+
+        function checkIn(idx) {
+          if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false;
+        }
+
+        const cells = [...document.querySelectorAll('[data-about-cell]')];
+        const cellIdx = [];
+
+        cells.forEach((cell, i) => {
+          const layerA = cell.querySelector('[data-layer="a"]');
+          const src = layerA ? layerA.getAttribute('src') : '';
+          const idx = srcToIndex(src);
+          if (idx >= 0) inUse[idx] = true;
+          cellIdx[i] = idx;
+        });
+
+        function applyKenBurns(img) {
+          img.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+          img.style.transform  = `scale(${KB_SCALE})`;
+        }
+        function resetKenBurns(img) {
+          img.style.transition = 'none';
+          img.style.transform  = 'scale(1)';
+          img.offsetHeight;
+        }
+
+        requestAnimationFrame(() => {
+          cells.forEach(cell => {
+            const a = cell.querySelector('[data-layer="a"]');
+            if (a) {
+              a.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+              a.style.transform  = `scale(${KB_SCALE})`;
+            }
+          });
+        });
+
+        function startCell(cell, ci, startDelay) {
+          const layerA = cell.querySelector('[data-layer="a"]');
+          const layerB = cell.querySelector('[data-layer="b"]');
+          if (!layerA || !layerB) return;
+
+          let frontIsA = true;
+
+          function nextImage() {
+            const front = frontIsA ? layerA : layerB;
+            const back  = frontIsA ? layerB : layerA;
+
+            const nextIdx = checkOut();
+            if (nextIdx < 0) {
+              setTimeout(nextImage, HOLD_MS);
+              return;
+            }
+
+            resetKenBurns(back);
+            back.style.opacity = '0';
+            back.src = IMAGES[nextIdx];
+
+            const doFade = () => {
+              if (!back.naturalWidth) {
+                checkIn(nextIdx);
+                setTimeout(nextImage, 500);
+                return;
+              }
+
+              back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+              back.style.opacity    = '1';
+              back.style.transform  = `scale(${KB_SCALE})`;
+              front.style.opacity   = '0';
+
+              checkIn(cellIdx[ci]);
+              cellIdx[ci] = nextIdx;
+
+              frontIsA = !frontIsA;
+              setTimeout(nextImage, HOLD_MS);
+            };
+
+            if (back.complete && back.naturalWidth > 0) {
+              doFade();
+            } else {
+              back.onload  = doFade;
+              back.onerror = () => {
+                checkIn(nextIdx);
+                setTimeout(nextImage, 500);
+              };
+            }
+          }
+
+          setTimeout(nextImage, startDelay + HOLD_MS);
+        }
+
+        requestAnimationFrame(() => {
+          cells.forEach((cell, i) => {
+            startCell(cell, i, i * STAGGER);
+          });
+        });
+      }
+    </script>
+  ) : (
+    /* Fallback: flat bg-background hero (no mosaic images available) */
+    <section class="pt-16 pb-12 px-6 bg-background border-b border-surface-dark">
+      <div class="mx-auto max-w-7xl">
+        <div class="w-8 h-px bg-accent mb-4"></div>
+        <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">The Woman Behind the Wardrobe</p>
+        <h1 class="font-heading text-primary text-5xl md:text-6xl lg:text-7xl font-semibold max-w-2xl leading-tight">
+          Danielle Marie
+        </h1>
+      </div>
+    </section>
+  )}
 
   <!-- ── PORTRAIT + INTRO ──────────────────────────────── -->
   <section class="py-20 px-6 bg-background" aria-label="About Danielle">
