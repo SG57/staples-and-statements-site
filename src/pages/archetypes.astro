@@ -200,16 +200,20 @@ const mascIconArc = buildIconArc(masculineSorted);
               <div class="archetype-hover-ray absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-[5]"></div>
 
               <!-- Always-visible bottom label -->
-              <div class="archetype-bottom-label absolute bottom-0 left-0 right-0 p-5 z-10">
+              <div class="archetype-bottom-label absolute bottom-0 left-0 right-0 p-4 lg:p-5 z-10">
                 <div class="flex items-center gap-2 mb-1">
                   <span class="text-lg text-accent/70">{archetype.data.icon ?? '✦'}</span>
                   <h3 class="font-heading text-white text-xl font-semibold leading-tight">
                     {archetype.data.name}
                   </h3>
                 </div>
+                <!-- Mobile: condensed description always visible (hidden on desktop where hover panel shows it) -->
+                <p class="lg:hidden font-body text-xs text-white/55 leading-snug line-clamp-2 mt-1">
+                  {archetype.data.description}
+                </p>
               </div>
 
-              <!-- Hover reveal panel: slides up from bottom on hover -->
+              <!-- Hover reveal panel: slides up from bottom on hover (desktop only; hidden on mobile via CSS) -->
               <!-- Outer div = gradient only (full card width, no counter-scale) -->
               <!-- Inner div = text content (counter-scaled to original pixel size) -->
               <div class="archetype-reveal absolute inset-x-0 bottom-0 z-20
@@ -244,7 +248,7 @@ const mascIconArc = buildIconArc(masculineSorted);
 
           <!-- "Find Your Archetype" quiz CTA card -->
           <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[374px]
-                      flex flex-col justify-between p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
+                      flex flex-col justify-between p-4 lg:p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
                data-quiz-trigger="fem">
             <!-- Archetype symbol arc -->
             <div class="flex items-end justify-center gap-1.5 pt-4 pb-2" aria-hidden="true">
@@ -265,7 +269,7 @@ const mascIconArc = buildIconArc(masculineSorted);
               </p>
               <button
                 type="button"
-                class="quiz-cta-btn inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200
+                class="quiz-cta-btn inline-flex items-center justify-center w-full lg:w-auto px-3 sm:px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-wider lg:tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200
                        focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
                 data-quiz-trigger="fem"
               >
@@ -406,16 +410,20 @@ const mascIconArc = buildIconArc(masculineSorted);
                 <div class="archetype-hover-ray absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-[5]"></div>
 
                 <!-- Always-visible bottom label -->
-                <div class="archetype-bottom-label absolute bottom-0 left-0 right-0 p-5 z-10">
+                <div class="archetype-bottom-label absolute bottom-0 left-0 right-0 p-4 lg:p-5 z-10">
                   <div class="flex items-center gap-2 mb-1">
                     <span class="text-lg text-accent/70">{archetype.data.icon ?? '▲'}</span>
                     <h3 class="font-heading text-white text-xl font-semibold leading-tight">
                       {archetype.data.name}
                     </h3>
                   </div>
+                  <!-- Mobile: condensed description always visible (hidden on desktop where hover panel shows it) -->
+                  <p class="lg:hidden font-body text-xs text-white/55 leading-snug line-clamp-2 mt-1">
+                    {archetype.data.description}
+                  </p>
                 </div>
 
-                <!-- Hover reveal panel: slides up from bottom on hover -->
+                <!-- Hover reveal panel: slides up from bottom on hover (desktop only; hidden on mobile via CSS) -->
                 <div class="archetype-reveal absolute inset-x-0 bottom-0 z-20
                             bg-gradient-to-t from-black/50 via-black/40 to-transparent">
                   <div class="archetype-reveal-content p-5">
@@ -448,7 +456,7 @@ const mascIconArc = buildIconArc(masculineSorted);
 
             <!-- "Find Your Archetype" quiz CTA card -->
             <div class="quiz-cta-card relative overflow-hidden bg-accent/12 backdrop-blur-sm border border-accent/25 aspect-[3/4] max-h-[374px]
-                        flex flex-col justify-between p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
+                        flex flex-col justify-between p-4 lg:p-5 hover:bg-accent/18 transition-all duration-300 cursor-pointer"
                  data-quiz-trigger="masc">
               <!-- Archetype symbol arc -->
               <div class="flex items-end justify-center gap-2.5 pt-4 pb-2" aria-hidden="true">
@@ -469,7 +477,7 @@ const mascIconArc = buildIconArc(masculineSorted);
                 </p>
                 <button
                   type="button"
-                  class="quiz-cta-btn inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200
+                  class="quiz-cta-btn inline-flex items-center justify-center w-full lg:w-auto px-3 sm:px-6 py-3 bg-accent text-white font-body text-xs font-medium tracking-wider lg:tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200
                          focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
                   data-quiz-trigger="masc"
                 >
@@ -671,23 +679,62 @@ const mascIconArc = buildIconArc(masculineSorted);
     padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
   }
 
-  /* ── Reveal panel transitions (fully CSS-controlled) ──────── */
+  /* ── Mobile: prevent long-press zoom and hide desktop hover UI ── */
+  .archetype-card {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+  }
+
+  /* ── Mobile: hide the hover reveal panel entirely ──────────── */
+  /* On touch devices, the card is just a link to the detail page.
+     The condensed description in the bottom label provides context. */
+  @media (max-width: 1023px) {
+    .archetype-reveal {
+      display: none !important;
+    }
+    .archetype-hover-ray {
+      display: none !important;
+    }
+    /* Strengthen bottom gradient — description text needs more dark coverage on mobile.
+       The gradient overlay div is the 3rd child after the two img layers. Override
+       its via-stop to extend darkness further up the card. */
+    .archetype-bottom-label {
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+      /* bottom-label gets its own scrim since description text lives here on mobile */
+    }
+    /* Ensure quiz CTA card text doesn't overflow */
+    .quiz-cta-card {
+      overflow: hidden;
+    }
+    .quiz-cta-card h3 {
+      font-size: 1.125rem; /* text-lg instead of text-xl on mobile */
+    }
+    .quiz-cta-card .quiz-cta-btn {
+      white-space: normal;
+      word-break: normal;
+    }
+  }
+
+  /* ── Reveal panel transitions (desktop only) ───────────────── */
   /* Base: hidden below card. Transition managed here so we can combine
      translateY + counter-scale in a single transform declaration. */
   .archetype-reveal {
     transform: translateY(100%);
     transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  /* Hover: slide up only — gradient stays full card width */
-  .archetype-card:hover .archetype-reveal {
-    transform: translateY(0);
-  }
-  /* Keyboard focus: slide up (card doesn't scale on focus) */
-  .archetype-card:focus-within .archetype-reveal {
-    transform: translateY(0);
+
+  @media (min-width: 1024px) {
+    /* Hover: slide up only — gradient stays full card width */
+    .archetype-card:hover .archetype-reveal {
+      transform: translateY(0);
+    }
+    /* Keyboard focus: slide up (card doesn't scale on focus) */
+    .archetype-card:focus-within .archetype-reveal {
+      transform: translateY(0);
+    }
   }
 
-  /* ── Counter-scale text-only layers ──────────────────────── */
+  /* ── Counter-scale text-only layers (desktop only) ─────────── */
   /* Gradient div (.archetype-reveal) is NOT counter-scaled so it spans
      the full width of the zoomed card. Only the text content wrapper
      and always-visible label shrink back to original pixel size. */
@@ -696,46 +743,52 @@ const mascIconArc = buildIconArc(masculineSorted);
     transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
                 opacity 300ms ease-out;
   }
-  .archetype-card:hover .archetype-reveal-content,
-  .archetype-card:hover .archetype-bottom-label {
-    transform: scale(0.6667);
-    transform-origin: bottom left;
-  }
-  /* Hide the always-visible name label once the reveal panel is shown */
-  .archetype-card:hover .archetype-bottom-label,
-  .archetype-card:focus-within .archetype-bottom-label {
-    opacity: 0;
+  @media (min-width: 1024px) {
+    .archetype-card:hover .archetype-reveal-content,
+    .archetype-card:hover .archetype-bottom-label {
+      transform: scale(0.6667);
+      transform-origin: bottom left;
+    }
+    /* Hide the always-visible name label once the reveal panel is shown */
+    .archetype-card:hover .archetype-bottom-label,
+    .archetype-card:focus-within .archetype-bottom-label {
+      opacity: 0;
+    }
   }
 
-  /* ── Hover expansion ───────────────────────────────────────── */
+  /* ── Hover expansion (desktop only) ────────────────────────── */
   /* Card scales 1.5× on hover; vertical growth fits within py-28 section padding.
      Edge cards may clip at section boundary (overflow-hidden on section) —
      acceptable since users focus on center cards. */
   .archetype-card {
     transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .archetype-card:hover {
-    transform: scale(1.5);
-    z-index: 50;
+  @media (min-width: 1024px) {
+    .archetype-card:hover {
+      transform: scale(1.5);
+      z-index: 50;
+    }
   }
 
-  /* ── Hover lockout — prevents scale from firing when cursor is
-     already over a card (e.g. on page load or after quiz closes).
+  /* ── Hover lockout (desktop only) — prevents scale from firing when
+     cursor is already over a card (e.g. on page load or after quiz closes).
      Removed on mouseleave so subsequent intentional hovers work. ── */
-  .archetype-card.hover-locked:hover {
-    transform: none;
-    z-index: auto;
-  }
-  .archetype-card.hover-locked:hover .archetype-reveal {
-    transform: translateY(100%);
-  }
-  .archetype-card.hover-locked:hover .archetype-reveal-content,
-  .archetype-card.hover-locked:hover .archetype-bottom-label {
-    transform: none;
-    opacity: 1;
-  }
-  .archetype-card.hover-locked .archetype-hover-ray {
-    opacity: 0 !important;
+  @media (min-width: 1024px) {
+    .archetype-card.hover-locked:hover {
+      transform: none;
+      z-index: auto;
+    }
+    .archetype-card.hover-locked:hover .archetype-reveal {
+      transform: translateY(100%);
+    }
+    .archetype-card.hover-locked:hover .archetype-reveal-content,
+    .archetype-card.hover-locked:hover .archetype-bottom-label {
+      transform: none;
+      opacity: 1;
+    }
+    .archetype-card.hover-locked .archetype-hover-ray {
+      opacity: 0 !important;
+    }
   }
 
   /* ── God ray bloom on hover ────────────────────────────────── */
