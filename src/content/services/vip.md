@@ -1,7 +1,7 @@
 ---
 title: "VIP Styling"
 slug: "vip"
-price: "$3,000/yr"
+price: "$3,600/yr"
 duration: "Year-round, on-call access"
 perfectFor: "CEOs, executives, entrepreneurs, public figures, and high-achieving professionals for whom image is a strategic asset"
 shortDescription: "Year-round, on-call styling partnership — unlimited access to Danielle's eye, expertise, and editorial taste."
@@ -28,6 +28,6 @@ This is styling as a business tool. Not fashion for fashion's sake — but a del
 
 VIP clients form a genuine partnership with Danielle. She learns your schedule, your upcoming events, your career trajectory, your body changes, and your evolving aesthetic. The result is a wardrobe and a presence that grows more intentional and more powerful with every season.
 
-**$3,000 for the year.** For context: one strong first impression in the right room can return that investment many times over.
+**$3,600 for the year.** For context: one strong first impression in the right room can return that investment many times over.
 
 VIP availability is limited. Contact Danielle to inquire about current openings.

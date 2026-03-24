@@ -1,7 +1,7 @@
 ---
 title: "Sourcing & Personal Shopping"
 slug: "sourcing"
-price: "~15% finder's fee"
+price: "$55/hr or ~15%"
 duration: "Ongoing or per-project"
 perfectFor: "Clients who know what they want but don't have the time or expertise to find it — or clients who want Danielle's eye on every purchase"
 shortDescription: "Danielle hunts, curates, and delivers exactly what your wardrobe needs — so you never have to set foot in a store if you don't want to."

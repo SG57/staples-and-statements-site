@@ -1,14 +1,14 @@
 ---
 title: "Photoshoot Styling"
 slug: "photoshoot-styling"
-price: "$55/hr"
+price: "$100/hr"
 duration: "Flexible — per shoot"
 perfectFor: "Models, photographers, entrepreneurs, and anyone building a visual brand who needs every outfit to perform on camera"
 shortDescription: "Expert on-set styling for photoshoots — so every look is camera-ready, cohesive, and communicates exactly what it needs to."
 order: 6
 status: "active"
 featured: false
-priceNote: "Range fee applies for shoots 30+ miles from San Diego"
+priceNote: "Extended range fee applies for sessions 2+ hours from San Diego"
 ---
 
 A great photo is half lighting, half styling. And the styling half is entirely controllable.
@@ -25,4 +25,4 @@ Danielle brings a trained editorial eye to every set, ensuring that garments han
 
 This is the service for when the photos matter. Brand launches, editorial features, portfolio work, campaign shoots — when the images will represent you publicly, the styling needs to be flawless.
 
-Rate is $55/hr. A range fee applies for shoots located 30+ miles from San Diego.
+Rate is $100/hr. An extended range fee applies for sessions located 2+ hours from San Diego.

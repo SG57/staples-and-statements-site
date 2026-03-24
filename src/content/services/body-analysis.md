@@ -3,7 +3,7 @@ title: "Body Analysis"
 slug: "body-analysis"
 price: "$50"
 duration: "Per session"
-perfectFor: "Clients who want to dress their actual body with confidence, not dress for who they wish they were"
+perfectFor: "Clients who want to dress the body they're in with confidence"
 shortDescription: "Learn which silhouettes, proportions, and cuts are designed to work with your body — not against it."
 order: 3
 status: "active"

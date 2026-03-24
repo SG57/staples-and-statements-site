@@ -39,9 +39,9 @@ const heroStart = bannerImages.length >= 6
 const hasMosaic = heroStart.length >= 2;
 
 // ── Tiered service grouping ─────────────────────────────────────
-const tier1Slugs = ['consultation', 'micro-styling'];
-const tier2Slugs = ['color-analysis', 'body-analysis', 'wardrobe-revamp', 'photoshoot-styling'];
-const tier3Slugs = ['master-style-moodboard', 'sourcing', 'vip'];
+const tier1Slugs = ['consultation', 'closet-cleanout'];
+const tier2Slugs = ['color-analysis', 'body-analysis', 'master-style-moodboard', 'wardrobe-revamp'];
+const tier3Slugs = ['photoshoot-styling', 'sourcing', 'vip'];
 
 const tier1 = activeServices.filter(s => tier1Slugs.includes(s.data.slug)).sort((a,b) => tier1Slugs.indexOf(a.data.slug) - tier1Slugs.indexOf(b.data.slug));
 const tier2 = activeServices.filter(s => tier2Slugs.includes(s.data.slug)).sort((a,b) => tier2Slugs.indexOf(a.data.slug) - tier2Slugs.indexOf(b.data.slug));

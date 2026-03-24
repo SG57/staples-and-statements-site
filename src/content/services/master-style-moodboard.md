@@ -1,13 +1,13 @@
 ---
 title: "Master Style Moodboard"
 slug: "master-style-moodboard"
-price: "~$99"
+price: "$55"
 duration: "Per session"
 perfectFor: "Clients who want a visual style document — a reference guide for every future shopping decision"
 shortDescription: "A bespoke visual map of your style identity: your archetype, your palette, your silhouettes, your signature."
 order: 7
 status: "active"
-priceNote: "Final price TBC — contact for details"
+priceNote: "One-time exercise — becomes a living, breathing style document"
 featured: false
 ---
 

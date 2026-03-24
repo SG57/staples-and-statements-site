@@ -3,8 +3,8 @@ title: "Color Analysis"
 slug: "color-analysis"
 price: "$50"
 duration: "Per session"
-perfectFor: "Clients ready to stop guessing and start knowing exactly which colors make them glow"
-shortDescription: "Discover your personal color palette — the colors that make your skin luminous and your whole look intentional."
+perfectFor: "Clients who are ready to stop guessing and start knowing what colors complement them best"
+shortDescription: "Discover your personal color palette — the colors that make you glow and your whole look intentional."
 order: 2
 status: "active"
 featured: true
