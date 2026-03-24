@@ -318,8 +318,10 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
           <a
             href={`/services/${service.data.slug}`}
             class:list={[
-              "group flex flex-col bg-primary text-white img-frame-card overflow-hidden transition-colors duration-200",
-              service.data.slug === 'consultation' && "border-l-2 border-accent",
+              "group flex flex-col img-frame-card overflow-hidden transition-colors duration-200",
+              service.data.slug === 'consultation'
+                ? "bg-surface text-text border-l-2 border-accent"
+                : "bg-primary text-white",
             ]}
           >
             {/* Top image banner */}
@@ -340,19 +342,28 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
                   {service.data.price}
                 </span>
                 {service.data.featured && (
-                  <span class="font-body text-xs tracking-widest uppercase text-white/40 bg-white/10 px-2 py-1">
+                  <span class:list={[
+                    "font-body text-xs tracking-widest uppercase px-2 py-1",
+                    service.data.slug === 'consultation' ? "text-accent-text/40 bg-accent/10" : "text-white/40 bg-white/10",
+                  ]}>
                     Popular
                   </span>
                 )}
               </div>
 
               {/* Title */}
-              <h3 class="font-heading text-2xl font-semibold text-white mb-3 group-hover:text-accent transition-colors">
+              <h3 class:list={[
+                "font-heading text-2xl font-semibold mb-3 group-hover:text-accent transition-colors",
+                service.data.slug === 'consultation' ? "text-primary" : "text-white",
+              ]}>
                 {service.data.title}
               </h3>
 
               {/* Description */}
-              <p class="font-body text-sm text-white/60 leading-relaxed flex-1 mb-6">
+              <p class:list={[
+                "font-body text-sm leading-relaxed flex-1 mb-6",
+                service.data.slug === 'consultation' ? "text-text-muted" : "text-white/60",
+              ]}>
                 {service.data.shortDescription ?? service.data.perfectFor}
               </p>
 
@@ -551,7 +562,7 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
     <div class="mx-auto max-w-5xl">
       <div class="text-center mb-14">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
-        <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3 text-center">The Process</p>
+        <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3" style="text-align:center">The Process</p>
         <h2 class="font-heading text-primary text-4xl">How It Works</h2>
       </div>
 
