@@ -12,7 +12,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <!-- ── CONFIRMATION HERO ─────────────────────────────── -->
   <section class="py-20 lg:py-28 px-6 bg-primary min-h-[50vh] flex items-center" aria-label="Booking confirmation">
-    <div class="mx-auto max-w-3xl text-center w-full">
+    <div class="mx-auto max-w-3xl flex flex-col items-center text-center w-full">
       <div class="w-16 h-16 border-2 border-accent rounded-full flex items-center justify-center mx-auto mb-8">
         <span class="text-accent text-2xl">✓</span>
       </div>
@@ -34,7 +34,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- ── WHILE YOU WAIT ────────────────────────────────── -->
   <section class="py-20 px-6 bg-background" aria-label="Next steps" data-compact-super="While You Wait" data-compact-title="Make the Most of Your Consultation" data-compact-theme="light">
     <div class="mx-auto max-w-5xl">
-      <div class="text-center mb-14">
+      <div class="flex flex-col items-center text-center mb-14">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
         <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3 text-center">While You Wait</p>
         <h2 class="font-heading text-primary text-4xl">Make the Most of Your Consultation</h2>
@@ -85,7 +85,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- ── REASSURANCE ───────────────────────────────────── -->
   <section class="py-16 px-6 bg-surface" aria-label="What to expect">
     <div class="mx-auto max-w-3xl">
-      <div class="text-center mb-10">
+      <div class="flex flex-col items-center text-center mb-10">
         <div class="w-8 h-px bg-accent mx-auto mb-4"></div>
         <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3 text-center">The Process</p>
         <h2 class="font-heading text-primary text-3xl">What to Expect</h2>
@@ -116,7 +116,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <!-- ── FOOTER CTA ────────────────────────────────────── -->
   <section class="py-16 px-6 bg-background border-t border-surface-dark">
-    <div class="mx-auto max-w-3xl text-center">
+    <div class="mx-auto max-w-3xl flex flex-col items-center text-center">
       <p class="font-body text-text-muted text-base leading-relaxed">
         Questions before the call? Reach out at{' '}
         <a
