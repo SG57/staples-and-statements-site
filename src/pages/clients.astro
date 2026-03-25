@@ -121,8 +121,23 @@ const heroStart = hasMosaic
     const FADE_MS  = 1500;
     const STAGGER  = 2_200;
     const KB_SCALE = 1.08;
+    const CELL_SEL = 'data-clients-cell';
 
     if (IMAGES.length >= 2 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+
+      // ── Timer management ──
+      const timers = new Set();
+      function safeTimeout(fn, ms) {
+        const id = setTimeout(() => { timers.delete(id); fn(); }, ms);
+        timers.add(id);
+        return id;
+      }
+      function killAllTimers() {
+        timers.forEach(id => clearTimeout(id));
+        timers.clear();
+      }
+
+      // ── Index pool ──
       const inUse = new Array(IMAGES.length).fill(false);
       const fileIndex = {};
       IMAGES.forEach((path, i) => { fileIndex[path.split('/').pop()] = i; fileIndex[path] = i; });
@@ -130,33 +145,135 @@ const heroStart = hasMosaic
       function checkOut() { const free = []; for (let i = 0; i < IMAGES.length; i++) { if (!inUse[i]) free.push(i); } if (!free.length) return -1; const pick = free[Math.floor(Math.random() * free.length)]; inUse[pick] = true; return pick; }
       function checkIn(idx) { if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false; }
 
-      const cells = [...document.querySelectorAll('[data-clients-cell]')];
+      // ── Cell state ──
+      const cells = [...document.querySelectorAll(`[${CELL_SEL}]`)];
       const cellIdx = [];
-      cells.forEach((cell, i) => { const a = cell.querySelector('[data-layer="a"]'); const idx = srcToIndex(a?.getAttribute('src') ?? ''); if (idx >= 0) inUse[idx] = true; cellIdx[i] = idx; });
+      const frontIsA = [];
 
-      requestAnimationFrame(() => { cells.forEach(cell => { const a = cell.querySelector('[data-layer="a"]'); if (a) { a.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`; a.style.transform = `scale(${KB_SCALE})`; } }); });
+      cells.forEach((cell, i) => {
+        const a = cell.querySelector('[data-layer="a"]');
+        const idx = srcToIndex(a?.getAttribute('src') ?? '');
+        if (idx >= 0) inUse[idx] = true;
+        cellIdx[i] = idx;
+        frontIsA[i] = true;
+      });
 
-      function startCell(cell, ci, startDelay) {
-        const layerA = cell.querySelector('[data-layer="a"]'), layerB = cell.querySelector('[data-layer="b"]');
-        if (!layerA || !layerB) return;
-        let frontIsA = true;
-        function nextImage() {
-          const front = frontIsA ? layerA : layerB, back = frontIsA ? layerB : layerA;
-          const nextIdx = checkOut();
-          if (nextIdx < 0) { setTimeout(nextImage, HOLD_MS); return; }
-          back.style.transition = 'none'; back.style.transform = 'scale(1)'; back.offsetHeight;
-          back.style.opacity = '0'; back.src = IMAGES[nextIdx];
-          const doFade = () => {
-            if (!back.naturalWidth) { checkIn(nextIdx); setTimeout(nextImage, 500); return; }
-            back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-            back.style.opacity = '1'; back.style.transform = `scale(${KB_SCALE})`; front.style.opacity = '0';
-            checkIn(cellIdx[ci]); cellIdx[ci] = nextIdx; frontIsA = !frontIsA; setTimeout(nextImage, HOLD_MS);
-          };
-          if (back.complete && back.naturalWidth > 0) doFade(); else { back.onload = doFade; back.onerror = () => { checkIn(nextIdx); setTimeout(nextImage, 500); }; }
+      // ── Circuit breaker ──
+      let swapTimestamps = [];
+      const CB_THRESHOLD = 8;
+      const CB_WINDOW = 2000;
+      function recordSwap() {
+        const now = Date.now();
+        swapTimestamps.push(now);
+        swapTimestamps = swapTimestamps.filter(t => now - t < CB_WINDOW);
+        if (swapTimestamps.length > CB_THRESHOLD) {
+          killAllTimers();
+          swapTimestamps = [];
+          rebuildPoolFromDOM();
+          safeTimeout(() => restartAllCells(), 500);
+          return false;
         }
-        setTimeout(nextImage, startDelay + HOLD_MS);
+        return true;
       }
-      requestAnimationFrame(() => { cells.forEach((cell, i) => { startCell(cell, i, i * STAGGER); }); });
+
+      // ── Rebuild pool from DOM (for recovery) ──
+      function rebuildPoolFromDOM() {
+        inUse.fill(false);
+        cells.forEach((cell, i) => {
+          const layer = frontIsA[i]
+            ? cell.querySelector('[data-layer="a"]')
+            : cell.querySelector('[data-layer="b"]');
+          const src = layer?.getAttribute('src') ?? '';
+          const idx = srcToIndex(src);
+          if (idx >= 0) { inUse[idx] = true; cellIdx[i] = idx; }
+        });
+      }
+
+      // ── Ken Burns ──
+      function applyKenBurns(img) {
+        img.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+        img.style.transform = `scale(${KB_SCALE})`;
+      }
+      function resetKenBurns(img) {
+        img.style.transition = 'none';
+        img.style.transform = 'scale(1)';
+        img.offsetHeight;
+      }
+
+      // ── Kick off Ken Burns on initial images ──
+      requestAnimationFrame(() => {
+        cells.forEach(cell => {
+          const a = cell.querySelector('[data-layer="a"]');
+          if (a) applyKenBurns(a);
+        });
+      });
+
+      // ── Cycle a single cell ──
+      function startCell(ci, startDelay) {
+        const cell = cells[ci];
+        const layerA = cell.querySelector('[data-layer="a"]');
+        const layerB = cell.querySelector('[data-layer="b"]');
+        if (!layerA || !layerB) return;
+
+        function nextImage() {
+          if (document.hidden) return;
+
+          const front = frontIsA[ci] ? layerA : layerB;
+          const back  = frontIsA[ci] ? layerB : layerA;
+
+          const nextIdx = checkOut();
+          if (nextIdx < 0) { safeTimeout(nextImage, HOLD_MS); return; }
+
+          resetKenBurns(back);
+          back.style.opacity = '0';
+          back.src = IMAGES[nextIdx];
+
+          const doFade = () => {
+            if (!back.naturalWidth) { checkIn(nextIdx); safeTimeout(nextImage, 500); return; }
+            if (!recordSwap()) return;
+
+            back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
+            back.style.opacity = '1';
+            back.style.transform = `scale(${KB_SCALE})`;
+            front.style.opacity = '0';
+
+            checkIn(cellIdx[ci]);
+            cellIdx[ci] = nextIdx;
+            frontIsA[ci] = !frontIsA[ci];
+            safeTimeout(nextImage, HOLD_MS);
+          };
+
+          if (back.complete && back.naturalWidth > 0) doFade();
+          else { back.onload = doFade; back.onerror = () => { checkIn(nextIdx); safeTimeout(nextImage, 500); }; }
+        }
+
+        safeTimeout(nextImage, startDelay + HOLD_MS);
+      }
+
+      // ── Start/restart all cells ──
+      function restartAllCells() {
+        cells.forEach((cell, i) => {
+          const front = frontIsA[i]
+            ? cell.querySelector('[data-layer="a"]')
+            : cell.querySelector('[data-layer="b"]');
+          if (front) applyKenBurns(front);
+          startCell(i, i * STAGGER);
+        });
+      }
+
+      // ── Visibility change: pause when hidden, clean restart when visible ──
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          killAllTimers();
+        } else {
+          killAllTimers();
+          rebuildPoolFromDOM();
+          restartAllCells();
+        }
+      });
+
+      // ── Initial start ──
+      requestAnimationFrame(() => restartAllCells());
     }
   </script>
   ) : (

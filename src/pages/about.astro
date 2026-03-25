@@ -134,130 +134,158 @@ const hasMosaic = heroStart.length >= 2;
       const FADE_MS  = 1500;
       const STAGGER  = 2_200;
       const KB_SCALE = 1.08;
+      const CELL_SEL = 'data-about-cell';
 
-      if (IMAGES.length < 2) {
-        // nothing to cycle
-      } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (IMAGES.length >= 2 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+
+        // ── Timer management ──
+        const timers = new Set();
+        function safeTimeout(fn, ms) {
+          const id = setTimeout(() => { timers.delete(id); fn(); }, ms);
+          timers.add(id);
+          return id;
+        }
+        function killAllTimers() {
+          timers.forEach(id => clearTimeout(id));
+          timers.clear();
+        }
+
+        // ── Index pool ──
         const inUse = new Array(IMAGES.length).fill(false);
         const fileIndex = {};
-        IMAGES.forEach((path, i) => {
-          const name = path.split('/').pop();
-          fileIndex[name] = i;
-          fileIndex[path] = i;
-        });
+        IMAGES.forEach((path, i) => { fileIndex[path.split('/').pop()] = i; fileIndex[path] = i; });
+        function srcToIndex(src) { if (!src) return -1; if (fileIndex[src] !== undefined) return fileIndex[src]; const n = src.split('/').pop(); return fileIndex[n] !== undefined ? fileIndex[n] : -1; }
+        function checkOut() { const free = []; for (let i = 0; i < IMAGES.length; i++) { if (!inUse[i]) free.push(i); } if (!free.length) return -1; const pick = free[Math.floor(Math.random() * free.length)]; inUse[pick] = true; return pick; }
+        function checkIn(idx) { if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false; }
 
-        function srcToIndex(src) {
-          if (!src) return -1;
-          if (fileIndex[src] !== undefined) return fileIndex[src];
-          const name = src.split('/').pop();
-          return fileIndex[name] !== undefined ? fileIndex[name] : -1;
-        }
-
-        function checkOut() {
-          const free = [];
-          for (let i = 0; i < IMAGES.length; i++) {
-            if (!inUse[i]) free.push(i);
-          }
-          if (free.length === 0) return -1;
-          const pick = free[Math.floor(Math.random() * free.length)];
-          inUse[pick] = true;
-          return pick;
-        }
-
-        function checkIn(idx) {
-          if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false;
-        }
-
-        const cells = [...document.querySelectorAll('[data-about-cell]')];
+        // ── Cell state ──
+        const cells = [...document.querySelectorAll(`[${CELL_SEL}]`)];
         const cellIdx = [];
+        const frontIsA = [];
 
         cells.forEach((cell, i) => {
-          const layerA = cell.querySelector('[data-layer="a"]');
-          const src = layerA ? layerA.getAttribute('src') : '';
-          const idx = srcToIndex(src);
+          const a = cell.querySelector('[data-layer="a"]');
+          const idx = srcToIndex(a?.getAttribute('src') ?? '');
           if (idx >= 0) inUse[idx] = true;
           cellIdx[i] = idx;
+          frontIsA[i] = true;
         });
 
+        // ── Circuit breaker ──
+        let swapTimestamps = [];
+        const CB_THRESHOLD = 8;
+        const CB_WINDOW = 2000;
+        function recordSwap() {
+          const now = Date.now();
+          swapTimestamps.push(now);
+          swapTimestamps = swapTimestamps.filter(t => now - t < CB_WINDOW);
+          if (swapTimestamps.length > CB_THRESHOLD) {
+            killAllTimers();
+            swapTimestamps = [];
+            rebuildPoolFromDOM();
+            safeTimeout(() => restartAllCells(), 500);
+            return false;
+          }
+          return true;
+        }
+
+        // ── Rebuild pool from DOM (for recovery) ──
+        function rebuildPoolFromDOM() {
+          inUse.fill(false);
+          cells.forEach((cell, i) => {
+            const layer = frontIsA[i]
+              ? cell.querySelector('[data-layer="a"]')
+              : cell.querySelector('[data-layer="b"]');
+            const src = layer?.getAttribute('src') ?? '';
+            const idx = srcToIndex(src);
+            if (idx >= 0) { inUse[idx] = true; cellIdx[i] = idx; }
+          });
+        }
+
+        // ── Ken Burns ──
         function applyKenBurns(img) {
           img.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-          img.style.transform  = `scale(${KB_SCALE})`;
+          img.style.transform = `scale(${KB_SCALE})`;
         }
         function resetKenBurns(img) {
           img.style.transition = 'none';
-          img.style.transform  = 'scale(1)';
+          img.style.transform = 'scale(1)';
           img.offsetHeight;
         }
 
         requestAnimationFrame(() => {
           cells.forEach(cell => {
             const a = cell.querySelector('[data-layer="a"]');
-            if (a) {
-              a.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-              a.style.transform  = `scale(${KB_SCALE})`;
-            }
+            if (a) applyKenBurns(a);
           });
         });
 
-        function startCell(cell, ci, startDelay) {
+        // ── Cycle a single cell ──
+        function startCell(ci, startDelay) {
+          const cell = cells[ci];
           const layerA = cell.querySelector('[data-layer="a"]');
           const layerB = cell.querySelector('[data-layer="b"]');
           if (!layerA || !layerB) return;
 
-          let frontIsA = true;
-
           function nextImage() {
-            const front = frontIsA ? layerA : layerB;
-            const back  = frontIsA ? layerB : layerA;
+            if (document.hidden) return;
+
+            const front = frontIsA[ci] ? layerA : layerB;
+            const back  = frontIsA[ci] ? layerB : layerA;
 
             const nextIdx = checkOut();
-            if (nextIdx < 0) {
-              setTimeout(nextImage, HOLD_MS);
-              return;
-            }
+            if (nextIdx < 0) { safeTimeout(nextImage, HOLD_MS); return; }
 
             resetKenBurns(back);
             back.style.opacity = '0';
             back.src = IMAGES[nextIdx];
 
             const doFade = () => {
-              if (!back.naturalWidth) {
-                checkIn(nextIdx);
-                setTimeout(nextImage, 500);
-                return;
-              }
+              if (!back.naturalWidth) { checkIn(nextIdx); safeTimeout(nextImage, 500); return; }
+              if (!recordSwap()) return;
 
               back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-              back.style.opacity    = '1';
-              back.style.transform  = `scale(${KB_SCALE})`;
-              front.style.opacity   = '0';
+              back.style.opacity = '1';
+              back.style.transform = `scale(${KB_SCALE})`;
+              front.style.opacity = '0';
 
               checkIn(cellIdx[ci]);
               cellIdx[ci] = nextIdx;
-
-              frontIsA = !frontIsA;
-              setTimeout(nextImage, HOLD_MS);
+              frontIsA[ci] = !frontIsA[ci];
+              safeTimeout(nextImage, HOLD_MS);
             };
 
-            if (back.complete && back.naturalWidth > 0) {
-              doFade();
-            } else {
-              back.onload  = doFade;
-              back.onerror = () => {
-                checkIn(nextIdx);
-                setTimeout(nextImage, 500);
-              };
-            }
+            if (back.complete && back.naturalWidth > 0) doFade();
+            else { back.onload = doFade; back.onerror = () => { checkIn(nextIdx); safeTimeout(nextImage, 500); }; }
           }
 
-          setTimeout(nextImage, startDelay + HOLD_MS);
+          safeTimeout(nextImage, startDelay + HOLD_MS);
         }
 
-        requestAnimationFrame(() => {
+        // ── Start/restart all cells ──
+        function restartAllCells() {
           cells.forEach((cell, i) => {
-            startCell(cell, i, i * STAGGER);
+            const front = frontIsA[i]
+              ? cell.querySelector('[data-layer="a"]')
+              : cell.querySelector('[data-layer="b"]');
+            if (front) applyKenBurns(front);
+            startCell(i, i * STAGGER);
           });
+        }
+
+        // ── Visibility change: pause when hidden, clean restart when visible ──
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            killAllTimers();
+          } else {
+            killAllTimers();
+            rebuildPoolFromDOM();
+            restartAllCells();
+          }
         });
+
+        // ── Initial start ──
+        requestAnimationFrame(() => restartAllCells());
       }
     </script>
   ) : (
