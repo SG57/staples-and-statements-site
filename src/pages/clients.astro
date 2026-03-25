@@ -205,11 +205,17 @@ const heroStart = hasMosaic
         <p class="font-body text-[10px] tracking-[0.3em] uppercase text-accent/60 mb-1">VIP Client</p>
       </div>
 
-      <article class="relative bg-primary-light border border-accent/15 p-8 sm:p-12 lg:p-16 img-frame-card"
+      <article class="relative bg-primary-light border border-accent/15 overflow-hidden img-frame-card"
                style="box-shadow: 0 16px 64px rgba(184, 151, 126, 0.20), 0 4px 16px rgba(184, 151, 126, 0.12), inset 0 1px 0 rgba(184, 151, 126, 0.08);">
 
-        {/* Subtle accent line top */}
-        <div class="absolute top-0 left-8 right-8 sm:left-12 sm:right-12 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
+        {/* Service image sliver — top banner */}
+        <div class="h-[48px] w-full overflow-hidden relative bg-gradient-to-r from-accent/20 to-primary-light">
+          <img src={`/images/services/${t.data.service}.webp`} alt="" class="w-full h-full object-cover opacity-60" loading="lazy" onerror="this.style.display='none'" />
+        </div>
+
+        <div class="p-8 sm:p-12 lg:p-16 relative">
+        {/* Subtle accent line */}
+        <div class="absolute top-0 left-8 right-8 sm:left-0 sm:right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
 
         {/* Quote mark — large, elegant */}
         <div class="font-heading text-7xl sm:text-8xl text-accent/20 leading-none mb-6 select-none" aria-hidden="true">"</div>
@@ -238,6 +244,7 @@ const heroStart = hasMosaic
             </a>
           </div>
         </div>
+        </div>
       </article>
     </div>
   </section>
@@ -252,10 +259,21 @@ const heroStart = hasMosaic
           return (
           <article
             class:list={[
-              "flex flex-col p-6 sm:p-10 img-frame-card",
+              "flex flex-col img-frame-card overflow-hidden",
               isDark ? "bg-primary" : "bg-surface",
             ]}
           >
+            {/* Service image sliver — top banner */}
+            {t.data.service && (
+              <div class:list={[
+                "h-[40px] w-full overflow-hidden relative",
+                isDark ? "bg-gradient-to-r from-accent/15 to-primary-light" : "bg-gradient-to-r from-surface-dark to-secondary/20",
+              ]}>
+                <img src={`/images/services/${t.data.service}.webp`} alt="" class:list={["w-full h-full object-cover", isDark ? "opacity-40" : "opacity-50"]} loading="lazy" onerror="this.style.display='none'" />
+              </div>
+            )}
+
+            <div class="flex flex-col flex-1 p-6 sm:p-10">
             <!-- Quote mark -->
             <div class:list={[
               "font-heading text-5xl sm:text-6xl leading-none mb-4 sm:mb-5",
@@ -304,6 +322,7 @@ const heroStart = hasMosaic
                   onerror="this.parentElement.style.display='none'"
                 />
               </div>
+            </div>
             </div>
           </article>
         )})}
