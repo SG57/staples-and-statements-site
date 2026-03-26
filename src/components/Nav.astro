@@ -57,14 +57,13 @@ const currentPath = Astro.url.pathname;
         })}
       </ul>
 
-      <!-- Center: glyph + brand mark -->
+      <!-- Center: brand mark (wordmark only — glyph is favicon) -->
       <a
         href="/"
-        class="nav-brand flex items-center gap-2.5 font-heading text-2xl font-semibold tracking-wide px-10 whitespace-nowrap"
+        class="nav-brand font-heading text-2xl font-semibold tracking-wide px-10 whitespace-nowrap"
         aria-label="Staples & Statements — Home"
       >
-        <img src="/glyph-nav.webp" alt="" class="h-7 w-7 object-contain" aria-hidden="true" />
-        <span>Staples & Statements</span>
+        Staples & Statements
       </a>
 
       <!-- Right items -->
@@ -91,11 +90,10 @@ const currentPath = Astro.url.pathname;
     <div class="flex items-center justify-between h-16 lg:hidden">
       <a
         href="/"
-        class="nav-brand flex items-center gap-2 font-heading text-xl font-semibold tracking-wide"
+        class="nav-brand font-heading text-xl font-semibold tracking-wide"
         aria-label="Staples & Statements — Home"
       >
-        <img src="/glyph-nav.webp" alt="" class="h-6 w-6 object-contain" aria-hidden="true" />
-        <span>Staples & Statements</span>
+        Staples & Statements
       </a>
 
       <button
