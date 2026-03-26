@@ -941,12 +941,6 @@ const mascIconArc = buildIconArc(masculineSorted);
       // Swap the data attribute
       page!.setAttribute('data-active-gender', targetGender);
 
-      // Lazy-load masculine video on first reveal
-      if (targetGender === 'masculine') {
-        const vid = document.getElementById('video-masculine') as HTMLVideoElement | null;
-        if (vid && vid.readyState === 0) vid.load();
-      }
-
       // Scroll to the top if user has scrolled past the hero
       if (window.scrollY > window.innerHeight * 0.5) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
