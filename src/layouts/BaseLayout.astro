@@ -200,8 +200,8 @@ const GA4_ID = 'G-PZNX8QZHDJ';
 
     <!-- ── Floating Action Buttons (FABs) ──────────────────────── -->
     <!-- Scroll-to-top + Quick-menu — appear after 300px scroll    -->
-    <div id="fab-group" class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3"
-         style="opacity: 0; transform: translateY(16px); pointer-events: none;
+    <div id="fab-group" class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none"
+         style="opacity: 0; transform: translateY(16px);
                 transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);">
 
       <!-- Quick-menu panel (hidden by default, opens above FABs) -->
@@ -511,11 +511,14 @@ const GA4_ID = 'G-PZNX8QZHDJ';
       if (shouldShow) {
         fabGroup.style.opacity        = '1';
         fabGroup.style.transform      = 'translateY(0)';
-        fabGroup.style.pointerEvents  = 'auto';
+        // Keep container pointer-events:none — only buttons/panel get auto
+        scrollBtn.style.pointerEvents = 'auto';
+        menuBtn.style.pointerEvents   = 'auto';
       } else {
         fabGroup.style.opacity        = '0';
         fabGroup.style.transform      = 'translateY(16px)';
-        fabGroup.style.pointerEvents  = 'none';
+        scrollBtn.style.pointerEvents = 'none';
+        menuBtn.style.pointerEvents   = 'none';
         // Close menu if open when FABs hide
         if (menuOpen) closeMenu();
       }
