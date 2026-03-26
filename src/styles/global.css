@@ -73,32 +73,11 @@
 
 /* ═══════════════════════════════════════════════════════════
    PORTFOLIO PAN ANIMATION
-   Slow vertical pan on "From the Feed" portfolio images.
-   Lives here (not in page <style is:global>) because Astro's
-   CSS bundler can strip @media queries from is:global blocks.
+   Inside @layer base so Tailwind v4 preserves @media queries.
    ═══════════════════════════════════════════════════════════ */
 @keyframes ig-pan {
   from { transform: translateY(0%); }
   to   { transform: translateY(-25%); }
-}
-.ig-post-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 150%;
-  object-fit: cover;
-  object-position: top center;
-  will-change: transform;
-  animation: ig-pan ease-in-out infinite alternate;
-}
-.ig-post-cell:hover .ig-post-img {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .ig-post-img {
-    animation: none;
-    height: 100%;
-  }
 }
 
 /* ── Base styles ───────────────────────────────────────────
