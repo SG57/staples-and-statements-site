@@ -5,7 +5,7 @@ price: "$55"
 duration: "Per session"
 perfectFor: "Clients who want a visual style document — a reference guide for every future shopping decision"
 shortDescription: "A bespoke visual map of your style identity: your archetype, your palette, your silhouettes, your signature."
-order: 7
+order: 4
 status: "active"
 priceNote: "One-time exercise — becomes a living, breathing style document"
 featured: false
@@ -13,18 +13,15 @@ featured: false
 
 Before you can build a wardrobe, you need to know what you're building toward.
 
-The Master Style Moodboard is Danielle's most conceptual offering: a fully customized visual document that defines your style identity from the ground up. Think of it as a style brief — the kind a creative director would build before a brand campaign. Except this one is built for you.
+The Master Style Moodboard is my most conceptual offering — a fully customized visual document designed to define your style identity from the ground up. Think of it as a personal style brief: the kind a creative director would develop before launching a brand campaign. Except this one is built entirely around you.
 
-Drawing on your Color Analysis results, your Body Analysis insights, your archetype profile, and an in-depth conversation about your life, your aesthetic, and your goals, Danielle creates a visual reference that captures exactly who you are stylistically — and where you're going.
+Drawing on the insights from your Color Analysis, Body Analysis, archetype profile and an in-depth conversation about your lifestyle, aesthetic, references and goals, I create a visual reference that captures exactly who you are stylistically — and where your style is headed.
 
-**What's included:**
-- Your confirmed style archetype (from the 7 Feminine Archetypes framework)
-- Your personal color palette
-- Silhouette and proportion guidance specific to your body
-- Curated inspiration images: outfits, textures, aesthetics, moods
-- Key wardrobe essentials for your specific archetype and lifestyle
-- A shopping direction guide — the lens through which to evaluate every future purchase
+**What You'll Receive:**
+- Curated inspiration imagery: outfits, textures, aesthetics and moods
+- Key wardrobe essentials aligned with your archetype and lifestyle
+- A clear shopping direction guide — the lens through which to evaluate every future purchase
 
-This document becomes your permanent style compass. Forward it to Danielle before shopping sessions. Reference it when you're tempted by a trend. Share it with a tailor or alterations professional. Build your entire wardrobe around it.
+This document becomes your long-term style compass. Use it before shopping. Reference it when a trend catches your eye. Share it with a tailor or alterations professional. Build your wardrobe around it with confidence.
 
-The Master Style Moodboard is best taken after a Color Analysis and Body Analysis. Many clients bundle all three.
+The Master Style Moodboard is typically most valuable after completing a Color and Body Analysis. Many clients choose to bundle all three services to create a complete foundation for their style.

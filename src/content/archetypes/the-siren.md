@@ -10,12 +10,12 @@ guideLink: "https://beacons.ai/staplesandstatementsss"
 ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
-The Siren knows exactly what she has and dresses to celebrate it. Your style is sensual without being scandalous, bold without being brash. You gravitate toward body-conscious silhouettes, rich fabrics, deep warm tones, and the kind of pieces that move with you. Your wardrobe is a love letter to your own body.
+The Siren knows exactly what they want to portray and dresses to celebrate it. Your style is sensual without being scandalous, bold without being brash. You gravitate toward body-conscious silhouettes, rich fabrics, bold colors, and the kind of pieces that make someone pause. Your wardrobe is a love letter to your own body.
 
 Your style says: *I know who I am. You should too.*
 
-**Signature pieces:** Bodycon dresses, wrap silhouettes, high-slit skirts, plunging necklines done with confidence, rich jewel-toned satins, form-fitting knitwear, statement heels.
+**Signature pieces:** Bodycon dresses, wrap silhouettes, form-flattering bodysuits, high-slit skirts, plunging necklines done with confidence, rich jewel-toned satins, form-fitting bottoms, statement heels.
 
-**Your palette:** Deep red, burnt sienna, chocolate brown, warm gold, terracotta, rich emerald.
+**Your palette:** Power reds, deep wine, black, obsidian, metallic gold, saturated jewel tones
 
 **Siren icons:** Sofia Vergara, Salma Hayek, Kim Kardashian.

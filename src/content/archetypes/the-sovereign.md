@@ -16,8 +16,8 @@ Your clothes don't make a statement — they make a presence. You integrate many
 
 Your style says: *This is me. It always has been.*
 
-**Signature pieces:** Perfectly fitted basics, cashmere, quality denim, clean leather goods, understated watches, pieces that feel like a second skin.
+**Signature pieces:** Perfectly fitted basics, cashmere, quality denim, clean leather goods, understated watches, elevated luxe basics, timeless outerwear, pieces that feel like a second skin.
 
-**Your palette:** Refined and effortless — soft black, warm grey, cream, deep navy, muted olive, natural tones.
+**Your palette:** Refined and effortless — cream, ivory, camel, charcoal, soft black, soft taupe, muted monochrome palettes.
 
-**Sovereign icons:** Jay-Z (modern era), Ryan Gosling, Pharrell Williams.
+**Sovereign icons:** Bradley Cooper, Ryan Gosling, Jake Gyllenhaal.

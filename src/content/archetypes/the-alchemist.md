@@ -16,8 +16,8 @@ You experience life in phases, and your style evolves alongside your inner world
 
 Your style says: *I'm becoming. Watch closely.*
 
-**Signature pieces:** Textured layers, mood-driven accessories, vintage and thrifted finds, statement rings, pieces with patina and history, draped silhouettes.
+**Signature pieces:** Textured layers, mood-driven accessories, vintage and thrifted finds, statement rings, pieces with sentimental value and history, draped silhouettes.
 
-**Your palette:** Mood-dependent — deep burgundy, midnight, forest green, aged gold, storm grey, burnt umber.
+**Your palette:** Mood-dependent — deep burgundy, midnight, forest green, aged gold, storm grey, burnt umber, plum.
 
 **Alchemist icons:** Donald Glover, Jared Leto, Lenny Kravitz.

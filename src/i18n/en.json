@@ -66,10 +66,9 @@
       "guides.*"
     ]
   },
-
   "nav": {
     "brand": "Staples & Statements",
-    "brand_aria": "Staples & Statements \u2014 Home",
+    "brand_aria": "Staples & Statements — Home",
     "toggle_aria": "Toggle navigation menu",
     "links": {
       "about": "About",
@@ -80,7 +79,6 @@
       "contact": "Contact"
     }
   },
-
   "footer": {
     "brand": "Staples & Statements",
     "tagline": "Your wardrobe, elevated. Expert styling services and archetype-based personal style guidance.",
@@ -88,22 +86,20 @@
     "social_heading": "Follow Along",
     "contact_heading": "Get in Touch",
     "email": "hello@staplesandstatements.com",
-    "copyright": "\u00a9 2026 Staples & Statements. All rights reserved.",
+    "copyright": "© 2026 Staples & Statements. All rights reserved.",
     "built_by": "Built by",
     "built_by_name": "SG57 Labs"
   },
-
   "marquee": {
     "items": [
       "Staples & Statements",
       "Wardrobe Styling",
       "Style Archetypes",
       "Personal Color Analysis",
-      "San Diego \u00b7 Virtual"
+      "San Diego · Virtual"
     ],
-    "separator": "\u2726"
+    "separator": "✦"
   },
-
   "ui": {
     "view_details": "View Details",
     "view_service_details": "View Service Details",
@@ -113,32 +109,32 @@
     "book_consultation": "Book Consultation",
     "book_a_consultation": "Book a Consultation",
     "book_personalized_styling": "Book Personalized Styling",
-    "explore_the_archetypes": "Explore the Archetypes \u2192",
-    "explore_the_archetypes_down": "Explore the Archetypes \u2193",
+    "explore_the_archetypes": "Explore the Archetypes →",
+    "explore_the_archetypes_down": "Explore the Archetypes ↓",
     "find_your_archetype": "Find Your Archetype",
-    "find_your_archetype_arrow": "Find Your Archetype \u2192",
+    "find_your_archetype_arrow": "Find Your Archetype →",
     "discover_your_type": "Discover Your Type",
-    "discover_your_archetype": "Discover Your Archetype \u2192",
-    "all_services": "\u2190 All Services",
+    "discover_your_archetype": "Discover Your Archetype →",
+    "all_services": "← All Services",
     "all_archetypes": "All Archetypes",
-    "read_all_client_stories": "Read All Client Stories \u2192",
-    "follow_on_instagram": "Follow on Instagram \u2192",
-    "shop_all_guides": "Shop All Guides \u2192",
-    "browse_all_guides": "Browse All Guides \u2192",
+    "read_all_client_stories": "Read All Client Stories →",
+    "follow_on_instagram": "Follow on Instagram →",
+    "shop_all_guides": "Shop All Guides →",
+    "browse_all_guides": "Browse All Guides →",
     "shop_style_guides": "Shop Style Guides",
-    "shop_this_look": "Shop This Look \u2192",
-    "shop_this_collection": "Shop This Collection \u2192",
-    "shop_this": "Shop This \u2192",
-    "shop_on_ltk": "Shop on LTK \u2192",
-    "shop_my_picks": "Shop My Picks \u2192",
-    "view_full_ltk_profile": "View Full LTK Profile \u2192",
-    "get_the_style_guide": "Get the Style Guide \u2192",
+    "shop_this_look": "Shop This Look →",
+    "shop_this_collection": "Shop This Collection →",
+    "shop_this": "Shop This →",
+    "shop_on_ltk": "Shop on LTK →",
+    "shop_my_picks": "Shop My Picks →",
+    "view_full_ltk_profile": "View Full LTK Profile →",
+    "get_the_style_guide": "Get the Style Guide →",
     "get_the_full_guide": "Get the full guide",
-    "not_sure_right": "Not Sure This Is Right? \u2192",
+    "not_sure_right": "Not Sure This Is Right? →",
     "send_message": "Send Message",
     "notify_me": "Notify Me",
     "try_again": "Try Again",
-    "book_on_calendly": "Book on Calendly \u2192",
+    "book_on_calendly": "Book on Calendly →",
     "digital_pdf": "Digital PDF",
     "items_count": "{{count}} items",
     "blend_badge": "Blend",
@@ -150,10 +146,9 @@
     "the_call_suffix": "the Call",
     "visual_data_coming_soon": "Visual data coming soon."
   },
-
   "home": {
     "meta": {
-      "title": "Staples & Statements \u2014 Wardrobe Styling by Danielle Marie",
+      "title": "Staples & Statements — Wardrobe Styling by Danielle Marie",
       "description": "Expert wardrobe styling and archetype-based personal style guidance by Danielle Marie. Book a free consultation in San Diego or virtually."
     },
     "hero": {
@@ -167,14 +162,14 @@
       "number": "01 /",
       "super": "What We Offer",
       "headline": "Styling Services",
-      "cta": "View All Services \u2192"
+      "cta": "View All Services →"
     },
     "archetype_tease": {
       "number": "02 /",
       "super": "The Framework",
       "headline": "Discover Your Style Archetype",
-      "subtext": "Every great wardrobe starts with knowing who you are. Danielle's 7 Feminine Archetypes framework is the foundation of every styling engagement.",
-      "cta": "Explore the Archetypes \u2192"
+      "subtext": "Every great wardrobe starts with knowing who you are. My 7 Feminine Archetypes Style Guide framework is the foundation of every styling engagement.",
+      "cta": "Explore the Archetypes →"
     },
     "testimonials": {
       "number": "03 /",
@@ -183,15 +178,15 @@
     "portfolio": {
       "super": "Portfolio",
       "headline": "From the Feed",
-      "stats": "52,000+ followers \u2022 @littledanniii",
-      "cta": "Follow on Instagram \u2192"
+      "stats": "53,000+ followers • @littledanniii",
+      "cta": "Follow on Instagram →"
     },
     "shop_preview": {
       "number": "04 /",
       "super": "Digital Products",
       "headline": "Style Guides",
-      "subtext": "Expert style knowledge you can reference any time \u2014 from $15.",
-      "cta": "Shop All Guides \u2192"
+      "subtext": "Expert style knowledge you can reference any time — from $15.",
+      "cta": "Shop All Guides →"
     },
     "waitlist": {
       "super": "Coming Soon",
@@ -204,15 +199,14 @@
     "final_cta": {
       "super": "Start Here",
       "headline": "Ready to elevate your wardrobe?",
-      "subtext": "Every journey starts with a free 20-minute consultation. No commitment. Just a conversation about where you are and where you want to go.",
+      "subtext": "Every journey starts with a complimentary 20-minute consultation. No preparation needed. Just a conversation about where you are and where you want to go.",
       "cta": "Book Your Free Consultation"
     }
   },
-
   "about": {
     "meta": {
-      "title": "About Danielle Marie \u2014 Staples & Statements",
-      "description": "Meet Danielle Marie, wardrobe stylist and creative director behind Staples & Statements. Learn about her archetype-based approach to personal style."
+      "title": "About Danielle Marie — Staples & Statements",
+      "description": "I'm Danielle Marie, wardrobe stylist and creative director behind Staples & Statements. Learn about my archetype-based approach to personal style."
     },
     "hero": {
       "super": "The Woman Behind the Wardrobe",
@@ -226,62 +220,61 @@
       "email": "danielle.marie@staplesandstatements.com"
     },
     "intro": {
-      "headline": "Style is a language.\nDanielle helps you speak it fluently.",
+      "headline": "Style is a language.\nI help you speak it fluently.",
       "paragraphs": [
-        "Danielle Marie has been obsessed with clothes since before she had the vocabulary to explain why. Growing up surrounded by fashion \u2014 the editorial spreads, the department store rituals, the way a perfectly chosen outfit could transform how someone carried themselves \u2014 she understood intuitively that style wasn't vanity. It was communication.",
-        "That instinct sharpened through years in high-end retail, where she developed a trained eye for proportion, fabric, and the subtle mechanics of why certain pieces work and others don't. She learned how to read bodies, understand color theory in practice, and \u2014 most importantly \u2014 how to translate what someone wanted to project into an actual, wearable wardrobe.",
-        "The launch of Staples & Statements formalized what had always been her natural gift: helping people discover and inhabit their authentic style identity. Not a trend. Not a borrowed aesthetic. Theirs.",
-        "Today, Danielle works with clients across San Diego and virtually nationwide \u2014 from first-time styling clients finding their footing to executives and entrepreneurs who understand that how they show up matters."
+        "From a young age, I was captivated by fashion — playing dress-up long before I understood what style truly meant. Some of my earliest memories are helping my mom choose her work outfits each morning, while my sisters and I happily fought over which shoes and dresses we would wear that day. Surrounded by fashion — from glossy editorial spreads to the ritual of wandering department store aisles — I began to understand something powerful: the right outfit could transform the way a person moved through the world. Even then, I knew instinctively that style was never about vanity. It was about presence, identity and storytelling.",
+        "That instinct only deepened through years of working in high-end retail, where I developed a trained eye for proportion, fabric and the subtle mechanics behind why certain pieces work effortlessly while others fall flat. I learned how to read body lines, apply color theory in practice and understand the quiet architecture of a well-built wardrobe. Most importantly, I learned how to translate what someone wants to express, into clothing that actually reflects it.",
+        "Launching Staples & Statements was simply the natural evolution of that work. It became the space where I could fully dedicate myself to what I've always loved most: helping people uncover and embody their authentic style identity. Not a passing trend. Not a borrowed aesthetic. Something deeply personal — something that feels entirely their own.",
+        "Today, I work with clients across San Diego and virtually around the world — from first-time styling clients discovering their footing to executives and entrepreneurs who understand that how you show up matters."
       ]
     },
     "philosophy": {
       "super": "The Approach",
       "headline": "The Archetype Framework",
       "paragraphs": [
-        "Danielle's signature approach to styling is organized around the 7 Feminine Archetypes \u2014 a framework for understanding personal style identity that goes deeper than trends or body types.",
-        "Your archetype is the underlying aesthetic DNA of your personal style. It reflects how you want to feel, how you want to be perceived, and what kind of visual story your wardrobe tells. When you dress in alignment with your archetype, getting dressed becomes effortless rather than exhausting.",
-        "When Danielle shared this framework publicly, tens of thousands of women recognized themselves in it immediately \u2014 because it resonates with something real, not a trend."
+        "My signature approach to styling is centered around the 7 Feminine Archetypes — a framework designed to uncover your true style identity at a deeper level than trends, body types or fleeting aesthetics.",
+        "Your archetype — or combination of archetypes — represents the underlying DNA of your personal style. It reflects who you are at your core, how you want to feel when you walk into a room and the visual story your wardrobe tells before you even speak. When you dress in alignment with your archetype, getting dressed becomes intuitive and energizing rather than overwhelming.",
+        "When I introduced this framework publicly, millions of people instantly recognized themselves within it because it speaks to something deeper than fashion trends. It taps into identity."
       ],
-      "cta": "Discover Your Archetype \u2192"
+      "cta": "Discover Your Archetype →"
     },
     "values": {
       "super": "The Principles",
-      "headline": "What Danielle Believes",
+      "headline": "What I Believe",
       "items": [
         {
           "number": "01",
           "heading": "Style is personal, never prescriptive.",
-          "body": "There is no universally 'correct' way to dress. Danielle's job is to help you find YOUR style \u2014 not impose someone else's aesthetic onto your life."
+          "body": "There is no universal formula for great style. My role is not to impose someone else’s aesthetic, but to help you uncover the one that already belongs to you. True style is personal — and the most powerful wardrobes are built around who you actually are."
         },
         {
           "number": "02",
           "heading": "Every body is a good body for great style.",
-          "body": "The work is about dressing your actual self with knowledge, intention, and confidence \u2014 not dressing for a hypothetical future body or an impossible standard."
+          "body": "Style isn’t about waiting for a future version of you to arrive. It’s about learning how to dress the person you are today with knowledge, intention and confidence — building a wardrobe that honors your real life, your real body and your real presence."
         },
         {
           "number": "03",
           "heading": "A great wardrobe is a tool, not a luxury.",
-          "body": "How you show up affects your confidence, your credibility, and the opportunities available to you. The investment in your wardrobe is an investment in yourself."
+          "body": "How you show up in the world influences your confidence, your credibility and the opportunities that unfold in front of you. A thoughtful wardrobe isn’t about excess — it’s about alignment. Investing in your style is ultimately an investment in yourself."
         }
       ]
     },
     "cta": {
       "super": "The First Step",
       "headline": "Ready to start your style journey?",
-      "subtext": "Every client engagement begins with a free 20-minute consultation. It's a conversation \u2014 no pressure, no commitment \u2014 just clarity on where you are and where you want to be.",
+      "subtext": "Every client relationship begins with a complimentary 20-minute consultation. It’s simply a conversation — no pressure, no commitment — just a chance to gain clarity on where you are now and where you’d like your style to take you.",
       "button": "Book Your Free Consultation"
     }
   },
-
   "services": {
     "meta": {
-      "title": "Styling Services \u2014 Staples & Statements",
-      "description": "Explore Danielle Marie's full range of wardrobe styling services \u2014 from free consultations to year-round VIP styling packages. San Diego & virtual."
+      "title": "Styling Services — Staples & Statements",
+      "description": "Explore my full range of wardrobe styling services — from complimentary consultations to year-round VIP styling packages. San Diego & virtually nationwide."
     },
     "hero": {
       "super": "Expert Styling Services",
       "headline": "Every wardrobe journey starts here.",
-      "subtext": "Starting a new wardrobe journey can feel daunting. That's why every service begins with a free consultation \u2014 so you invest in exactly what you need, nothing more."
+      "subtext": "Starting a new wardrobe journey can feel daunting. That’s why every service begins with a complimentary consultation — so you invest in exactly what you need, nothing more."
     },
     "tier1": {
       "super": "Start Here",
@@ -301,13 +294,13 @@
       "steps": [
         {
           "number": "Step 01",
-          "heading": "Book a Free Consultation",
-          "body": "A 20-minute call to discuss your goals, challenges, and lifestyle. Danielle will recommend exactly which services make sense for where you are right now."
+          "heading": "Book a Complimentary Consultation",
+          "body": "A 20-minute call to discuss your goals, challenges, and lifestyle. I will recommend exactly which services make sense for where you are right now."
         },
         {
           "number": "Step 02",
           "heading": "Your Styling Session",
-          "body": "In-person or virtual, depending on the service. Danielle arrives prepared and focused on building something that actually works for your life."
+          "body": "In-person or virtual, depending on the service. I arrive prepared and focused on building something that actually works for your life."
         },
         {
           "number": "Step 03",
@@ -320,15 +313,14 @@
       "testimonial_quote": "Danielle completely changed how I think about getting dressed.",
       "super": "Not Sure Where to Start?",
       "headline": "Every journey begins with a conversation.",
-      "subtext": "Book a free 20-minute consultation and let Danielle recommend the right path forward for your specific goals, budget, and lifestyle.",
-      "cta": "Book Your Free Consultation"
+      "subtext": "Book a complimentary 20-minute consultation and let me recommend the right path forward for your specific goals, budget, and lifestyle.",
+      "cta": "Book Your Complimentary Consultation"
     }
   },
-
   "services_detail": {
-    "meta_title_template": "{{service.title}} \u2014 Staples & Statements",
+    "meta_title_template": "{{service.title}} — Staples & Statements",
     "hero": {
-      "back_link": "\u2190 All Services"
+      "back_link": "← All Services"
     },
     "sidebar": {
       "heading": "At a Glance",
@@ -336,10 +328,10 @@
       "duration_label": "Duration",
       "perfect_for_label": "Perfect For",
       "cta_primary": "Book Consultation",
-      "cta_secondary": "Not Sure This Is Right? \u2192"
+      "cta_secondary": "Not Sure This Is Right? →"
     },
     "testimonial": {
-      "cta": "Read All Client Stories \u2192"
+      "cta": "Read All Client Stories →"
     },
     "related": {
       "super": "Related Services",
@@ -347,11 +339,10 @@
       "card_cta": "View Service Details"
     }
   },
-
   "archetypes": {
     "meta": {
-      "title": "Style Archetypes \u2014 Staples & Statements",
-      "description": "Discover your style archetype with Danielle Marie's framework. Seven distinct aesthetic identities \u2014 find yours and transform how you dress."
+      "title": "Style Archetypes — Staples & Statements",
+      "description": "Discover your style archetype with Danielle Marie's framework. Seven distinct aesthetic identities — find yours and transform how you dress."
     },
     "gender_toggle": {
       "feminine": "Feminine",
@@ -361,47 +352,46 @@
       "super": "The Framework",
       "headline_line1": "Find Your",
       "headline_accent": "Style Archetype",
-      "subtext": "Seven distinct aesthetic identities. One is yours. Understanding it changes how you shop, how you dress, and how you feel every single morning.",
-      "cta": "Explore the Archetypes \u2193"
+      "subtext": "Seven distinct aesthetic identities. One unique combination that’s entirely your own. Understanding your archetype blend changes how you shop, how you dress and how you show up in the world each day.",
+      "cta": "Explore the Archetypes ↓"
     },
     "hero_masculine": {
       "super": "The Framework",
       "headline_line1": "Find Your",
       "headline_accent": "Style Archetype",
-      "subtext": "Distinct aesthetic identities for the modern man. Understanding yours changes how you dress, how you present, and how the world reads you.",
-      "cta": "Explore the Archetypes \u2193"
+      "subtext": "Distinct aesthetic identities for the modern person. Understanding your archetype blend changes how you dress, how you present and how the world reads you.",
+      "cta": "Explore the Archetypes ↓"
     },
     "grid_feminine": {
       "super": "The Seven Types",
       "headline": "The Feminine Archetypes",
-      "subtext": "Every woman is a blend \u2014 but most have one dominant archetype. Which one resonates with you?"
+      "subtext": "Every person is a blend — but most have one dominant archetype. Which one resonates with you?"
     },
     "grid_masculine": {
       "super": "The Archetypes",
       "headline": "The Masculine Archetypes",
-      "subtext": "Every man's style is rooted in an archetype. Find the one that captures how you move through the world."
+      "subtext": "Every person’s style is rooted in an archetype blend. Find the one that captures how you move through the world."
     },
     "quiz_cta": {
-      "heading": "Not sure which one is you?",
-      "subtext": "Find your archetype in under 2 minutes.",
-      "button": "Find Your Archetype \u2192"
+      "heading": "Not sure what you are?",
+      "subtext": "Find your archetypes in under 2 minutes.",
+      "button": "Find Your Archetype →"
     },
     "masculine_coming_soon": {
       "headline": "Coming Soon",
-      "subtext": "The masculine archetype framework is being developed. Check back soon \u2014 or book a consultation and Danielle will walk you through it personally.",
+      "subtext": "The masculine archetype framework is being developed. Check back soon — or book a consultation and I will walk you through it personally.",
       "cta": "Book a Consultation"
     },
     "guides_cta": {
       "super": "Digital Guides",
-      "headline": "Take Your Archetype Home",
-      "subtext": "In-depth style guides for your archetype \u2014 from $15. Instant download.",
+      "headline": "Take Your Archetypes Home",
+      "subtext": "In-depth style guides for your archetype — from $15. Instant download.",
       "cta_primary": "Shop Style Guides",
       "cta_secondary": "Book Personalized Styling"
     }
   },
-
   "archetypes_detail": {
-    "meta_title_template": "{{archetype.name}} \u2014 Style Archetype | Staples & Statements",
+    "meta_title_template": "{{archetype.name}} — Style Archetype | Staples & Statements",
     "hero": {
       "feminine_label": "Feminine Archetype",
       "masculine_label": "Masculine Archetype",
@@ -421,7 +411,7 @@
     "shades": {
       "super": "Your Unique Blend",
       "headline_template": "{{archetype.name}} with shades of...",
-      "subtext": "Most people are a blend of two archetypes. Select a secondary to explore what your unique combination means.",
+      "subtext": "Most people are a blend of archetypes. Select a secondary to explore what your unique combination means.",
       "choose_label": "Choose your shade",
       "ltk_eyebrow": "Shop this pairing on LTK"
     },
@@ -432,66 +422,76 @@
       "cta_secondary": "Book a Consultation"
     }
   },
-
   "shop": {
     "meta": {
-      "title": "Shop Style Guides & Curated Picks \u2014 Staples & Statements",
-      "description": "Shop Danielle Marie's digital style guides and curated product collections, organized by archetype. Instant downloads and hand-picked fashion finds."
+      "title": "Shop Style Guides & Curated Picks — Staples & Statements",
+      "description": "Shop my digital style guides and curated product collections, organized by archetype. Instant downloads and hand-picked fashion finds."
     },
     "hero": {
-      "eyebrow_guides": "Digital Downloads \u00b7 Curated Guides",
-      "eyebrow_picks": "LTK Collections \u00b7 By Archetype",
+      "eyebrow_guides": "Digital Downloads · Curated Guides",
+      "eyebrow_picks": "LTK Collections · By Archetype",
       "headline": "Shop My Picks",
-      "subtext": "Digital style guides you can reference forever, and hand-picked product collections organized by archetype. Everything Danielle-approved."
+      "subtext": "Digital style guides you can reference forever, and hand-picked product collections organized by archetype. Everything is Danielle-approved."
     },
     "mode_toggle": {
       "guides": "Style Guides",
       "picks": "Curated Picks"
     },
     "picks_panel": {
-      "eyebrow": "Hand-picked by archetype \u00b7 Shoppable on LTK",
+      "eyebrow": "Hand-picked by archetype · Shoppable on LTK",
       "feminine_empty": "Feminine archetype collections coming soon.",
-      "masculine_empty": "Men's archetype collections coming soon.",
+      "masculine_empty": "Masculine archetype collections coming soon.",
       "more_from_danielle": "More from Danielle"
     },
     "personalized_cta": {
       "super": "Personalized Styling",
       "headline": "Want a wardrobe curated just for you?",
-      "subtext": "Style guides and curated picks are a great starting point \u2014 but nothing compares to a wardrobe built specifically around your body, your colors, your life, and your archetype.",
-      "cta": "Book Your Free Consultation"
+      "subtext": "Style guides and curated picks are a great starting point — but nothing compares to a wardrobe built specifically around your body, your colors, your life, and your archetype.",
+      "cta": "Book Your Complimentary Consultation"
     }
   },
-
   "clients": {
     "meta": {
-      "title": "Client Experiences \u2014 Staples & Statements",
-      "description": "Real results from real clients. Read testimonials from Danielle Marie's wardrobe styling clients and discover what a styling transformation looks like."
+      "title": "Client Experiences — Staples & Statements",
+      "description": "Real results from real clients. Read testimonials from my wardrobe styling clients and discover what a styling transformation looks like."
     },
     "hero": {
-      "super": "Their Words, Not Ours",
+      "super": "Their Words, Not Mine",
       "headline": "Client Experiences",
       "subtext": "Style transformations don't show up in a single before-and-after photo. They show up in how you carry yourself. How you feel walking into a room."
     },
     "stats": [
-      { "number": "52K+", "label": "Instagram Followers" },
-      { "number": "500+", "label": "LTK Products Curated" },
-      { "number": "6", "label": "Style Guides Published" },
-      { "number": "7", "label": "Style Archetypes" }
+      {
+        "number": "53K+",
+        "label": "Instagram Followers"
+      },
+      {
+        "number": "500+",
+        "label": "LTK Products Curated"
+      },
+      {
+        "number": "6",
+        "label": "Style Guides Published"
+      },
+      {
+        "number": "12",
+        "label": "Style Archetypes"
+      }
     ],
     "process": {
       "items": [
         {
-          "icon": "\u2726",
-          "heading": "Every journey starts free.",
-          "body": "A 20-minute consultation \u2014 no prep, no commitment \u2014 to understand your goals and identify the right service."
+          "icon": "✦",
+          "heading": "Every journey starts complimentary.",
+          "body": "A 20-minute consultation — no prep, no commitment — to understand your goals and identify the right service."
         },
         {
-          "icon": "\u25c9",
+          "icon": "◉",
           "heading": "Your session, your terms.",
           "body": "In-person in San Diego or virtually via Zoom or FaceTime. Scheduled around your life, not the other way around."
         },
         {
-          "icon": "\u265b",
+          "icon": "♛",
           "heading": "Results that last.",
           "body": "Clients don't just leave with outfits. They leave with the knowledge to make better style decisions forever."
         }
@@ -500,30 +500,29 @@
     "final_cta": {
       "super": "Your Turn",
       "headline": "Ready to be the next success story?",
-      "subtext": "Join the clients who stopped settling for a wardrobe that doesn't quite fit \u2014 and invested in one that does.",
-      "cta": "Book Your Free Consultation"
+      "subtext": "Join the clients who stopped settling for a wardrobe that doesn't quite fit — and invested in one that does.",
+      "cta": "Book Your Complimentary Consultation"
     }
   },
-
   "contact": {
     "meta": {
-      "title": "Contact & Book \u2014 Staples & Statements",
-      "description": "Book a free consultation with wardrobe stylist Danielle Marie. Available in San Diego and virtually nationwide."
+      "title": "Contact & Book — Staples & Statements",
+      "description": "Book a complimentary consultation with wardrobe stylist Danielle Marie. Available in San Diego and virtually nationwide."
     },
     "hero": {
       "super": "Get in Touch",
       "headline": "Let's Connect.",
-      "subtext": "Whether you're ready to book or just exploring \u2014 reach out. Danielle reads every message."
+      "subtext": "Whether you’re ready to book or start exploring — reach out. I read every message."
     },
     "booking": {
-      "super": "Book Your Free Consultation",
+      "super": "Book Your Complimentary Consultation",
       "headline": "Schedule a 20-Minute Call",
-      "subtext": "Select a day and time that works for you. Available via phone, Zoom, or FaceTime. No preparation required \u2014 just show up."
+      "subtext": "Select a day and time that works for you. Available via phone, Zoom, or FaceTime. No preparation required — just show up."
     },
     "calendly_fallback": {
       "headline": "Calendar not loading?",
-      "subtext": "This sometimes happens with ad blockers or slow connections. You can book directly on Calendly \u2014 same availability, same booking.",
-      "cta_primary": "Book on Calendly \u2192",
+      "subtext": "This sometimes happens with ad blockers or slow connections. You can book directly on Calendly — same availability, same booking.",
+      "cta_primary": "Book on Calendly →",
       "cta_secondary": "Try Again"
     },
     "info": {
@@ -531,12 +530,12 @@
       "email_label": "Email",
       "email": "hello@staplesandstatements.com",
       "location_label": "Location",
-      "location": "San Diego, CA \u2014 also available virtually nationwide",
+      "location": "San Diego, CA — also available virtually nationwide",
       "social_label": "Follow Along"
     },
     "form": {
       "heading": "Send a Message",
-      "subtext": "Have a question before booking? Or not quite ready to schedule? Send a note \u2014 Danielle responds personally.",
+      "subtext": "Have a question before booking? Or not quite ready to schedule? Send a note — I respond personally.",
       "name_label": "Name",
       "name_placeholder": "Your name",
       "email_label": "Email",
@@ -554,24 +553,23 @@
         "other": "Other"
       },
       "message_label": "Message",
-      "message_placeholder": "Tell Danielle what's on your mind \u2014 style goals, questions about services, anything at all.",
+      "message_placeholder": "Tell me what’s on your mind — style goals, questions about services, anything at all.",
       "submit": "Send Message",
       "required_marker": "*"
     },
-    "form_success": "Message received. Danielle will be in touch within 1-2 business days."
+    "form_success": "Message received. I will be in touch within 1-2 business days."
   },
-
   "booking_confirmed": {
     "meta": {
-      "title": "You're Booked! \u2014 Staples & Statements",
+      "title": "You're Booked! — Staples & Statements",
       "description": "Your consultation with Danielle Marie is confirmed. Here's what to expect next."
     },
     "hero": {
-      "check_icon": "\u2713",
+      "check_icon": "✓",
       "headline": "You're booked.",
       "headline_personalized_template": "You're booked, {{firstName}}.",
       "details_template": "Danielle will see you on {{formattedDate}}.",
-      "subtext": "Danielle will send a calendar invite with the meeting link shortly. In the meantime \u2014 there's plenty to explore."
+      "subtext": "Danielle will send a calendar invite with the meeting link shortly. In the meantime — there's plenty to explore."
     },
     "while_you_wait": {
       "super": "While You Wait",
@@ -579,16 +577,16 @@
       "subtext": "The more Danielle knows about your style before the call, the more value you'll get from your 20 minutes together. Here are two great ways to prepare.",
       "cards": [
         {
-          "icon": "\u2726",
+          "icon": "✦",
           "heading": "Discover Your Style Archetype",
-          "body": "Danielle's 7 Feminine Archetypes framework is the foundation of every styling engagement. Identify your dominant archetype before the call and Danielle can get straight to building your wardrobe strategy \u2014 no time wasted figuring out who you are.",
-          "cta": "Explore the Archetypes \u2192"
+          "body": "Danielle's 7 Feminine Archetypes framework is the foundation of every styling engagement. Identify your dominant archetype before the call and Danielle can get straight to building your wardrobe strategy — no time wasted figuring out who you are.",
+          "cta": "Explore the Archetypes →"
         },
         {
-          "icon": "\u265b",
+          "icon": "♛",
           "heading": "Explore Danielle's Curated Picks",
-          "body": "Browse the style guides and LTK collections to get a feel for Danielle's aesthetic eye. See something you love? Save it \u2014 it's a great conversation starter for your call.",
-          "cta": "Shop My Picks \u2192"
+          "body": "Browse the style guides and LTK collections to get a feel for Danielle's aesthetic eye. See something you love? Save it — it's a great conversation starter for your call.",
+          "cta": "Shop My Picks →"
         }
       ]
     },
@@ -598,7 +596,7 @@
       "steps": [
         {
           "label": "Before",
-          "body": "No prep required. Just show up as you are. If you want to have your closet nearby or a few inspiration images, great \u2014 but it's not necessary."
+          "body": "No prep required. Just show up as you are. If you want to have your closet nearby or a few inspiration images, great — but it's not necessary."
         },
         {
           "label": "During",
@@ -615,29 +613,28 @@
       "email": "hello@staplesandstatements.com"
     }
   },
-
   "services_content": {
     "consultation": {
-      "title": "Free Consultation",
+      "title": "Complimentary Consultation",
       "slug": "consultation",
       "price": "FREE",
       "duration": "20 minutes",
-      "perfectFor": "Anyone considering styling services \u2014 this is where every journey begins",
-      "shortDescription": "A free 20-minute call to explore your style goals and find the right path forward.",
+      "perfectFor": "Anyone considering styling services — this is where every journey begins",
+      "shortDescription": "A complimentary 20-minute call to explore your style goals and find the right path forward.",
       "order": 1,
       "featured": true,
-      "body": "Every great wardrobe starts with a conversation.\n\nBefore we dive into your closet, your colors, or your shopping habits, we start with you \u2014 who you are, where you're going, and what you want your style to say when you walk into a room. This is a no-pressure, no-commitment call designed to help you figure out what kind of support you actually need.\n\nIn 20 minutes, we'll cover your current style challenges, your goals (a new job? a life transition? simply wanting to feel more like yourself?), and which of Danielle's services makes the most sense for where you are right now.\n\n**There's no upsell here.** If the right answer is to start with a Color Analysis, that's what we'll recommend. If you'd be better served by a Wardrobe Revamp, we'll say so. The consultation exists to make sure your investment goes to the right place.\n\nThis call takes place over phone, Zoom, or FaceTime \u2014 wherever you're most comfortable. No prep work required. Just show up as you are."
+      "body": "Every great wardrobe begins with a conversation.\n\nBefore we dive into your closet, your colors, or your shopping habits, we start with you — who you are, where you’re going, and what you want your style to say when you walk into a room. This is a relaxed, no-pressure consultation designed to help clarify what kind of support will serve you best.\n\nIn just 20 minutes, we’ll talk through your current style challenges, your goals (whether that’s a new job, a life transition, or simply wanting to feel more like yourself again), and which of my services will make the most sense for where you are right now.\n\n**There’s no upsell here — only honest guidance.** If the best place to start is a Color Analysis, that’s what I’ll recommend. If a Wardrobe Revamp would serve you better, I’ll say so. The goal is simply to ensure your investment goes exactly where it should.\n\nThe consultation can take place over the phone, Zoom or FaceTime — wherever you’re most comfortable. No preparation required. Just come as you are."
     },
     "color_analysis": {
       "title": "Color Analysis",
       "slug": "color-analysis",
       "price": "$50",
       "duration": "Per session",
-      "perfectFor": "Clients who are ready to stop guessing and start knowing what colors complement them best",
-      "shortDescription": "Discover your personal color palette \u2014 the colors that make you glow and your whole look intentional.",
+      "perfectFor": "Clients who are ready to take the guesswork out of what colors complement them best",
+      "shortDescription": "Discover your personal and intentional color palette — the colors that make you glow from the inside out.",
       "order": 2,
       "featured": true,
-      "body": "Color is the fastest way to transform how you look without changing a single thing about yourself. The right color palette makes your skin luminous, your eyes brighter, and your entire presence more commanding. The wrong colors \u2014 no matter how expensive or trendy \u2014 work against you.\n\nIn a Color Analysis session, Danielle uses the principles of seasonal color theory to identify your personal palette: the spectrum of hues, depths, and undertones that harmonize with your natural coloring. You'll walk away knowing not just *which* colors to wear, but *why* \u2014 and why certain colors you've been gravitating toward might be quietly undermining your look.\n\nFrom foundation shopping to building a capsule wardrobe to finally understanding why some photos of you pop and others feel flat \u2014 color analysis is foundational. It's the kind of knowledge that changes how you shop forever.\n\n**What you'll get:**\n- Your confirmed seasonal palette (Spring, Summer, Autumn, or Winter)\n- Specific color recommendations to prioritize in your wardrobe\n- Colors to minimize or avoid \u2014 and why\n- A clear framework for shopping with confidence\n\nThis service can be done virtually or in-person. All new clients are encouraged to book a free Consultation first."
+      "body": "Color is the fastest way to transform how you look — without changing anything about yourself. The right palette brings luminosity to your skin, brightness to your eyes and a sense of clarity to your overall presence. The wrong colors, no matter how expensive or on-trend, can quietly work against you.\n\nIn a Color Analysis session, I use the principles of seasonal color theory to identify your personal palette — the range of hues, depths, and undertones that naturally harmonize with your coloring. You’ll leave not only knowing which colors flatter you most, but understanding why they work — and why some of the shades you’ve been questioning may have been subtly dulling your look.\n\nFrom building a capsule wardrobe to shopping with intention to understanding why some photos of you seem to glow while others fall flat, color analysis creates a powerful foundation. It’s the kind of insight that changes the way you shop — and dress — for years to come.\n\n**What You’ll Receive:**\n- Your confirmed seasonal palette (Spring, Summer, Autumn, or Winter — along with subseason)\n- Clear color recommendations to prioritize in your wardrobe\n- Guidance on which colors to minimize or avoid — and why\n- A clear framework for shopping and dressing with confidence\n\nThis service can be done virtually or in person. All new clients are encouraged to begin with a complimentary consultation to ensure this service is the right starting point for their goals."
     },
     "body_analysis": {
       "title": "Body Analysis",
@@ -645,235 +642,236 @@
       "price": "$50",
       "duration": "Per session",
       "perfectFor": "Clients who want to dress the body they're in with confidence",
-      "shortDescription": "Learn which silhouettes, proportions, and cuts are designed to work with your body \u2014 not against it.",
+      "shortDescription": "Learn which silhouettes, proportions, and cuts are designed to work with your body — not against it.",
       "order": 3,
       "featured": false,
-      "body": "Every body is a good body for great style. But every body has its own geometry \u2014 and the most flattering wardrobe is the one built around your actual proportions, not a generic size chart or someone else's body type.\n\nBody Analysis is about understanding the visual relationship between your natural shape and the clothing you put on it. Danielle uses a trained eye and a practical framework to identify your natural proportions, your visual balance points, and the silhouettes, cuts, and styling details that will consistently work in your favor.\n\nThis isn't about hiding or minimizing. It's about dressing with intention \u2014 understanding why some outfits feel effortless and others never quite land, even when everything is technically \"in your size.\"\n\n**What you'll get:**\n- Clear identification of your natural body proportions\n- Silhouettes and cuts that create your most balanced, elevated look\n- Specific styling details to embrace (and a few to retire)\n- A practical lens for evaluating everything in your closet going forward\n\nBody Analysis pairs beautifully with Color Analysis \u2014 together, they give you a complete style foundation. Many clients book both in the same session or on back-to-back calls.\n\nAll new clients are encouraged to begin with a free Consultation."
+      "body": "Every body is worthy of great style. But every body has its own unique geometry — and the most flattering wardrobe is the one designed around your natural proportions, not a generic size chart or someone else’s body type.\n\nBody Analysis focuses on understanding the visual relationship between your natural shape and the clothing you put on it. Using a trained eye and a practical framework, I identify your natural proportions, your visual balance points and the silhouettes, cuts and styling details that consistently work in your favor.\n\nThis isn’t about hiding or minimizing your body. It’s about dressing with intention — understanding why some outfits feel effortlessly right while others never quite land, even when everything is technically \"your size.\"\n\n**What You’ll Receive:**\n- Clear identification of your natural body proportions\n- Silhouettes and cuts that create your most balanced, elevated look\n- Specific styling details to embrace (and a few to retire)\n- A practical framework for evaluating everything in your wardrobe moving forward\n\nBody Analysis pairs beautifully with Color Analysis — together, they create a complete foundation for your personal style. Many clients choose to book both services in the same session or on back-to-back calls.\n\nAll new clients are encouraged to begin with a complimentary consultation."
     },
     "closet_cleanout": {
       "title": "Closet Clean Out",
       "slug": "closet-cleanout",
-      "price": "$55/hr",
+      "price": "$55 per hour (Extended range fee applies for sessions 1+ hours from San Diego)",
       "duration": "Per session",
       "perfectFor": "Clients dealing with closet overwhelm who are ready to edit, organize, and rediscover what they already own",
-      "shortDescription": "A hands-on closet audit and edit \u2014 we'll pull everything out, decide what stays, and rebuild a wardrobe that actually works for your life.",
-      "order": 4,
-      "featured": false,
-      "body": "You don't need more clothes. You need a closet that makes sense.\n\nA Closet Clean Out is a hands-on session where Danielle goes through your wardrobe piece by piece \u2014 editing what no longer serves you, rediscovering what you've been overlooking, and reorganizing what remains into a functional, intentional system.\n\nThis isn't about throwing everything away. It's about clarity. Most clients are surprised to find they already own a stronger wardrobe than they thought \u2014 it was just buried under pieces that don't fit, don't flatter, or don't align with who they are now.\n\n**What you'll get:**\n- A full wardrobe audit \u2014 every piece evaluated for fit, condition, relevance, and style alignment\n- Clear keep / donate / alter categories\n- A reorganized closet built around how you actually live and dress\n- A gap analysis: what's missing and what to invest in next\n- Styling notes on pieces you're keeping \u2014 new ways to wear what you already own\n\nA Closet Clean Out pairs beautifully with the Master Style Moodboard \u2014 once your closet is edited, the moodboard becomes your roadmap for building it back up with intention.\n\nSessions are $55/hr and can be done in-person or virtually. Most closet clean outs take 2\u20134 hours depending on wardrobe size."
-    },
-    "wardrobe_revamp": {
-      "title": "Wardrobe Revamp",
-      "slug": "wardrobe-revamp",
-      "price": "$55/hr",
-      "duration": "Flexible \u2014 typically 2\u20134 hours",
-      "perfectFor": "Clients navigating a life transition, a new chapter, or a long-overdue reset of their personal style",
-      "shortDescription": "A complete wardrobe audit, edit, and rebuild strategy \u2014 for the client ready to invest in a closet that works as hard as they do.",
+      "shortDescription": "A hands-on closet audit and edit — we’ll pull everything out, decide what stays and what goes, and rebuild a wardrobe that actually works for your life.",
       "order": 5,
-      "featured": true,
-      "body": "Some wardrobes need more than fresh eyes. They need a complete overhaul.\n\nThe Wardrobe Revamp is Danielle's signature in-depth service: a full edit of your current closet, a ruthless audit of what stays and what goes, and a strategic plan for filling the gaps with intentional pieces that actually serve your life. It's not just about getting organized. It's about building a wardrobe that works \u2014 one that makes getting dressed the easiest part of your day.\n\nThis service is especially powerful during life transitions: a career change, a new relationship, post-pregnancy, weight changes, relocating to a new city, stepping into a more public role. When your life shifts, your wardrobe needs to catch up.\n\n**What we'll cover:**\n- Full closet edit and audit (keep, donate, consign, alter, discard)\n- Identification of your core wardrobe needs vs. impulse buys\n- Organization and styling of your edited closet\n- A curated shopping list of strategic pieces to fill real gaps\n- Styling of new purchase combinations as items are added\n\nSessions are done in-person at your home or location of choice. Travel included within San Diego. Range fee applies for locations 30+ miles from San Diego.\n\nThe hourly rate reflects the depth of focus and the lasting impact \u2014 most clients find their wardrobe decisions dramatically simplified for months afterward."
+      "featured": false,
+      "body": "You don’t need more clothes. You need a closet that makes sense.\n\nA Closet Clean Out is a hands-on session where I work through your wardrobe piece by piece — editing what no longer serves you, rediscovering what’s been overlooked and reorganizing what remains into a functional, intentional system.\n\nThis process isn’t about throwing everything away. It’s about clarity. Many clients are surprised to realize they already own a stronger wardrobe than they thought — it was simply buried beneath pieces that don’t fit, don’t flatter, or no longer reflect who they are today.\n\n**What You’ll Receive:**\n- A full wardrobe audit, with every piece evaluated for fit, condition, relevance, and style alignment\n- Clear keep, donate and alter categories\n- A reorganized closet built around how you actually live and dress\n- A gap analysis outlining what’s missing and what to invest in next\n- Styling notes for pieces you’re keeping — including new ways to wear what you already own\n\nA Closet Clean Out pairs beautifully with the Master Style Moodboard. Once your wardrobe has been edited, the moodboard becomes your roadmap for rebuilding it with clarity and intention.\n\nSessions are $55/hr and can be done either in person or virtually. Most closet clean outs take between 2-4 hours, depending on the size of the wardrobe."
     },
     "photoshoot_styling": {
       "title": "Photoshoot Styling",
       "slug": "photoshoot-styling",
-      "price": "$100/hr",
-      "duration": "Flexible \u2014 per shoot",
+      "price": "$100 per hour",
+      "duration": "Flexible — per shoot",
       "perfectFor": "Models, photographers, entrepreneurs, and anyone building a visual brand who needs every outfit to perform on camera",
-      "shortDescription": "Expert on-set styling for photoshoots \u2014 so every look is camera-ready, cohesive, and communicates exactly what it needs to.",
-      "order": 6,
+      "shortDescription": "Expert on-set styling for photoshoots — so every look is camera-ready, cohesive, and communicates exactly what it needs to.",
+      "order": 7,
       "featured": false,
-      "priceNote": "Extended range fee applies for sessions 2+ hours from San Diego",
-      "body": "A great photo is half lighting, half styling. And the styling half is entirely controllable.\n\nPhotoshoot Styling is about ensuring that every look you put in front of a camera is doing exactly what it needs to do \u2014 communicating your brand, your personality, your market positioning. Whether you're a model building a book, a photographer needing a stylist for an editorial shoot, or an entrepreneur doing a personal brand shoot, what you wear tells a story before a single word is spoken.\n\nDanielle brings a trained editorial eye to every set, ensuring that garments hang correctly, proportions read well on camera, color palettes remain cohesive across looks, and every outfit feels intentional rather than assembled.\n\n**What's included:**\n- Pre-shoot consultation to align on the visual direction and concept\n- Sourcing and pulling looks (where applicable) \u2014 or editing/styling from your existing wardrobe\n- On-set presence throughout the shoot for real-time adjustments, steaming, and fit corrections\n- Post-shoot review and notes if needed\n\nThis is the service for when the photos matter. Brand launches, editorial features, portfolio work, campaign shoots \u2014 when the images will represent you publicly, the styling needs to be flawless.\n\nRate is $100/hr. An extended range fee applies for sessions located 2+ hours from San Diego."
+      "priceNote": "Extended range fee applies for sessions 1+ hours from San Diego",
+      "body": "A great photo is part lighting, part styling — and the styling half is entirely within your control.\n\nPhotoshoot Styling ensures that every look you place in front of a camera communicates exactly what it needs to: your brand, your personality and your positioning. Whether you’re a model building your portfolio, a photographer producing an editorial or an entrepreneur creating personal brand imagery, what you wear tells a story long before a single word is spoken.\n\nI bring a trained editorial eye to every set, ensuring garments hang correctly, proportions read well on camera, color palettes remain cohesive across looks and every outfit feels intentional rather than improvised.\n\n**What You’ll Receive:**\n- Pre-shoot consultation to align on the visual direction and concept\n- Sourcing and pulling looks (when applicable) or editing and styling from your existing wardrobe\n- On-set presence throughout the shoot for real-time adjustments, steaming, and fit corrections\n- Post-shoot review and styling notes if needed\n\nThis service is designed for moments when the images matter. Brand launches, editorial features, portfolio work, campaign shoots — whenever the photographs will represent you publicly, the styling needs to be precise.\n\nRate is $100 per hour. An extended range fee applies for sessions located 1+ hours from San Diego."
     },
     "master_style_moodboard": {
       "title": "Master Style Moodboard",
       "slug": "master-style-moodboard",
       "price": "$55",
       "duration": "Per session",
-      "perfectFor": "Clients who want a visual style document \u2014 a reference guide for every future shopping decision",
+      "perfectFor": "Clients who want a visual style document — a reference guide for every future shopping decision",
       "shortDescription": "A bespoke visual map of your style identity: your archetype, your palette, your silhouettes, your signature.",
-      "order": 7,
+      "order": 4,
       "featured": false,
-      "priceNote": "One-time exercise \u2014 becomes a living, breathing style document",
-      "body": "Before you can build a wardrobe, you need to know what you're building toward.\n\nThe Master Style Moodboard is Danielle's most conceptual offering: a fully customized visual document that defines your style identity from the ground up. Think of it as a style brief \u2014 the kind a creative director would build before a brand campaign. Except this one is built for you.\n\nDrawing on your Color Analysis results, your Body Analysis insights, your archetype profile, and an in-depth conversation about your life, your aesthetic, and your goals, Danielle creates a visual reference that captures exactly who you are stylistically \u2014 and where you're going.\n\n**What's included:**\n- Your confirmed style archetype (from the 7 Feminine Archetypes framework)\n- Your personal color palette\n- Silhouette and proportion guidance specific to your body\n- Curated inspiration images: outfits, textures, aesthetics, moods\n- Key wardrobe essentials for your specific archetype and lifestyle\n- A shopping direction guide \u2014 the lens through which to evaluate every future purchase\n\nThis document becomes your permanent style compass. Forward it to Danielle before shopping sessions. Reference it when you're tempted by a trend. Share it with a tailor or alterations professional. Build your entire wardrobe around it.\n\nThe Master Style Moodboard is best taken after a Color Analysis and Body Analysis. Many clients bundle all three."
+      "priceNote": "One-time exercise — becomes a living, breathing style document",
+      "body": "Before you can build a wardrobe, you need to know what you’re building toward.\n\nThe Master Style Moodboard is my most conceptual offering — a fully customized visual document designed to define your style identity from the ground up. Think of it as a personal style brief: the kind a creative director would develop before launching a brand campaign. Except this one is built entirely around you.\n\nDrawing on the insights from your Color Analysis, Body Analysis, archetype profile and an in-depth conversation about your lifestyle, aesthetic, references and goals, I create a visual reference that captures exactly who you are stylistically — and where your style is headed.\n\n**What You’ll Receive:**\n- Curated inspiration imagery: outfits, textures, aesthetics and moods\n- Key wardrobe essentials aligned with your archetype and lifestyle\n- A clear shopping direction guide — the lens through which to evaluate every future purchase\n\nThis document becomes your long-term style compass. Use it before shopping. Reference it when a trend catches your eye. Share it with a tailor or alterations professional. Build your wardrobe around it with confidence.\n\nThe Master Style Moodboard is typically most valuable after completing a Color and Body Analysis. Many clients choose to bundle all three services to create a complete foundation for their style."
     },
     "sourcing": {
       "title": "Sourcing & Personal Shopping",
       "slug": "sourcing",
-      "price": "$55/hr or ~15%",
+      "price": "$55 per hour or 15% finders fee",
       "duration": "Ongoing or per-project",
-      "perfectFor": "Clients who know what they want but don't have the time or expertise to find it \u2014 or clients who want Danielle's eye on every purchase",
-      "shortDescription": "Danielle hunts, curates, and delivers exactly what your wardrobe needs \u2014 so you never have to set foot in a store if you don't want to.",
-      "order": 8,
+      "perfectFor": "Clients who want new pieces in their wardrobe but don’t have the time or expertise to find it — or clients who want my eye on every purchase.",
+      "shortDescription": "I hunt, curate, and deliver exactly what your wardrobe needs — so you never have to set foot in a store if you don’t want to.",
+      "order": 6,
       "featured": false,
-      "priceNote": "Fee structure TBC \u2014 contact for details",
-      "body": "Some clients don't want to shop. They want it handled.\n\nSourcing and Personal Shopping is Danielle's white-glove service for clients who want expert curation without the time investment. You tell her what you need \u2014 a specific occasion outfit, a capsule wardrobe for a new role, a complete closet overhaul \u2014 and she finds it. Every piece is selected with your color palette, body proportions, lifestyle needs, and style archetype in mind.\n\nThis isn't browsing. It's precision targeting.\n\nDanielle's sourcing process involves identifying specific items across price points and brands, presenting curated options for client approval, and handling the logistics of pulling pieces for try-on sessions or coordinating returns. Whether you need one killer blazer or a complete seasonal wardrobe, sourcing removes the friction from building a wardrobe you love.\n\n**How it works:**\n- Initial briefing call (included in consultation): review your needs, budget, timeline, and priorities\n- Danielle researches, pulls, and presents curated options\n- You review, approve, and purchase your selections\n- A finder's fee (~15% of the total purchase) applies to sourced items\n\nThis service is especially popular with VIP clients, busy executives, new parents, and anyone navigating a major wardrobe rebuild who values their time.\n\nSourcing can be done as a standalone service or as an ongoing component of a VIP Styling relationship."
+      "priceNote": "Fee structure or $55 per hour — contact for details",
+      "body": "Some clients don’t want to shop. They want it handled.\n\nSourcing and Personal Shopping is my white-glove service for clients who want expert curation without the time commitment. You describe what you need — a standout outfit for a specific event, a capsule wardrobe for a new role or a full wardrobe refresh — and I source it. Every piece is selected with your color palette, body proportions, lifestyle needs, and style archetype in mind.\n\nThis isn’t browsing. It’s precision.\n\nMy sourcing process involves identifying highly specific pieces across brands and price points, presenting curated options for client approval, and managing the logistics of pulling items for try-on sessions or researching return policies. Whether you need one exceptional blazer or an entire seasonal wardrobe, sourcing removes the friction from building a closet you truly love.\n\n**What You’ll Receive:**\n- Initial briefing call (included in consultation) to review your needs, budget, timeline, and priorities\n- I research, pull and present curated options\n- You review, approve, and purchase your selections\n- A finder’s fee (approximately 15% of the total purchase) applies to one-off sourced items\n\nThis service is especially popular with VIP clients, busy executives, new parents and anyone navigating a significant wardrobe transition who values their time.\n\nSourcing can be booked as a standalone service or as an ongoing component of a VIP Styling relationship."
     },
     "vip": {
       "title": "VIP Styling",
       "slug": "vip",
-      "price": "$3,600/yr",
+      "price": "$3,600 per year",
       "duration": "Year-round, on-call access",
       "perfectFor": "CEOs, executives, entrepreneurs, public figures, and high-achieving professionals for whom image is a strategic asset",
-      "shortDescription": "Year-round, on-call styling partnership \u2014 unlimited access to Danielle's eye, expertise, and editorial taste.",
-      "order": 9,
+      "shortDescription": "Year-round, on-call styling partnership — unlimited access to my eye, expertise, and editorial craft.",
+      "order": 8,
       "featured": true,
-      "body": "For the client who wants their style handled \u2014 completely, consistently, and at the highest level.\n\nThe VIP Styling package is Danielle's most comprehensive offering: a year-long partnership that puts her on-call for every wardrobe decision you face. New job presentation? She's got it. Last-minute gala? Handled. Building out a capsule wardrobe for a three-city speaking tour? Done before you land.\n\nThis is styling as a business tool. Not fashion for fashion's sake \u2014 but a deliberate, sustained investment in how you show up. Because how you look affects how you're perceived, how you carry yourself, and the opportunities that come your way.\n\n**What's included in VIP:**\n- Unlimited Zoom or FaceTime styling calls throughout the year\n- Full Color Analysis and Body Analysis at onboarding\n- Master Style Moodboard created and maintained for your evolving life\n- Wardrobe Revamp session at the start of the engagement\n- Ongoing Sourcing and Personal Shopping throughout the year (finder's fees apply to purchases)\n- Priority response for urgent styling needs\n- Seasonal wardrobe reviews and updates\n- Pre-event and occasion styling as needed\n\nVIP clients form a genuine partnership with Danielle. She learns your schedule, your upcoming events, your career trajectory, your body changes, and your evolving aesthetic. The result is a wardrobe and a presence that grows more intentional and more powerful with every season.\n\n**$3,600 for the year.** For context: one strong first impression in the right room can return that investment many times over.\n\nVIP availability is limited. Contact Danielle to inquire about current openings."
+      "body": "For the client who wants their style handled — completely, consistently, and at the highest level.\n\nThe VIP Styling package is my most comprehensive offering: a year-long partnership that places me on call for the wardrobe decisions that shape how you show up. New job presentation? Covered. Last-minute gala? Handled. Building out a capsule wardrobe for a multi-city speaking tour? Done before you land.\n\nThis is styling as a strategic tool — not fashion for fashion’s sake, but a thoughtful, sustained investment in how you present yourself to the world. Because how you look influences how you’re perceived, how you carry yourself and the opportunities that follow.\n\n**What You’ll Receive With VIP:**\n- Unlimited Zoom or FaceTime styling calls throughout the year\n- Full Color and Body Analysis during onboarding\n- A Master Style Moodboard created and maintained as your life evolves\n- A Closet Clean Out session at the beginning of the engagement\n- Ongoing sourcing and personal shopping throughout the year (finder’s fees apply to one-off purchases)\n- Priority response for urgent styling needs\n- Seasonal wardrobe reviews and updates\n- Pre-event and occasion styling as needed\n\nVIP clients form a genuine partnership with me. Over time, I learn your schedule, your upcoming events, your career trajectory and the evolution of your personal aesthetic. The result is a wardrobe — and a presence — that becomes more intentional, more refined and more powerful with every season.\n\n**$3,600 per year.** For context, one powerful first impression in the right room can return that investment many times over.\n\nVIP availability is intentionally limited. Contact me to inquire about current openings."
     }
   },
-
   "archetypes_content": {
     "the_siren": {
       "name": "The Siren",
       "slug": "the-siren",
       "description": "Confident, magnetic, and irresistibly alluring. Your style celebrates every curve and commands every room.",
       "gender": "feminine",
-      "icon": "\u25c9",
+      "icon": "◉",
       "color": "#8c4a3e",
-      "body": "The Siren knows exactly what she has and dresses to celebrate it. Your style is sensual without being scandalous, bold without being brash. You gravitate toward body-conscious silhouettes, rich fabrics, deep warm tones, and the kind of pieces that move with you. Your wardrobe is a love letter to your own body.\n\nYour style says: *I know who I am. You should too.*\n\n**Signature pieces:** Bodycon dresses, wrap silhouettes, high-slit skirts, plunging necklines done with confidence, rich jewel-toned satins, form-fitting knitwear, statement heels.\n\n**Your palette:** Deep red, burnt sienna, chocolate brown, warm gold, terracotta, rich emerald.\n\n**Siren icons:** Sofia Vergara, Salma Hayek, Kim Kardashian."
+      "body": "The Siren knows exactly what they want to portray and dresses to celebrate it. Your style is sensual without being scandalous, bold without being brash. You gravitate toward body-conscious silhouettes, rich fabrics, bold colors, and the kind of pieces that make someone pause. Your wardrobe is a love letter to your own body.\n\nYour style says: *I know who I am. You should too.*\n\n**Signature pieces:** Bodycon dresses, wrap silhouettes, form-flattering bodysuits, high-slit skirts, plunging necklines done with confidence, rich jewel-toned satins, form-fitting bottoms, statement heels.\n\n**Your palette:** Power reds, deep wine, black, obsidian, metallic gold, saturated jewel tones\n\n**Siren icons:** Sofia Vergara, Salma Hayek, Kim Kardashian."
     },
     "the_muse": {
       "name": "The Muse",
       "slug": "the-muse",
-      "description": "Romantic, ethereal, and endlessly creative. Your style is poetry in motion.",
+      "description": "Romantic, ethereal, and endlessly feminine. Your style is poetry in motion.",
       "gender": "feminine",
-      "icon": "\u2726",
+      "icon": "✦",
       "color": "#c9b8d4",
-      "body": "The Muse lives where art and beauty intersect. Your wardrobe is an expression of your inner world \u2014 layered, romantic, and always slightly dreamy. You're drawn to flowing silhouettes, delicate prints, vintage-inspired details, and fabrics that move. Florals, lace, soft watercolor tones, and unexpected feminine details feel instinctively right to you.\n\nYour style says: *I see beauty everywhere, and I wear it.*\n\n**Signature pieces:** Flowy midi dresses, romantic blouses, delicate jewelry, vintage-inspired accessories, soft floral prints, ethereal layering.\n\n**Your palette:** Dusty rose, sage green, lavender, ivory, antique gold, muted periwinkle.\n\n**Muse icons:** Carrie Bradshaw, Alexa Chung, Zooey Deschanel."
+      "body": "The Muse lives where romance and femininity intersect. Your wardrobe is an expression of your inner world — layered, romantic, with a bit of magic to it. You’re drawn to flowing silhouettes, bold feminine prints, fun and ornate details, and fabrics that move. Florals, lace, soft watercolor tones, bright dreamy pops of color and unexpected feminine details like sequins and feathers feel instinctively right to you.\n\nYour style says: *I see beauty everywhere I go, and I wear it.*\n\n**Signature pieces:** Flowy midi dresses, romantic blouses, feminine jewelry, statement accessories, floral prints, ethereal layering.\n\n**Your palette:** Dusty rose, sage green, lavender, ivory, antique gold, muted periwinkle, bright pops of color (usually used for accents)\n\n**Muse icons:** Carrie Bradshaw, Alexa Chung, Zooey Deschanel."
     },
     "the_warrior": {
       "name": "The Warrior",
       "slug": "the-warrior",
       "description": "Bold, structured, and completely unapologetic. You dress with intention and leave an impression.",
       "gender": "feminine",
-      "icon": "\u25b2",
+      "icon": "▲",
       "color": "#5a5a5a",
-      "body": "The Warrior's style is armor \u2014 beautiful, powerful, and built to move through the world with confidence. You're drawn to strong shoulders, structured silhouettes, sharp tailoring, and a palette of high-contrast neutrals. Your look is minimal in decoration and maximal in impact. You don't need embellishment \u2014 your presence is enough.\n\nYour style says: *I am ready for whatever this day brings.*\n\n**Signature pieces:** Structured blazers, tailored trousers, crisp white shirts, sleek trench coats, minimal statement jewelry, strong-shouldered dresses, clean leather pieces.\n\n**Your palette:** Black, white, charcoal, camel, navy, sharp red.\n\n**Warrior icons:** Tilda Swinton, Lupita Nyong'o, Christy Turlington."
+      "body": "The Warrior’s style is armor — beautiful, powerful, and built to move through the world with confidence. You’re drawn to strong shoulders, structured silhouettes, sharp tailoring, and a palette of high-contrast neutrals. Your look is minimal in decoration and maximal in impact. You don’t need embellishment — your presence is enough.\n\nYour style says: *I am prepared for whatever the day brings.*\n\n**Signature pieces:** Structured blazers, tailored trousers, crisp white shirts, sleek trench coats, minimal statement jewelry, strong-shouldered dresses, clean leather pieces, pointed toe shoes.\n\n**Your palette:** Black, white, tan, navy, charcoal, emerald or electric cobalt (as accents), metallic silver\n\n**Warrior icons:** Tilda Swinton, Lupita Nyong’o, Christy Turlington."
     },
     "the_enchantress": {
       "name": "The Enchantress",
       "slug": "the-enchantress",
-      "description": "Dark, magnetic, and mysterious. Your style draws people in before you say a word.",
+      "description": "Alluring, magnetic, and mysterious. Your style draws people in before you say a word.",
       "gender": "feminine",
-      "icon": "\u25c8",
+      "icon": "◈",
       "color": "#4a3d5c",
-      "body": "The Enchantress operates in the space between shadow and light. Your style is dark romance made wearable \u2014 moody colors, unexpected textures, layered complexity, and an edge that feels effortless rather than studied. You're drawn to deep jewel tones, gothic-adjacent details, velvet, lace, and silhouettes that suggest rather than reveal.\n\nYour style says: *There's more here than you can see. Come closer.*\n\n**Signature pieces:** Velvet wrap dresses, lace-detail tops, dramatic sleeve details, deep-toned midi skirts, layered necklaces, boots with presence.\n\n**Your palette:** Deep plum, midnight navy, forest green, charcoal, oxblood, dusty mauve.\n\n**Enchantress icons:** Winona Ryder, Dita Von Teese, Lana Del Rey."
+      "body": "The Enchantress lives in the space between shadow and light. Your style leans heavily into dark romance — moody colors, unexpected textures, layered complexity, and an edge that feels effortless. You’re drawn to deep smoky tones, gothic-adjacent details, velvet, lace, and silhouettes that suggest rather than reveal.\n\nYour style says: *There’s more than meets the eye. Come closer.*\n\n**Signature pieces:** Draped or asymmetrical pieces, lace elements, dramatic sleeve details, sheer overlays, smoky-toned midi skirts, layered and gemstone jewelry, boots with presence.\n\n**Your palette:** Plum, burgundy, wine, black, smoke, midnight blue, deep forest greens, iridescent or opal-like accents.\n\n**Enchantress icons:** Winona Ryder, Dita Von Teese, Lana Del Rey."
     },
     "the_creator": {
       "name": "The Creator",
       "slug": "the-creator",
-      "description": "Eclectic, expressive, and artistically fearless. Your style is wearable art \u2014 and the rules don't apply.",
+      "description": "Eclectic, expressive, and artistically fearless. Your style is wearable art — and rules don’t apply to you.",
       "gender": "feminine",
-      "icon": "\u25d0",
+      "icon": "◐",
       "color": "#6b8c6e",
-      "body": "The Creator sees fashion as a medium, not a mandate. You mix prints without apology, layer textures that shouldn't work until they do, and find pieces that tell stories most people would walk right past. Your style is curated chaos \u2014 a visual diary of your obsessions, inspirations, and the beautiful things you can't stop noticing.\n\nYour style says: *I made the rules I live by. You're welcome to look.*\n\n**Signature pieces:** Mixed-print combinations, statement vintage pieces, bold accessories as punctuation, artist-adjacent textures, unexpected color combinations, hand-crafted or artisan pieces.\n\n**Your palette:** Earthy terracotta, chartreuse, cobalt, burnt orange, mustard, deep teal \u2014 often all at once.\n\n**Creator icons:** Iris Apfel, Solange Knowles, Erykah Badu."
+      "body": "The Creator sees fashion as a medium, not a mandate. You mix prints without apology, layer textures that shouldn’t work until they do and find pieces that tell stories most people would walk right past. Your style is curated chaos — a visual diary of your obsessions, inspirations and the beautiful things you can’t stop noticing.\n\nYour style says: *I make the rules I live by. You’re welcome to look.*\n\n**Signature pieces:** Mixed-print combinations, experimental cuts, bold accessories as punctuation, artist-adjacent textures, unexpected color combinations, hand-crafted or artisan pieces and oversized and fitted combos.\n\n**Your palette:** Bright primaries, fun color-blocking, unexpected combinations and pops of neon or saturated hues.\n\n**Creator icons:** Iris Apfel, Solange Knowles, Erykah Badu."
     },
     "the_empress": {
       "name": "The Empress",
       "slug": "the-empress",
-      "description": "Nurturing, grounding, and abundantly elegant. You dress with quiet confidence \u2014 luxe elevated basics and warm neutrals that radiate stability and grace.",
+      "description": "Nurturing, grounding, and abundantly elegant. You dress with quiet confidence — luxe elevated basics and warm neutrals that radiate stability and grace.",
       "gender": "feminine",
-      "icon": "\u265b",
+      "icon": "♛",
       "color": "#8b6b4a",
-      "body": "The Empress radiates warmth the moment she enters a room. Your style isn't about commanding attention \u2014 it's about creating an atmosphere of grounded abundance. You gravitate toward luxe, elevated basics: pieces that feel as good as they look, built with quality that speaks for itself. Your wardrobe is an extension of your nurturing energy \u2014 every piece chosen with care, stability, and timeless intention.\n\nYou don't need trends. Your closet is full of high-quality neutrals that layer beautifully, silk that drapes just right, and gold that catches the light. You dress for how you want to feel: warm, capable, and elegantly put together without trying too hard.\n\nYour style says: *I am here, grounded, and abundant.*\n\n**Signature pieces:** Silk blouses, gold jewelry, tailored trousers, cashmere wraps, elevated knitwear, structured handbags, quality loafers.\n\n**Your palette:** Warm neutrals \u2014 camel, ivory, gold, olive, warm taupe, soft champagne, rich cognac.\n\n**Empress icons:** Meghan Markle, Amal Clooney, Oprah Winfrey."
+      "body": "The Empress radiates warmth the moment they enter a room. Your style isn’t about commanding attention — it’s about creating an atmosphere of grounded abundance. You gravitate toward luxe, elevated basics: pieces that feel as good as they look, built with quality that speaks for itself. Your wardrobe is an extension of your nurturing energy — every piece chosen with care, stability, and timeless intention.\n\nYou don’t need trends. Your closet is full of pieces that layer beautifully like silk that drapes just right and stacked gold that catches the light. You dress for how you want to feel: warm, capable, and elegantly put together without trying too hard.\n\nYour style says: *I am here, grounded, and abundant.*\n\n**Signature pieces:** Silk blouses, gold jewelry, tailored yet comfortable trousers, cashmere wraps, elevated knitwear, structured handbags, quality loafers, luxe staples, rich fabrics.\n\n**Your palette:** Warm earthy colors — olive, sage, warm neutrals (caramel, taupe), terracotta, soft gold, rich browns.\n\n**Empress icons:** Meghan Markle, Amal Clooney, Oprah Winfrey."
     },
     "the_angelic_one": {
       "name": "The Angelic One",
       "slug": "the-angelic-one",
-      "description": "Pure, luminous, and timelessly beautiful. Your style radiates grace and effortless softness.",
+      "description": "Simple, dainty and timelessly beautiful. Your style radiates grace and effortless softness.",
       "gender": "feminine",
-      "icon": "\u2727",
+      "icon": "✧",
       "color": "#e8ddd4",
-      "body": "The Angelic One carries an aura of calm, purity, and gentle beauty. Your wardrobe speaks in whispers \u2014 soft whites, warm creams, blush pinks, and the kind of delicate details that reward a second look. Your style is never loud, but it's never forgettable. There's a timelessness to everything you wear that transcends trend.\n\nYour style says: *I am exactly where I belong, and I am at peace.*\n\n**Signature pieces:** Flowy white dresses, silk slip skirts, soft-knit cardigans, ballet flats, pearl jewelry, sheer layers, linen basics in cloud-soft tones.\n\n**Your palette:** Ivory, cream, blush, powder pink, warm white, pale gold, soft champagne.\n\n**Angelic icons:** Audrey Hepburn, Hailey Bieber, Sienna Miller."
+      "body": "The Angelic One carries an aura of peace, softness and gentle beauty. Your wardrobe speaks in whispers — soft whites, warm creams, blush pinks, baby blues, and the kind of delicate details that reward a second look. Your style is never loud, but it’s never forgettable. There’s a timelessness to everything you wear that transcends trends.\n\nYour style says: *I am exactly where I belong, and I am at peace.*\n\n**Signature pieces:** Flowy sun dresses, simple silk pieces, soft-knit cardigans, ballet flats, pearl jewelry, sheer layers, light wash denim, linen basics in cloud-soft tones.\n\n**Your palette:** Ivory, cream, powder pink, baby blue, butter yellow, warm white, pale gold, soft champagne, silver.\n\n**Angelic icons:** Lily-Rose Depp, Grace Kelly, Elle Fanning"
     },
     "the_protector": {
       "name": "The Protector",
       "slug": "the-protector",
-      "description": "Grounded, capable, and quietly strong. You dress to feel steady and ready for life \u2014 not to impress, but to be prepared for whatever comes.",
+      "description": "Grounded, capable, and quietly strong. You dress to feel steady and ready for life — not to impress, but to be prepared for whatever comes.",
       "gender": "masculine",
-      "icon": "\u25c6",
+      "icon": "◆",
       "color": "#2c3e50",
-      "body": "The Protector doesn't dress to be noticed \u2014 he dresses to be ready. Your wardrobe is built on dependability: quality over quantity, durability over novelty. Every piece earns its place through repeated wear and unwavering reliability. You gravitate toward well-worn leather that ages beautifully, heavy-gauge knits, heritage boots, and perfectly fitted denim that holds up to real life.\n\nYou're not chasing the next thing. You've already found what works, and you return to it with quiet confidence. Your style reflects stability, trustworthiness, and a grounding presence that puts everyone around you at ease.\n\nYour style says: *I'm steady. I'm here. I'm not going anywhere.*\n\n**Signature pieces:** Heavyweight chore jackets, quality leather boots, well-fitted dark denim, classic crew-neck knits, military-inspired outerwear, dependable field watches.\n\n**Your palette:** Deep earth tones \u2014 slate, charcoal, olive, worn brown, indigo, iron grey.\n\n**Protector icons:** Steve McQueen, Idris Elba, David Beckham (off-duty)."
+      "body": "The Protector doesn’t dress to be noticed — they dress to be ready. Your wardrobe is built on dependability: quality over quantity, durability over novelty. Every piece earns its place through repeated wear and unwavering reliability. You gravitate toward well-worn leather that ages beautifully, heavy-gauge knits, heritage boots, and perfectly fitted denim that holds up to real life.\n\nYou’re not chasing the next thing. You’ve already found what works, and you return to it with quiet confidence. Your style reflects stability, trustworthiness, and a grounding presence that puts everyone around you at ease.\n\nYour style says: *I’m steady. I’m here. I’m not going anywhere.*\n\n**Signature pieces:** Heavyweight chore jackets, quality leather boots, well-fitted dark denim, classic crew-neck sweatshirt, military-inspired outerwear, dependable field watches.\n\n**Your palette:** Deep earth tones — olive, forest green, charcoal, slate, camel, chocolate brown, muted burgundy or rust accents\n\n**Protector icons:** Steve McQueen, Idris Elba, David Beckham (off-duty)."
     },
     "the_maverick": {
       "name": "The Maverick",
       "slug": "the-maverick",
-      "description": "Driven by freedom, individuality, and self-expression. Fashion is a playground, not a rule book \u2014 you evolve with curiosity and refuse to blend in.",
+      "description": "Driven by freedom, individuality, and self-expression. Fashion is a playground, not a rule book — you evolve with curiosity and refuse to blend in.",
       "gender": "masculine",
-      "icon": "\u25c7",
+      "icon": "◇",
       "color": "#2d1b33",
-      "body": "The Maverick's closet is a contradiction by design. Vintage band tees under structured blazers. Distressed denim with tailored details. Statement accessories that start conversations. You resist being boxed in and see fashion as a playground versus a rule book. Rules exist to be bent, and you bend them with taste.\n\nYour wardrobe is always evolving because standing still is the only thing you refuse to do. You crave freedom, novelty, and movement. Labels feel limiting \u2014 your style is versatile and hard to pin down, which is exactly the point. You enjoy bending and remixing trends on your own terms.\n\nYour style says: *You've never seen this before. And you won't again.*\n\n**Signature pieces:** Oversized statement outerwear, graphic tees, mixed-era layering, bold accessories, unexpected footwear choices, one-of-a-kind vintage finds.\n\n**Your palette:** High-contrast with unexpected pops \u2014 black and white base with electric blue, deep red, mustard, or neon accents.\n\n**Maverick icons:** Tyler, the Creator, Harry Styles, Kid Cudi."
+      "body": "The Maverick’s closet is a contradiction by design. Band tees under structured blazers. Distressed denim with tailored details. Statement accessories that start conversations. You resist being boxed in and see fashion as a playground versus a rule book. Rules exist to be bent, and you bend them with taste.\n\nYour wardrobe is always evolving because standing still is the only thing you refuse to do. You crave freedom, novelty, and movement. Labels feel limiting — your style is versatile and hard to pin down, which is exactly the point. You enjoy bending and remixing trends on your own terms.\n\nYour style says: *You’ve never seen this before. And you won’t again.*\n\n**Signature pieces:** Oversized statement outerwear, graphic tees, mixed-era layering, bold accessories, unexpected footwear choices, one-of-a-kind finds.\n\n**Your palette:** High-contrast with unexpected pops — black and white base with electric blue, cherry red, emerald, bright orange or neon accents.\n\n**Maverick icons:** Tyler, The Creator, Harry Styles, Kid Cudi."
     },
     "the_architect": {
       "name": "The Architect",
       "slug": "the-architect",
-      "description": "Intentional, precise, and deeply aware of the power of presentation. Every choice is considered, every detail calculated \u2014 nothing is accidental.",
+      "description": "Intentional, precise, and deeply aware of the power of presentation. Every choice is considered, every detail calculated — nothing is accidental.",
       "gender": "masculine",
-      "icon": "\u25fc",
+      "icon": "◼",
       "color": "#1a1a2e",
-      "body": "The Architect's wardrobe is a masterclass in precision. Every piece is selected for its construction, its cut, its purpose in the larger system. You appreciate structure, clarity, and cohesion \u2014 clean lines, architectural shapes, and monochromatic palettes that create visual harmony. You don't wear clothes \u2014 you curate a visual identity where every detail has been considered and nothing is left to chance.\n\nYour style refines over time. You adjust details rather than reinvent yourself. Trends are adopted strategically \u2014 only if they align with the vision you've already built. Your presence enters a room with focus, sharpness, and intention.\n\nYour style says: *Nothing here is by accident.*\n\n**Signature pieces:** Tailored blazers with architectural shoulders, minimalist watches, structured trousers, clean sneakers, well-pressed button-downs, precision-cut outerwear.\n\n**Your palette:** Controlled neutrals \u2014 black, white, charcoal, navy, steel grey, bone.\n\n**Architect icons:** Tom Ford, A$AP Rocky (structured looks), Timoth\u00e9e Chalamet."
+      "body": "The Architect’s wardrobe is a masterclass in precision. Every piece is selected for its construction, its cut, its purpose in the larger system. You appreciate structure, clarity, and cohesion — clean lines, architectural shapes, and monochromatic palettes that create visual harmony. You don’t wear clothes — you curate a visual identity where every detail has been considered and nothing is left to chance.\n\nYour style refines over time. You adjust details rather than reinvent yourself. Trends are adopted strategically — only if they align with the vision you’ve already built. Your presence enters a room with focus, sharpness, and intention.\n\nYour style says: *Nothing here is by accident.*\n\n**Signature pieces:** Tailored blazers with architectural shoulders, minimalist watches, structured trousers, clean sneakers, well-pressed button-downs, precision-cut outerwear.\n\n**Your palette:** Controlled neutrals — black, white, charcoal, navy, steel grey, bone, tan.\n\n**Architect icons:** Tom Ford, A$AP Rocky (structured looks), David Gandy."
     },
     "the_alchemist": {
       "name": "The Alchemist",
       "slug": "the-alchemist",
-      "description": "Style as emotional language. You move through phases, moods, and transformation \u2014 your wardrobe reflects inner depth and personal evolution.",
+      "description": "Style as emotional language. You move through phases, moods, and transformation — your wardrobe reflects inner depth and personal evolution.",
       "gender": "masculine",
-      "icon": "\u25ce",
+      "icon": "◎",
       "color": "#4a2d3e",
-      "body": "The Alchemist dresses from the inside out. Your wardrobe shifts with your inner landscape \u2014 dark and moody one season, warm and layered the next. You're drawn to texture, contrast, and pieces that carry emotional weight. A vintage ring, a hand-dyed scarf, a jacket that survived three creative phases. For you, getting dressed is an act of translation \u2014 transforming what you feel into what you wear.\n\nYou experience life in phases, and your style evolves alongside your inner world. Clothing becomes a tool for storytelling, exploration, and self-discovery. Nothing in your closet is random \u2014 every piece marks a moment, a mood, a transformation.\n\nYour style says: *I'm becoming. Watch closely.*\n\n**Signature pieces:** Textured layers, mood-driven accessories, vintage and thrifted finds, statement rings, pieces with patina and history, draped silhouettes.\n\n**Your palette:** Mood-dependent \u2014 deep burgundy, midnight, forest green, aged gold, storm grey, burnt umber.\n\n**Alchemist icons:** Donald Glover, Jared Leto, Lenny Kravitz."
+      "body": "The Alchemist dresses from the inside out. Your wardrobe shifts with your inner landscape — dark and moody one season, warm and layered the next. You’re drawn to texture, contrast, and pieces that carry emotional weight. A vintage ring, a hand-dyed scarf, a jacket that survived three creative phases. For you, getting dressed is an act of translation — transforming what you feel into what you wear.\n\nYou experience life in phases, and your style evolves alongside your inner world. Clothing becomes a tool for storytelling, exploration, and self-discovery. Nothing in your closet is random — every piece marks a moment, a mood, a transformation.\n\nYour style says: *I’m becoming. Watch closely.*\n\n**Signature pieces:** Textured layers, mood-driven accessories, vintage and thrifted finds, statement rings, pieces with sentimental value and history, draped silhouettes.\n\n**Your palette:** Mood-dependent — deep burgundy, midnight, forest green, aged gold, storm grey, burnt umber, plum.\n\n**Alchemist icons:** Donald Glover, Jared Leto, Lenny Kravitz."
     },
     "the_sovereign": {
       "name": "The Sovereign",
       "slug": "the-sovereign",
-      "description": "Fully aligned \u2014 your style feels effortless, grounded, and quietly powerful. You're not chasing trends or identities; you're expressing a fully formed sense of self.",
+      "description": "Fully aligned — your style feels effortless, grounded, and quietly powerful. You're not chasing trends or identities; you're expressing a fully formed sense of self.",
       "gender": "masculine",
-      "icon": "\u2b21",
+      "icon": "⬡",
       "color": "#1a3a2a",
-      "body": "The Sovereign's style is the quietest and the most powerful. Nothing feels forced, nothing feels like a costume. There's a seamless quality to how you dress \u2014 every piece belongs, not because it was carefully selected, but because it simply couldn't be anything else. You've moved past performance and arrived at something more rare: pure alignment.\n\nYour clothes don't make a statement \u2014 they make a presence. You integrate many influences without losing coherence. Trends don't define you, and you don't react strongly to them. When something feels right, you wear it. When it doesn't, you don't. That simplicity is your superpower.\n\nYour style says: *This is me. It always has been.*\n\n**Signature pieces:** Perfectly fitted basics, cashmere, quality denim, clean leather goods, understated watches, pieces that feel like a second skin.\n\n**Your palette:** Refined and effortless \u2014 soft black, warm grey, cream, deep navy, muted olive, natural tones.\n\n**Sovereign icons:** Jay-Z (modern era), Ryan Gosling, Pharrell Williams."
+      "body": "The Sovereign’s style is the quietest and the most powerful. Nothing feels forced, nothing feels like a costume. There’s a seamless quality to how you dress — every piece belongs, not because it was carefully selected, but because it simply couldn’t be anything else. You’ve moved past performance and arrived at something more rare: pure alignment.\n\nYour clothes don’t make a statement — they make a presence. You integrate many influences without losing coherence. Trends don’t define you, and you don’t react strongly to them. When something feels right, you wear it. When it doesn’t, you don’t. That simplicity is your superpower.\n\nYour style says: *This is me. It always has been.*\n\n**Signature pieces:** Perfectly fitted basics, cashmere, quality denim, clean leather goods, understated watches, elevated luxe basics, timeless outerwear, pieces that feel like a second skin.\n\n**Your palette:** Refined and effortless — cream, ivory, camel, charcoal, soft black, soft taupe, muted monochrome palettes.\n\n**Sovereign icons:** Bradley Cooper, Ryan Gosling, Jake Gyllenhaal."
     }
   },
-
   "guides": {
     "7_feminine_archetypes": {
       "slug": "7-feminine-archetypes",
       "title": "The 7 Feminine Archetypes Style Guide",
       "price": "$27",
-      "description": "The guide that started a movement. Identify your dominant archetype, understand your style DNA, and build a wardrobe that finally feels authentic.",
-      "tags": ["Archetypes", "Bestseller"]
+      "description": "The style guide that started a movement. Identify your dominant archetype, understand your style DNA, and build a wardrobe that finally feels authentic.",
+      "tags": [
+        "Archetypes",
+        "Bestseller"
+      ]
     },
     "single_moms": {
       "slug": "single-moms",
       "title": "The Ultimate Single Mom's Style Guide 40+",
       "price": "$27",
-      "description": "Style that works for your real life. Practical, polished, and always put-together \u2014 for the woman who doesn't have time to overthink it.",
-      "tags": ["Lifestyle"]
+      "description": "Style that works for your real life. Practical, polished, and always put-together — for the mom who doesn’t have time to overthink it.",
+      "tags": [
+        "Lifestyle"
+      ]
     },
     "ultimate_style_edit": {
       "slug": "ultimate-style-edit",
       "title": "The Ultimate Style Edit",
       "price": "$27",
-      "description": "A comprehensive wardrobe audit framework \u2014 how to edit ruthlessly, identify gaps strategically, and shop with intention.",
-      "tags": ["Wardrobe"]
+      "description": "A comprehensive wardrobe audit framework — how to edit ruthlessly, identify gaps strategically, and shop with intention.",
+      "tags": [
+        "Wardrobe"
+      ]
     },
     "maximalist": {
       "slug": "maximalist",
       "title": "The Ultimate Maximalist Style Guide",
       "price": "$27",
-      "description": "For the woman who believes more is more. Bold prints, layered textures, color confidence \u2014 maximalism done right.",
-      "tags": ["Archetypes"]
+      "description": "For people who believe more is more. Bold prints, layered textures, color confidence — maximalism done right.",
+      "tags": [
+        "Archetypes"
+      ]
     },
     "mens_edition": {
       "slug": "mens-edition",
       "title": "The Ultimate Style Edit: Men's Edition",
       "price": "$27",
       "description": "Clean, powerful, intentional dressing for men. Wardrobe fundamentals, silhouette principles, and the system behind a truly effortless wardrobe.",
-      "tags": ["Men's"]
+      "tags": [
+        "Men's"
+      ]
     },
     "no_overpacking": {
       "slug": "no-overpacking",
       "title": "10 Outfits, No Overpacking",
       "price": "$15",
-      "description": "Pack light, look incredible. The stylish mini guide that teaches you to do more with less \u2014 your carry-on's new best friend.",
-      "tags": ["Travel", "Starter"]
+      "description": "Pack light, look incredible. The stylish mini guide that teaches you to do more with less — your carry-on's new best friend.",
+      "tags": [
+        "Travel",
+        "Starter"
+      ]
     }
   }
 }

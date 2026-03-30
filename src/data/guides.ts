@@ -27,7 +27,7 @@ export const guides: Guide[] = [
     title: 'The 7 Feminine Archetypes Style Guide',
     price: '$27',
     description:
-      'The guide that started a movement. Identify your dominant archetype, understand your style DNA, and build a wardrobe that finally feels authentic.',
+      'The style guide that started a movement. Identify your dominant archetype, understand your style DNA, and build a wardrobe that finally feels authentic.',
     tags: ['Archetypes', 'Bestseller'],
     link: 'https://shop.beacons.ai/staplesandstatementsss/209b235a-3af0-46ae-a2a7-962abe1310fb',
   },
@@ -36,7 +36,7 @@ export const guides: Guide[] = [
     title: "The Ultimate Single Mom's Style Guide 40+",
     price: '$27',
     description:
-      "Style that works for your real life. Practical, polished, and always put-together — for the woman who doesn't have time to overthink it.",
+      "Style that works for your real life. Practical, polished, and always put-together — for the mom who doesn't have time to overthink it.",
     tags: ['Lifestyle'],
     link: 'https://shop.beacons.ai/staplesandstatementsss/3fc52a60-e677-44fe-b35a-7e07a9eb4aa9',
   },
@@ -54,7 +54,7 @@ export const guides: Guide[] = [
     title: 'The Ultimate Maximalist Style Guide',
     price: '$27',
     description:
-      'For the woman who believes more is more. Bold prints, layered textures, color confidence — maximalism done right.',
+      'For people who believe more is more. Bold prints, layered textures, color confidence — maximalism done right.',
     tags: ['Archetypes'],
     link: 'https://shop.beacons.ai/staplesandstatementsss/bfc67072-d0d6-48de-bd31-39dae3f09a9d',
   },

@@ -18,6 +18,6 @@ Your style says: *Nothing here is by accident.*
 
 **Signature pieces:** Tailored blazers with architectural shoulders, minimalist watches, structured trousers, clean sneakers, well-pressed button-downs, precision-cut outerwear.
 
-**Your palette:** Controlled neutrals — black, white, charcoal, navy, steel grey, bone.
+**Your palette:** Controlled neutrals — black, white, charcoal, navy, steel grey, bone, tan.
 
-**Architect icons:** Tom Ford, A$AP Rocky (structured looks), Timothée Chalamet.
+**Architect icons:** Tom Ford, A$AP Rocky (structured looks), David Gandy.
