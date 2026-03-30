@@ -38,8 +38,7 @@ const archetypes = defineCollection({
     gender: z.enum(['feminine', 'masculine']),
     icon: z.string().optional(),
     color: z.string().optional(),
-    guideLink: z.string().optional(),
-    ltkLink: z.string().optional(),
+
     image: z.string().optional(),
   }),
 });

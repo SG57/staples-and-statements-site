@@ -6,7 +6,6 @@ order: 6
 gender: "feminine"
 icon: "♛"
 color: "#8b6b4a"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Empress radiates warmth the moment they enter a room. Your style isn't about commanding attention — it's about creating an atmosphere of grounded abundance. You gravitate toward luxe, elevated basics: pieces that feel as good as they look, built with quality that speaks for itself. Your wardrobe is an extension of your nurturing energy — every piece chosen with care, stability, and timeless intention.

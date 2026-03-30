@@ -67,6 +67,13 @@ const archetypeCollections = getCollectionsForArchetype(_ltkAll, data.slug)
   .filter((c) => !c.isBlend)
   .map((c) => ({ title: c.title, url: c.collection_url, cover: c.cover, count: c.product_count }));
 
+const LTK_PROFILE = 'https://www.shopltk.com/explore/Staplesandstatementsss';
+// Best single-archetype collection: non-blend, non-curvy, shortest title
+const bestCollection = getCollectionsForArchetype(_ltkAll, data.slug)
+  .filter((c) => !c.isBlend && !c.isCurvy)
+  .sort((a, b) => a.title.length - b.title.length)[0];
+const bestCollectionUrl = bestCollection?.collection_url ?? LTK_PROFILE;
+
 /* Determine gender label for cross-linking */
 const isFeminine = data.gender === 'feminine';
 
@@ -124,15 +131,7 @@ const genderGuide = isFeminine
       <!-- Accent line in archetype color -->
       <div class="w-12 sm:w-16 h-1 mb-8 sm:mb-10" style={`background-color: ${data.color}`}></div>
 
-      <!-- Hero CTAs -->
-      <div class="flex flex-col sm:flex-row gap-3">
-        <a
-          href="/archetypes#archetypes"
-          class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200 min-h-[48px]"
-        >
-          Find Your Archetype
-        </a>
-      </div>
+
     </div>
 
   </section>
@@ -438,7 +437,7 @@ const genderGuide = isFeminine
           )}
         </div>
 
-        <!-- RIGHT COLUMN: Description text -->
+        <!-- RIGHT COLUMN: Description text + Shop CTA -->
         <div>
           {visuals ? (
             <div class="description-prose">
@@ -451,6 +450,18 @@ const genderGuide = isFeminine
           ) : (
             <div class="font-body text-white/50 italic">Visual data coming soon.</div>
           )}
+
+          <!-- Shop This Look CTA -->
+          <div class="mt-10">
+            <a
+              href={bestCollectionUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200 min-h-[48px]"
+            >
+              Shop This Look →
+            </a>
+          </div>
         </div>
 
       </div>
@@ -661,8 +672,14 @@ const genderGuide = isFeminine
         </div>
         <div class="flex flex-col sm:flex-row gap-3 shrink-0">
           <a
-            href="/archetypes"
+            href="/style-quiz"
             class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-body text-sm font-medium tracking-widest uppercase hover:bg-accent-light transition-colors duration-200 min-h-[48px]"
+          >
+            Find Your Archetype
+          </a>
+          <a
+            href="/archetypes"
+            class="inline-flex items-center justify-center px-8 py-4 border border-white/25 text-white font-body text-sm font-medium tracking-widest uppercase hover:border-white hover:bg-white/8 transition-colors duration-200 min-h-[48px]"
           >
             All Archetypes
           </a>

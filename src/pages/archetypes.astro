@@ -3,6 +3,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArchetypeQuiz from '../components/ArchetypeQuiz.astro';
 import { getCollection } from 'astro:content';
 import { getCardImages } from '../data/archetype-images';
+import { fetchLtkCollections, getCollectionsForArchetype } from '../data/ltk-api';
+
+const _ltkAll = await fetchLtkCollections();
+const LTK_PROFILE = 'https://www.shopltk.com/explore/Staplesandstatementsss';
+
+// Build a map: archetype slug → best LTK collection URL
+// "Best" = non-blend, non-curvy, shortest title (the base collection, not "Full Figured" variants)
+// Fallback to generic LTK profile if no collection exists
+function getBestCollectionUrl(slug: string): string {
+  const collections = getCollectionsForArchetype(_ltkAll, slug)
+    .filter((c) => !c.isBlend && !c.isCurvy);
+  if (collections.length === 0) return LTK_PROFILE;
+  collections.sort((a, b) => a.title.length - b.title.length);
+  return collections[0].collection_url;
+}
 
 const feminineArchetypes = await getCollection('archetypes', ({ data }) => data.gender === 'feminine');
 const feminineSorted = feminineArchetypes.sort((a, b) => a.data.order - b.data.order);
@@ -227,12 +242,10 @@ const mascIconArc = buildIconArc(masculineSorted);
                     {archetype.data.description}
                   </p>
                   <div class="flex flex-col gap-2">
-                    {archetype.data.ltkLink && (
-                      <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
-                         class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
-                        Shop This Look →
-                      </a>
-                    )}
+                    <a href={getBestCollectionUrl(archetype.data.slug)} target="_blank" rel="noopener noreferrer"
+                       class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
+                      Shop This Look →
+                    </a>
                   </div>
                 </div>
               </div>
@@ -429,12 +442,10 @@ const mascIconArc = buildIconArc(masculineSorted);
                       {archetype.data.description}
                     </p>
                     <div class="flex flex-col gap-2">
-                      {archetype.data.ltkLink && (
-                        <a href={archetype.data.ltkLink} target="_blank" rel="noopener noreferrer"
-                           class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
-                          Shop This Look →
-                        </a>
-                      )}
+                      <a href={getBestCollectionUrl(archetype.data.slug)} target="_blank" rel="noopener noreferrer"
+                         class="font-body text-xs tracking-widest uppercase text-white/60 hover:text-accent transition-colors">
+                        Shop This Look →
+                      </a>
                     </div>
                   </div>
                 </div>

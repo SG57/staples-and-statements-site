@@ -6,7 +6,6 @@ order: 1
 gender: "feminine"
 icon: "◉"
 color: "#8c4a3e"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Siren knows exactly what they want to portray and dresses to celebrate it. Your style is sensual without being scandalous, bold without being brash. You gravitate toward body-conscious silhouettes, rich fabrics, bold colors, and the kind of pieces that make someone pause. Your wardrobe is a love letter to your own body.

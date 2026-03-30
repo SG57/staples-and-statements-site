@@ -6,7 +6,6 @@ order: 7
 gender: "feminine"
 icon: "✧"
 color: "#e8ddd4"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Angelic One carries an aura of peace, softness and gentle beauty. Your wardrobe speaks in whispers — soft whites, warm creams, blush pinks, baby blues, and the kind of delicate details that reward a second look. Your style is never loud, but it's never forgettable. There's a timelessness to everything you wear that transcends trends.

@@ -6,7 +6,6 @@ order: 1
 gender: masculine
 icon: "◆"
 color: "#2c3e50"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Protector doesn't dress to be noticed — they dress to be ready. Your wardrobe is built on dependability: quality over quantity, durability over novelty. Every piece earns its place through repeated wear and unwavering reliability. You gravitate toward well-worn leather that ages beautifully, heavy-gauge knits, heritage boots, and perfectly fitted denim that holds up to real life.

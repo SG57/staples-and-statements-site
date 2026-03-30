@@ -6,7 +6,6 @@ order: 3
 gender: masculine
 icon: "◼"
 color: "#1a1a2e"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Architect's wardrobe is a masterclass in precision. Every piece is selected for its construction, its cut, its purpose in the larger system. You appreciate structure, clarity, and cohesion — clean lines, architectural shapes, and monochromatic palettes that create visual harmony. You don't wear clothes — you curate a visual identity where every detail has been considered and nothing is left to chance.

@@ -6,7 +6,6 @@ order: 2
 gender: masculine
 icon: "◇"
 color: "#2d1b33"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Maverick's closet is a contradiction by design. Band tees under structured blazers. Distressed denim with tailored details. Statement accessories that start conversations. You resist being boxed in and see fashion as a playground versus a rule book. Rules exist to be bent, and you bend them with taste.

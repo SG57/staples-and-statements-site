@@ -6,7 +6,6 @@ order: 5
 gender: "feminine"
 icon: "◐"
 color: "#6b8c6e"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Creator sees fashion as a medium, not a mandate. You mix prints without apology, layer textures that shouldn't work until they do and find pieces that tell stories most people would walk right past. Your style is curated chaos — a visual diary of your obsessions, inspirations and the beautiful things you can't stop noticing.

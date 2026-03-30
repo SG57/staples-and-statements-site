@@ -6,7 +6,6 @@ order: 4
 gender: "feminine"
 icon: "◈"
 color: "#4a3d5c"
-ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 
 The Enchantress lives in the space between shadow and light. Your style leans heavily into dark romance — moody colors, unexpected textures, layered complexity, and an edge that feels effortless. You're drawn to deep smoky tones, gothic-adjacent details, velvet, lace, and silhouettes that suggest rather than reveal.
