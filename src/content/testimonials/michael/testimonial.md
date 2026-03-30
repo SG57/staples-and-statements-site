@@ -1,6 +1,6 @@
 ---
 name: "Michael"
-service: "wardrobe-revamp"
+service: "closet-cleanout"
 date: 2025-08-22
 hasPhoto: false
 ---

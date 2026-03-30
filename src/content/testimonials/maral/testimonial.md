@@ -1,6 +1,6 @@
 ---
 name: "Maral"
-service: "wardrobe-revamp"
+service: "closet-cleanout"
 date: 2025-09-14
 hasPhoto: false
 ---
