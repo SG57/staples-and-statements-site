@@ -1,13 +1,14 @@
 ---
 title: "Sourcing & Personal Shopping"
 slug: "sourcing"
-price: "$55/hr"
+price: "$55 per hour"
 duration: "Ongoing or per-project"
 perfectFor: "Clients who want new pieces in their wardrobe but don't have the time or expertise to find it — or clients who want my eye on every purchase."
 shortDescription: "I hunt, curate, and deliver exactly what your wardrobe needs — so you never have to set foot in a store if you don't want to."
 order: 6
 status: "active"
-priceNote: "or 15% finders fee on sourced items"
+priceNote: "or"
+priceAlt: "15% finders fee"
 featured: false
 ---
 

@@ -106,7 +106,12 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
                     {service.data.price}
                   </span>
                   {service.data.priceNote && (
-                    <p class="font-body text-[10px] text-white/40 mt-1 normal-case tracking-normal">{service.data.priceNote}</p>
+                    <p class="font-body text-[11px] text-white/50 mt-1 italic normal-case tracking-normal">{service.data.priceNote}</p>
+                  )}
+                  {service.data.priceAlt && (
+                    <span class="font-body text-xs tracking-widest uppercase text-accent font-medium block mt-0.5">
+                      {service.data.priceAlt}
+                    </span>
                   )}
                 </div>
                 {service.data.featured && (
@@ -194,9 +199,17 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
                     </span>
                     {service.data.priceNote && (
                       <p class:list={[
-                        "font-body text-[10px] mt-1 normal-case tracking-normal",
-                        isDark ? "text-white/40" : "text-primary/40",
+                        "font-body text-[11px] mt-1 italic normal-case tracking-normal",
+                        isDark ? "text-white/50" : "text-primary/50",
                       ]}>{service.data.priceNote}</p>
+                    )}
+                    {service.data.priceAlt && (
+                      <span class:list={[
+                        "font-body text-xs tracking-widest uppercase font-medium block mt-0.5",
+                        isDark ? "text-accent" : "text-accent-text",
+                      ]}>
+                        {service.data.priceAlt}
+                      </span>
                     )}
                   </div>
                   {service.data.featured && (
@@ -289,9 +302,17 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
                     </span>
                     {service.data.priceNote && (
                       <p class:list={[
-                        "font-body text-[10px] mt-1 normal-case tracking-normal",
-                        isVip ? "text-white/40" : "text-primary/40",
+                        "font-body text-[11px] mt-1 italic normal-case tracking-normal",
+                        isVip ? "text-white/50" : "text-primary/50",
                       ]}>{service.data.priceNote}</p>
+                    )}
+                    {service.data.priceAlt && (
+                      <span class:list={[
+                        "font-body text-xs tracking-widest uppercase font-medium block mt-0.5",
+                        isVip ? "text-accent" : "text-accent-text",
+                      ]}>
+                        {service.data.priceAlt}
+                      </span>
                     )}
                   </div>
                   {service.data.featured && (

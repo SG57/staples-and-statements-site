@@ -650,7 +650,7 @@
     "closet_cleanout": {
       "title": "Closet Clean Out",
       "slug": "closet-cleanout",
-      "price": "$55/hr",
+      "price": "$55 per hour",
       "priceNote": "Extended range fee applies for sessions 1+ hours from San Diego",
       "duration": "Per session",
       "perfectFor": "Clients dealing with closet overwhelm who are ready to edit, organize, and rediscover what they already own",
@@ -662,7 +662,7 @@
     "photoshoot_styling": {
       "title": "Photoshoot Styling",
       "slug": "photoshoot-styling",
-      "price": "$100/hr",
+      "price": "$100 per hour",
       "duration": "Flexible — per shoot",
       "perfectFor": "Models, photographers, entrepreneurs, and anyone building a visual brand who needs every outfit to perform on camera",
       "shortDescription": "Expert on-set styling for photoshoots — so every look is camera-ready, cohesive, and communicates exactly what it needs to.",
@@ -686,19 +686,20 @@
     "sourcing": {
       "title": "Sourcing & Personal Shopping",
       "slug": "sourcing",
-      "price": "$55/hr",
+      "price": "$55 per hour",
       "duration": "Ongoing or per-project",
       "perfectFor": "Clients who want new pieces in their wardrobe but don’t have the time or expertise to find it — or clients who want my eye on every purchase.",
       "shortDescription": "I hunt, curate, and deliver exactly what your wardrobe needs — so you never have to set foot in a store if you don’t want to.",
       "order": 6,
       "featured": false,
-      "priceNote": "or 15% finders fee on sourced items",
+      "priceNote": "or",
+      "priceAlt": "15% finders fee",
       "body": "Some clients don’t want to shop. They want it handled.\n\nSourcing and Personal Shopping is my white-glove service for clients who want expert curation without the time commitment. You describe what you need — a standout outfit for a specific event, a capsule wardrobe for a new role or a full wardrobe refresh — and I source it. Every piece is selected with your color palette, body proportions, lifestyle needs, and style archetype in mind.\n\nThis isn’t browsing. It’s precision.\n\nMy sourcing process involves identifying highly specific pieces across brands and price points, presenting curated options for client approval, and managing the logistics of pulling items for try-on sessions or researching return policies. Whether you need one exceptional blazer or an entire seasonal wardrobe, sourcing removes the friction from building a closet you truly love.\n\n**What You’ll Receive:**\n- Initial briefing call (included in consultation) to review your needs, budget, timeline, and priorities\n- I research, pull and present curated options\n- You review, approve, and purchase your selections\n- A finder’s fee (approximately 15% of the total purchase) applies to one-off sourced items\n\nThis service is especially popular with VIP clients, busy executives, new parents and anyone navigating a significant wardrobe transition who values their time.\n\nSourcing can be booked as a standalone service or as an ongoing component of a VIP Styling relationship."
     },
     "vip": {
       "title": "VIP Styling",
       "slug": "vip",
-      "price": "$3,600/yr",
+      "price": "$3,600 per year",
       "duration": "Year-round, on-call access",
       "perfectFor": "CEOs, executives, entrepreneurs, public figures, and high-achieving professionals for whom image is a strategic asset",
       "shortDescription": "Year-round, on-call styling partnership — unlimited access to my eye, expertise, and editorial craft.",

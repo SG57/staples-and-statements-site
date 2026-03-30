@@ -61,7 +61,10 @@ const calendlyURL = '/contact';
           <div class="mt-6">
             <span class="font-heading text-3xl text-accent font-semibold uppercase">{service.data.price}</span>
             {service.data.priceNote && (
-              <p class="font-body text-sm text-white/40 mt-1">{service.data.priceNote}</p>
+              <p class="font-body text-sm text-white/50 mt-1 italic">{service.data.priceNote}</p>
+            )}
+            {service.data.priceAlt && (
+              <span class="font-heading text-3xl text-accent font-semibold uppercase block">{service.data.priceAlt}</span>
             )}
           </div>
 
@@ -121,7 +124,10 @@ const calendlyURL = '/contact';
                 <dt class="font-body text-xs tracking-widest uppercase text-accent-text mb-1">Price</dt>
                 <dd class="font-heading text-2xl font-semibold text-primary uppercase">{service.data.price}</dd>
                 {service.data.priceNote && (
-                  <dd class="font-body text-xs text-text-light mt-1">{service.data.priceNote}</dd>
+                  <dd class="font-body text-xs text-text-light mt-1 italic">{service.data.priceNote}</dd>
+                )}
+                {service.data.priceAlt && (
+                  <dd class="font-heading text-2xl font-semibold text-primary uppercase">{service.data.priceAlt}</dd>
                 )}
               </div>
               {service.data.duration && (

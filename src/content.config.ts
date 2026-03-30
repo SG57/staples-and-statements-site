@@ -12,6 +12,7 @@ const services = defineCollection({
     shortDescription: z.string().optional(),
     order: z.number(),
     priceNote: z.string().optional(),
+    priceAlt: z.string().optional(),
     status: z.enum(['active', 'suspended', 'coming-soon']).default('active'),
     featured: z.boolean().default(false),
   }),
