@@ -1,7 +1,8 @@
 ---
 title: "Closet Clean Out"
 slug: "closet-cleanout"
-price: "$55 per hour (Extended range fee applies for sessions 1+ hours from San Diego)"
+price: "$55/hr"
+priceNote: "Extended range fee applies for sessions 1+ hours from San Diego"
 duration: "Per session"
 perfectFor: "Clients dealing with closet overwhelm who are ready to edit, organize, and rediscover what they already own"
 shortDescription: "A hands-on closet audit and edit — we'll pull everything out, decide what stays and what goes, and rebuild a wardrobe that actually works for your life."
