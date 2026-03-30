@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { readdirSync } from 'fs';
-import { join } from 'path';
 
 const allServices = await getCollection('services');
 const activeServices = allServices
@@ -11,37 +9,11 @@ const activeServices = allServices
 
 const calendlyURL = '/contact';
 
-// ── Hero mosaic: scan service-banners at build time ─────────────
-let bannerImages: string[] = [];
-try {
-  const dir = join(process.cwd(), 'public/images/service-banners');
-  bannerImages = readdirSync(dir)
-    .filter(f => /\.(webp|jpg|jpeg|png)$/i.test(f))
-    .sort()
-    .map(f => `/images/service-banners/${f}`);
-} catch { /* folder doesn't exist yet — graceful fallback */ }
-
-// Pick 6 random unique starting images (same pattern as home hero)
-function sampleUnique(arr: string[], n: number): string[] {
-  const shuffled = [...arr];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled.slice(0, n);
-}
-const heroStart = bannerImages.length >= 6
-  ? sampleUnique(bannerImages, 6)
-  : bannerImages.length >= 2
-    ? [...bannerImages, ...bannerImages, ...bannerImages].slice(0, 6)
-    : [];
-
-const hasMosaic = heroStart.length >= 2;
 
 // ── Tiered service grouping ─────────────────────────────────────
-const tier1Slugs = ['consultation', 'closet-cleanout'];
-const tier2Slugs = ['color-analysis', 'body-analysis', 'master-style-moodboard', 'wardrobe-revamp'];
-const tier3Slugs = ['photoshoot-styling', 'sourcing', 'vip'];
+const tier1Slugs = ['consultation'];
+const tier2Slugs = ['closet-cleanout', 'color-analysis', 'body-analysis', 'master-style-moodboard', 'wardrobe-revamp', 'sourcing'];
+const tier3Slugs = ['photoshoot-styling', 'vip'];
 
 const tier1 = activeServices.filter(s => tier1Slugs.includes(s.data.slug)).sort((a,b) => tier1Slugs.indexOf(a.data.slug) - tier1Slugs.indexOf(b.data.slug));
 const tier2 = activeServices.filter(s => tier2Slugs.includes(s.data.slug)).sort((a,b) => tier2Slugs.indexOf(a.data.slug) - tier2Slugs.indexOf(b.data.slug));
@@ -51,279 +23,42 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
 <BaseLayout
   title="Styling Services — Staples & Statements"
   description="Explore Danielle Marie's full range of wardrobe styling services — from free consultations to year-round VIP styling packages. San Diego & virtual."
-  transparentNav={hasMosaic}
+  transparentNav={true}
 >
 
-  <!-- ══════════════════════════════════════════════════════════════
-       SECTION 1 — HERO BANNER
-       Mosaic image grid with crossfade carousel (mirrors home page).
-       Falls back to flat bg-primary layout if < 2 banner images.
-       ══════════════════════════════════════════════════════════════ -->
-  {hasMosaic ? (
-    <section class="relative overflow-hidden bg-primary" aria-label="Services hero"
+  <!-- ── HERO — Single static banner ── -->
+  <section class="relative overflow-hidden bg-primary" aria-label="Services hero"
              data-compact-super="Expert Styling" data-compact-title="Services" data-compact-theme="dark">
-      <div class="relative min-h-[70svh] lg:min-h-[60vh] flex flex-col">
+    <div class="relative min-h-[70svh] lg:min-h-[60vh] flex flex-col">
 
-        <!-- Mosaic grid — 2×2 mobile, 3×2 desktop -->
-        <div id="svc-hero-mosaic" class="absolute inset-0 grid grid-cols-2 grid-rows-2 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 w-full h-full">
+      <!-- Hero image -->
+      <img src="/images/service-banners/service-banner-7.webp" alt="Styling services by Danielle Marie"
+           class="absolute inset-0 w-full h-full object-cover" loading="eager" width="1920" height="1080" />
 
-          {/* Cell 0 — portrait on desktop (2 rows), equal on mobile */}
-          <div data-svc-cell="0" class="col-span-1 row-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
-            <img data-layer="a" src={heroStart[0]} alt="Wardrobe styling by Danielle Marie"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="600" height="900" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
-          </div>
+      <!-- Top scrim for nav legibility -->
+      <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
+           style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
 
-          {/* Cell 1 */}
-          <div data-svc-cell="1" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-            <img data-layer="a" src={heroStart[1]} alt="Editorial styling"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
+      <!-- Bottom scrim for text legibility -->
+      <div class="absolute bottom-0 left-0 right-0 h-[65%] lg:h-[55%] pointer-events-none z-[5]"
+           style="background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
 
-          {/* Cell 2 */}
-          <div data-svc-cell="2" class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-            <img data-layer="a" src={heroStart[2] ?? heroStart[0]} alt="Personal styling session"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-          {/* Cell 3 */}
-          <div data-svc-cell="3" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
-            <img data-layer="a" src={heroStart[3] ?? heroStart[1]} alt="Luxury personal styling"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-          {/* Cell 4 — desktop only */}
-          <div data-svc-cell="4" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-            <img data-layer="a" src={heroStart[4] ?? heroStart[0]} alt="Editorial wardrobe styling"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-          {/* Cell 5 — desktop only */}
-          <div data-svc-cell="5" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-            <img data-layer="a" src={heroStart[5] ?? heroStart[1]} alt="Style consultation"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-        </div>
-
-        <!-- Top scrim for nav legibility -->
-        <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
-             style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
-
-        <!-- Bottom scrim for text legibility -->
-        <div class="absolute bottom-0 left-0 right-0 h-[65%] lg:h-[55%] pointer-events-none z-[5]"
-             style="background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
-
-        <!-- Hero text overlay -->
-        <div class="absolute inset-0 flex items-end justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-16 pt-20 z-10">
-          <div class="max-w-xl">
-            <div class="w-8 h-px bg-accent mb-4"></div>
-            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3 text-bloom-sm">Expert Styling Services</p>
-            <h1 class="font-heading text-white text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-bloom">
-              Every wardrobe journey starts here.
-            </h1>
-            <p class="mt-4 lg:mt-6 font-body text-white/80 text-base sm:text-lg leading-relaxed max-w-md text-bloom-sm">
-              Starting a new wardrobe journey can feel daunting. That's why every service begins with a free consultation — so you invest in exactly what you need, nothing more.
-            </p>
-          </div>
+      <!-- Hero text overlay -->
+      <div class="absolute inset-0 flex items-end justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-16 pt-20 z-10">
+        <div class="max-w-xl">
+          <div class="w-8 h-px bg-accent mb-4"></div>
+          <p class="font-body text-xs tracking-widest uppercase text-accent mb-3 text-bloom-sm">Expert Styling Services</p>
+          <h1 class="font-heading text-white text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-bloom">
+            Every wardrobe journey starts here.
+          </h1>
+          <p class="mt-4 lg:mt-6 font-body text-white/80 text-base sm:text-lg leading-relaxed max-w-md text-bloom-sm">
+            Starting a new wardrobe journey can feel daunting. That&rsquo;s why every service begins with a free consultation &mdash; so you invest in exactly what you need, nothing more.
+          </p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Hero carousel script -->
-    <script define:vars={{ bannerImages }}>
-      const IMAGES   = bannerImages;
-      const HOLD_MS  = 12_000;
-      const FADE_MS  = 1500;
-      const STAGGER  = 2_200;
-      const KB_SCALE = 1.08;
-      const CELL_SEL = 'data-svc-cell';
-
-      if (IMAGES.length >= 2 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-
-        // ── Timer management ──
-        const timers = new Set();
-        function safeTimeout(fn, ms) {
-          const id = setTimeout(() => { timers.delete(id); fn(); }, ms);
-          timers.add(id);
-          return id;
-        }
-        function killAllTimers() {
-          timers.forEach(id => clearTimeout(id));
-          timers.clear();
-        }
-
-        // ── Index pool ──
-        const inUse = new Array(IMAGES.length).fill(false);
-        const fileIndex = {};
-        IMAGES.forEach((path, i) => { fileIndex[path.split('/').pop()] = i; fileIndex[path] = i; });
-        function srcToIndex(src) { if (!src) return -1; if (fileIndex[src] !== undefined) return fileIndex[src]; const n = src.split('/').pop(); return fileIndex[n] !== undefined ? fileIndex[n] : -1; }
-        function checkOut() { const free = []; for (let i = 0; i < IMAGES.length; i++) { if (!inUse[i]) free.push(i); } if (!free.length) return -1; const pick = free[Math.floor(Math.random() * free.length)]; inUse[pick] = true; return pick; }
-        function checkIn(idx) { if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false; }
-
-        // ── Cell state ──
-        const cells = [...document.querySelectorAll(`[${CELL_SEL}]`)];
-        const cellIdx = [];
-        const frontIsA = [];
-
-        cells.forEach((cell, i) => {
-          const a = cell.querySelector('[data-layer="a"]');
-          const idx = srcToIndex(a?.getAttribute('src') ?? '');
-          if (idx >= 0) inUse[idx] = true;
-          cellIdx[i] = idx;
-          frontIsA[i] = true;
-        });
-
-        // ── Circuit breaker ──
-        let swapTimestamps = [];
-        const CB_THRESHOLD = 8;
-        const CB_WINDOW = 2000;
-        function recordSwap() {
-          const now = Date.now();
-          swapTimestamps.push(now);
-          swapTimestamps = swapTimestamps.filter(t => now - t < CB_WINDOW);
-          if (swapTimestamps.length > CB_THRESHOLD) {
-            killAllTimers();
-            swapTimestamps = [];
-            rebuildPoolFromDOM();
-            safeTimeout(() => restartAllCells(), 500);
-            return false;
-          }
-          return true;
-        }
-
-        // ── Rebuild pool from DOM (for recovery) ──
-        function rebuildPoolFromDOM() {
-          inUse.fill(false);
-          cells.forEach((cell, i) => {
-            const layer = frontIsA[i]
-              ? cell.querySelector('[data-layer="a"]')
-              : cell.querySelector('[data-layer="b"]');
-            const src = layer?.getAttribute('src') ?? '';
-            const idx = srcToIndex(src);
-            if (idx >= 0) { inUse[idx] = true; cellIdx[i] = idx; }
-          });
-        }
-
-        // ── Ken Burns ──
-        function applyKenBurns(img) {
-          img.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-          img.style.transform = `scale(${KB_SCALE})`;
-        }
-        function resetKenBurns(img) {
-          img.style.transition = 'none';
-          img.style.transform = 'scale(1)';
-          img.offsetHeight;
-        }
-
-        requestAnimationFrame(() => {
-          cells.forEach(cell => {
-            const a = cell.querySelector('[data-layer="a"]');
-            if (a) applyKenBurns(a);
-          });
-        });
-
-        // ── Cycle a single cell ──
-        function startCell(ci, startDelay) {
-          const cell = cells[ci];
-          const layerA = cell.querySelector('[data-layer="a"]');
-          const layerB = cell.querySelector('[data-layer="b"]');
-          if (!layerA || !layerB) return;
-
-          function nextImage() {
-            if (document.hidden) return;
-
-            const front = frontIsA[ci] ? layerA : layerB;
-            const back  = frontIsA[ci] ? layerB : layerA;
-
-            const nextIdx = checkOut();
-            if (nextIdx < 0) { safeTimeout(nextImage, HOLD_MS); return; }
-
-            resetKenBurns(back);
-            back.style.opacity = '0';
-            back.src = IMAGES[nextIdx];
-
-            const doFade = () => {
-              if (!back.naturalWidth) { checkIn(nextIdx); safeTimeout(nextImage, 500); return; }
-              if (!recordSwap()) return;
-
-              back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-              back.style.opacity = '1';
-              back.style.transform = `scale(${KB_SCALE})`;
-              front.style.opacity = '0';
-
-              checkIn(cellIdx[ci]);
-              cellIdx[ci] = nextIdx;
-              frontIsA[ci] = !frontIsA[ci];
-              safeTimeout(nextImage, HOLD_MS);
-            };
-
-            if (back.complete && back.naturalWidth > 0) doFade();
-            else { back.onload = doFade; back.onerror = () => { checkIn(nextIdx); safeTimeout(nextImage, 500); }; }
-          }
-
-          safeTimeout(nextImage, startDelay + HOLD_MS);
-        }
-
-        // ── Start/restart all cells ──
-        function restartAllCells() {
-          cells.forEach((cell, i) => {
-            const front = frontIsA[i]
-              ? cell.querySelector('[data-layer="a"]')
-              : cell.querySelector('[data-layer="b"]');
-            if (front) applyKenBurns(front);
-            startCell(i, i * STAGGER);
-          });
-        }
-
-        // ── Visibility change: pause when hidden, clean restart when visible ──
-        document.addEventListener('visibilitychange', () => {
-          if (document.hidden) {
-            killAllTimers();
-          } else {
-            killAllTimers();
-            rebuildPoolFromDOM();
-            restartAllCells();
-          }
-        });
-
-        // ── Initial start ──
-        requestAnimationFrame(() => restartAllCells());
-      }
-    </script>
-  ) : (
-    /* Fallback: flat bg-primary hero (no mosaic images available) */
-    <section class="pt-16 pb-16 px-6 bg-primary" aria-label="Services hero"
-             data-compact-super="Expert Styling" data-compact-title="Services" data-compact-theme="dark">
-      <div class="mx-auto max-w-7xl">
-        <div class="w-8 h-px bg-accent mb-4"></div>
-        <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Expert Styling Services</p>
-        <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold max-w-3xl leading-tight">
-          Every wardrobe journey starts here.
-        </h1>
-        <p class="mt-6 font-body text-white/60 text-lg max-w-xl leading-relaxed">
-          Starting a new wardrobe journey can feel daunting. That's why every service begins with a free consultation — so you invest in exactly what you need, nothing more.
-        </p>
-      </div>
-    </section>
-  )}
 
 
   <!-- ══════════════════════════════════════════════════════════════
@@ -355,7 +90,7 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
             {/* Top image banner */}
             <div class="h-[60px] w-full overflow-hidden relative bg-gradient-to-r from-secondary/40 to-primary-light">
               <img
-                src={`/images/services/${service.data.slug}.webp`}
+                src="/images/services/vip.webp"
                 alt=""
                 class="w-full h-full object-cover"
                 loading="lazy"
@@ -434,7 +169,7 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
                 isDark ? "bg-gradient-to-r from-secondary/40 to-primary-light" : "bg-gradient-to-r from-surface-dark to-secondary/20",
               ]}>
                 <img
-                  src={`/images/services/${service.data.slug}.webp`}
+                  src="/images/services/vip.webp"
                   alt=""
                   class="w-full h-full object-cover"
                   loading="lazy"
@@ -503,7 +238,7 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
         <h2 class="font-heading text-primary text-3xl sm:text-4xl">For the client who wants more.</h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {tier3.map((service) => {
           const isVip = service.data.slug === 'vip';
           return (
@@ -521,7 +256,7 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
                 isVip ? "bg-gradient-to-r from-accent/30 to-primary-light" : "bg-gradient-to-r from-surface-dark to-secondary/20",
               ]}>
                 <img
-                  src={`/images/services/${service.data.slug}.webp`}
+                  src="/images/services/vip.webp"
                   alt=""
                   class="w-full h-full object-cover"
                   loading="lazy"

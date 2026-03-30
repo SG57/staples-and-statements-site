@@ -2,53 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { guides, BEACONS_SHOP } from '../data/guides';
 import { fetchLtkCollections } from '../data/ltk-api';
-import { readdirSync } from 'fs';
-import { join } from 'path';
 
 const ltkProfileURL  = 'https://www.shopltk.com/explore/Staplesandstatementsss';
 const beaconsShopURL = BEACONS_SHOP;
 const calendlyURL    = '/contact';
 
-// ── Hero mosaic: scan image pools at build time ─────────────────────────
-// Guide mode images: service banners + guide covers
-let guideImages: string[] = [];
-try {
-  const bannerDir = join(process.cwd(), 'public/images/service-banners');
-  const guideDir  = join(process.cwd(), 'public/images/guides');
-  guideImages = [
-    ...readdirSync(bannerDir).filter(f => /\.webp$/i.test(f)).sort().map(f => `/images/service-banners/${f}`),
-    ...readdirSync(guideDir).filter(f => /\.webp$/i.test(f)).sort().map(f => `/images/guides/${f}`),
-  ];
-} catch { /* graceful fallback */ }
-
-// Picks mode images: archetype first-card images (the-*-1.webp)
-let picksImages: string[] = [];
-try {
-  const archDir = join(process.cwd(), 'public/images/archetypes');
-  picksImages = readdirSync(archDir)
-    .filter(f => /^the-.*-1\.webp$/.test(f))
-    .sort()
-    .map(f => `/images/archetypes/${f}`);
-} catch { /* graceful fallback */ }
-
-// Shared sampler — used once, avoids duplication
-function sampleUnique(arr: string[], n: number): string[] {
-  const shuffled = [...arr];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled.slice(0, n);
-}
-
-// Starting images for the default mode (guides)
-const heroStart = guideImages.length >= 6
-  ? sampleUnique(guideImages, 6)
-  : guideImages.length >= 2
-    ? [...guideImages, ...guideImages, ...guideImages].slice(0, 6)
-    : [];
-
-const hasMosaic = heroStart.length >= 2;
 
 // ── Fetch all LTK collections (cached: one API call for the whole build) ──────
 const allCollections = await fetchLtkCollections();
@@ -85,184 +43,78 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 <BaseLayout
   title="Shop Style Guides & Curated Picks — Staples & Statements"
   description="Shop Danielle Marie's digital style guides and curated product collections, organized by archetype. Instant downloads and hand-picked fashion finds."
-  transparentNav={hasMosaic}
+  transparentNav={true}
 >
 
-  <!-- ── PAGE HEADER ─────────────────────────────────────────────────────── -->
-  {hasMosaic ? (
-    <section class="shop-header relative overflow-hidden bg-primary" aria-label="Shop header">
-      <div class="relative min-h-[70svh] lg:min-h-[60vh] flex flex-col">
+  <!-- ── HERO — Single static banner ── -->
+  <section class="shop-header relative overflow-hidden bg-primary" aria-label="Shop header">
+    <div class="relative min-h-[70svh] lg:min-h-[60vh] flex flex-col">
 
-        <!-- Mosaic grid — 2x2 mobile, 3x2 desktop -->
-        <div id="shop-hero-mosaic" class="absolute inset-0 grid grid-cols-2 grid-rows-2 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 w-full h-full">
+      <!-- Hero image -->
+      <img src="/images/service-banners/service-banner-1.webp" alt="Shop Staples & Statements"
+           class="absolute inset-0 w-full h-full object-cover" loading="eager" width="1920" height="1080" />
 
-          {/* Cell 0 — portrait on desktop (2 rows), equal on mobile */}
-          <div data-shop-cell="0" class="col-span-1 row-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
-            <img data-layer="a" src={heroStart[0]} alt="Shop Staples & Statements"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="600" height="900" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
+      <!-- Top scrim for nav legibility -->
+      <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
+           style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
+
+      <!-- Bottom scrim for text legibility -->
+      <div class="absolute bottom-0 left-0 right-0 h-[65%] lg:h-[55%] pointer-events-none z-[5]"
+           style="background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
+
+      <!-- Hero text + mode toggle overlay -->
+      <div class="absolute inset-0 flex items-end justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-16 pt-20 z-10">
+        <div class="w-full mx-auto max-w-7xl shop-header-inner">
+
+          <!-- Left: headline + tagline -->
+          <div class="shop-header-text">
+            <div class="w-8 h-px bg-accent mb-4"></div>
+            <p
+              class="font-body text-xs tracking-widest uppercase text-accent mb-3 shop-eyebrow text-bloom-sm"
+              data-guides="Digital Downloads · Curated Guides"
+              data-picks="LTK Collections · By Archetype"
+            >Digital Downloads · Curated Guides</p>
+            <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold leading-tight text-bloom">
+              Shop My Picks
+            </h1>
+            <p class="mt-5 font-body text-white/80 text-lg max-w-xl leading-relaxed text-bloom-sm">
+              Digital style guides you can reference forever, and hand-picked product
+              collections organized by archetype. Everything Danielle-approved.
+            </p>
           </div>
 
-          {/* Cell 1 */}
-          <div data-shop-cell="1" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-            <img data-layer="a" src={heroStart[1]} alt="Style guides & curated picks"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-          {/* Cell 2 */}
-          <div data-shop-cell="2" class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-            <img data-layer="a" src={heroStart[2] ?? heroStart[0]} alt="Curated fashion picks"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-          {/* Cell 3 */}
-          <div data-shop-cell="3" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
-            <img data-layer="a" src={heroStart[3] ?? heroStart[1]} alt="Digital style guides"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-          {/* Cell 4 — desktop only */}
-          <div data-shop-cell="4" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-            <img data-layer="a" src={heroStart[4] ?? heroStart[0]} alt="Archetype-based styling"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-          </div>
-
-          {/* Cell 5 — desktop only */}
-          <div data-shop-cell="5" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-            <img data-layer="a" src={heroStart[5] ?? heroStart[1]} alt="Shop by archetype"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" width="400" height="300" />
-            <img data-layer="b" src="" alt="" aria-hidden="true"
-                 class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
+          <!-- Right: mode toggle strip -->
+          <div
+            class="shop-mode-strip"
+            role="group"
+            aria-label="Select shop section"
+          >
+            <button
+              class="shop-mode-btn"
+              data-mode="guides"
+              aria-pressed="true"
+              type="button"
+            >Style Guides</button>
+            <button
+              class="shop-mode-btn"
+              data-mode="picks"
+              aria-pressed="false"
+              type="button"
+            >Curated Picks</button>
           </div>
 
         </div>
-
-        <!-- Top scrim for nav legibility -->
-        <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
-             style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
-
-        <!-- Bottom scrim for text legibility -->
-        <div class="absolute bottom-0 left-0 right-0 h-[65%] lg:h-[55%] pointer-events-none z-[5]"
-             style="background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
-
-        <!-- Hero text + mode toggle overlay -->
-        <div class="absolute inset-0 flex items-end justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-16 pt-20 z-10">
-          <div class="w-full mx-auto max-w-7xl shop-header-inner">
-
-            <!-- Left: headline + tagline -->
-            <div class="shop-header-text">
-              <div class="w-8 h-px bg-accent mb-4"></div>
-              <p
-                class="font-body text-xs tracking-widest uppercase text-accent mb-3 shop-eyebrow text-bloom-sm"
-                data-guides="Digital Downloads · Curated Guides"
-                data-picks="LTK Collections · By Archetype"
-              >Digital Downloads · Curated Guides</p>
-              <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold leading-tight text-bloom">
-                Shop My Picks
-              </h1>
-              <p class="mt-5 font-body text-white/80 text-lg max-w-xl leading-relaxed text-bloom-sm">
-                Digital style guides you can reference forever, and hand-picked product
-                collections organized by archetype. Everything Danielle-approved.
-              </p>
-            </div>
-
-            <!-- Right: mode toggle strip -->
-            <div
-              class="shop-mode-strip"
-              role="group"
-              aria-label="Select shop section"
-            >
-              <button
-                class="shop-mode-btn"
-                data-mode="guides"
-                aria-pressed="true"
-                type="button"
-              >Style Guides</button>
-              <button
-                class="shop-mode-btn"
-                data-mode="picks"
-                aria-pressed="false"
-                type="button"
-              >Curated Picks</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-  ) : (
-    <section class="shop-header px-6 pt-16 pb-0 bg-primary" aria-label="Shop header">
-      <div class="mx-auto max-w-7xl shop-header-inner">
-
-        <!-- Left: headline + tagline -->
-        <div class="shop-header-text">
-          <div class="w-8 h-px bg-accent mb-4"></div>
-          <p
-            class="font-body text-xs tracking-widest uppercase text-accent mb-3 shop-eyebrow"
-            data-guides="Digital Downloads · Curated Guides"
-            data-picks="LTK Collections · By Archetype"
-          >Digital Downloads · Curated Guides</p>
-          <h1 class="font-heading text-white text-5xl md:text-6xl font-semibold leading-tight">
-            Shop My Picks
-          </h1>
-          <p class="mt-5 font-body text-white/60 text-lg max-w-xl leading-relaxed">
-            Digital style guides you can reference forever, and hand-picked product
-            collections organized by archetype. Everything Danielle-approved.
-          </p>
-        </div>
-
-        <!-- Right: mode toggle strip -->
-        <div
-          class="shop-mode-strip"
-          role="group"
-          aria-label="Select shop section"
-        >
-          <button
-            class="shop-mode-btn"
-            data-mode="guides"
-            aria-pressed="true"
-            type="button"
-          >Style Guides</button>
-          <button
-            class="shop-mode-btn"
-            data-mode="picks"
-            aria-pressed="false"
-            type="button"
-          >Curated Picks</button>
-        </div>
-
-      </div>
-
-      <!-- Subtle separator before content shell -->
-      <div class="mx-auto max-w-7xl mt-14">
-        <div class="w-full h-px bg-white/8"></div>
-      </div>
-    </section>
-  )}
-
-  <!-- Subtle separator before content shell (mosaic gets it outside the hero) -->
-  {hasMosaic && (
-    <div class="bg-primary px-6">
-      <div class="mx-auto max-w-7xl">
-        <div class="w-full h-px bg-white/8"></div>
       </div>
     </div>
-  )}
+  </section>
+
+  <!-- Subtle separator before content shell -->
+  <div class="bg-primary px-6">
+    <div class="mx-auto max-w-7xl">
+      <div class="w-full h-px bg-white/8"></div>
+    </div>
+  </div>
+
 
   <!-- ── CONTENT SHELL ───────────────────────────────────────────────────── -->
   <div class="shop-shell bg-primary px-6 pt-14 pb-24" id="shop-shell">
@@ -762,286 +614,7 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
   }
 </style>
 
-<!-- Hero mosaic carousel (define:vars for build-time image pools) -->
-<script define:vars={{ guideImages, picksImages }}>
-  const POOLS    = { guides: guideImages, picks: picksImages };
-  const HOLD_MS  = 12000;
-  const FADE_MS  = 1500;
-  const STAGGER  = 2200;
-  const KB_SCALE = 1.08;
-  const CELL_SEL = 'data-shop-cell';
 
-  if (guideImages.length >= 2 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    var currentPool = 'guides';
-    var IMAGES = POOLS[currentPool];
-    var inUse  = new Array(IMAGES.length).fill(false);
-    var fileIndex = {};
-    var cellIdx = [];
-    var frontIsA = [];
-
-    // ── Timer management ──
-    var timers = new Set();
-    function safeTimeout(fn, ms) {
-      var id = setTimeout(function() { timers.delete(id); fn(); }, ms);
-      timers.add(id);
-      return id;
-    }
-    function killAllTimers() {
-      timers.forEach(function(id) { clearTimeout(id); });
-      timers.clear();
-    }
-
-    function rebuildIndex() {
-      fileIndex = {};
-      IMAGES.forEach(function(path, i) {
-        var name = path.split('/').pop();
-        fileIndex[name] = i;
-        fileIndex[path] = i;
-      });
-    }
-    rebuildIndex();
-
-    function srcToIndex(src) {
-      if (!src) return -1;
-      if (fileIndex[src] !== undefined) return fileIndex[src];
-      var name = src.split('/').pop();
-      return fileIndex[name] !== undefined ? fileIndex[name] : -1;
-    }
-
-    function checkOut() {
-      var free = [];
-      for (var i = 0; i < IMAGES.length; i++) {
-        if (!inUse[i]) free.push(i);
-      }
-      if (free.length === 0) return -1;
-      var pick = free[Math.floor(Math.random() * free.length)];
-      inUse[pick] = true;
-      return pick;
-    }
-
-    function checkIn(idx) {
-      if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false;
-    }
-
-    // ── Circuit breaker ──
-    var swapTimestamps = [];
-    var CB_THRESHOLD = 8;
-    var CB_WINDOW = 2000;
-    function recordSwap() {
-      var now = Date.now();
-      swapTimestamps.push(now);
-      swapTimestamps = swapTimestamps.filter(function(t) { return now - t < CB_WINDOW; });
-      if (swapTimestamps.length > CB_THRESHOLD) {
-        killAllTimers();
-        swapTimestamps = [];
-        rebuildPoolFromDOM();
-        safeTimeout(function() { restartAllCells(); }, 500);
-        return false;
-      }
-      return true;
-    }
-
-    var cells = Array.prototype.slice.call(document.querySelectorAll('[' + CELL_SEL + ']'));
-    if (cells.length === 0) {
-      // mosaic not in DOM — skip
-    } else {
-
-      // Mark initially displayed images as in-use
-      cells.forEach(function(cell, i) {
-        var layerA = cell.querySelector('[data-layer="a"]');
-        var src = layerA ? layerA.getAttribute('src') : '';
-        var idx = srcToIndex(src);
-        if (idx >= 0) inUse[idx] = true;
-        cellIdx[i] = idx;
-        frontIsA[i] = true;
-      });
-
-      // ── Rebuild pool from DOM (for recovery) ──
-      function rebuildPoolFromDOM() {
-        inUse = new Array(IMAGES.length).fill(false);
-        cells.forEach(function(cell, i) {
-          var layer = frontIsA[i]
-            ? cell.querySelector('[data-layer="a"]')
-            : cell.querySelector('[data-layer="b"]');
-          var src = layer ? layer.getAttribute('src') : '';
-          var idx = srcToIndex(src);
-          if (idx >= 0) { inUse[idx] = true; cellIdx[i] = idx; }
-        });
-      }
-
-      function applyKenBurns(img) {
-        img.style.transition = 'transform ' + HOLD_MS + 'ms ease-in-out, opacity ' + FADE_MS + 'ms ease-in-out';
-        img.style.transform  = 'scale(' + KB_SCALE + ')';
-      }
-      function resetKenBurns(img) {
-        img.style.transition = 'none';
-        img.style.transform  = 'scale(1)';
-        img.offsetHeight; // force reflow
-      }
-
-      // Initial Ken Burns
-      requestAnimationFrame(function() {
-        cells.forEach(function(cell) {
-          var a = cell.querySelector('[data-layer="a"]');
-          if (a) applyKenBurns(a);
-        });
-      });
-
-      function startCell(ci, startDelay) {
-        var cell = cells[ci];
-        var layerA = cell.querySelector('[data-layer="a"]');
-        var layerB = cell.querySelector('[data-layer="b"]');
-        if (!layerA || !layerB) return;
-
-        function nextImage() {
-          if (document.hidden) return;
-
-          var front = frontIsA[ci] ? layerA : layerB;
-          var back  = frontIsA[ci] ? layerB : layerA;
-
-          var nextIdx = checkOut();
-          if (nextIdx < 0) {
-            safeTimeout(nextImage, HOLD_MS);
-            return;
-          }
-
-          resetKenBurns(back);
-          back.style.opacity = '0';
-          back.src = IMAGES[nextIdx];
-
-          var doFade = function() {
-            if (!back.naturalWidth) {
-              checkIn(nextIdx);
-              safeTimeout(nextImage, 500);
-              return;
-            }
-            if (!recordSwap()) return;
-
-            back.style.transition = 'transform ' + HOLD_MS + 'ms ease-in-out, opacity ' + FADE_MS + 'ms ease-in-out';
-            back.style.opacity    = '1';
-            back.style.transform  = 'scale(' + KB_SCALE + ')';
-            front.style.opacity   = '0';
-
-            checkIn(cellIdx[ci]);
-            cellIdx[ci] = nextIdx;
-            frontIsA[ci] = !frontIsA[ci];
-            safeTimeout(nextImage, HOLD_MS);
-          };
-
-          if (back.complete && back.naturalWidth > 0) {
-            doFade();
-          } else {
-            back.onload  = doFade;
-            back.onerror = function() {
-              checkIn(nextIdx);
-              safeTimeout(nextImage, 500);
-            };
-          }
-        }
-
-        safeTimeout(nextImage, startDelay + HOLD_MS);
-      }
-
-      // ── Start/restart all cells ──
-      function restartAllCells() {
-        cells.forEach(function(cell, i) {
-          var front = frontIsA[i]
-            ? cell.querySelector('[data-layer="a"]')
-            : cell.querySelector('[data-layer="b"]');
-          if (front) applyKenBurns(front);
-          startCell(i, i * STAGGER);
-        });
-      }
-
-      // ── Visibility change: pause when hidden, clean restart when visible ──
-      document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-          killAllTimers();
-        } else {
-          killAllTimers();
-          rebuildPoolFromDOM();
-          restartAllCells();
-        }
-      });
-
-      // ── Initial start ──
-      requestAnimationFrame(function() { restartAllCells(); });
-
-      // ── Pool swap on mode switch ────────────────────────────────────
-      // Crossfade ALL cells to images from the new pool
-      function swapPool(newMode) {
-        if (newMode === currentPool) return;
-        var newImages = POOLS[newMode];
-        if (!newImages || newImages.length < 2) return;
-
-        // Clear all running timers
-        killAllTimers();
-
-        // Switch active pool state
-        currentPool = newMode;
-        IMAGES      = newImages;
-        inUse       = new Array(IMAGES.length).fill(false);
-        cellIdx     = [];
-        rebuildIndex();
-
-        // Crossfade each cell to a random image from the new pool
-        cells.forEach(function(cell, ci) {
-          var layerA = cell.querySelector('[data-layer="a"]');
-          var layerB = cell.querySelector('[data-layer="b"]');
-          if (!layerA || !layerB) return;
-
-          var nextIdx = checkOut();
-          if (nextIdx < 0) return;
-          cellIdx[ci] = nextIdx;
-
-          // Determine which layer is currently visible using frontIsA state
-          var front = frontIsA[ci] ? layerA : layerB;
-          var back  = frontIsA[ci] ? layerB : layerA;
-
-          resetKenBurns(back);
-          back.style.opacity = '0';
-          back.src = IMAGES[nextIdx];
-
-          var doSwapFade = function() {
-            back.style.transition = 'transform ' + HOLD_MS + 'ms ease-in-out, opacity ' + FADE_MS + 'ms ease-in-out';
-            back.style.opacity    = '1';
-            back.style.transform  = 'scale(' + KB_SCALE + ')';
-            front.style.transition = 'opacity ' + FADE_MS + 'ms ease-in-out';
-            front.style.opacity   = '0';
-            frontIsA[ci] = !frontIsA[ci];
-          };
-
-          if (back.complete && back.naturalWidth > 0) {
-            safeTimeout(doSwapFade, ci * 120); // subtle stagger
-          } else {
-            back.onload = function() {
-              safeTimeout(doSwapFade, ci * 120);
-            };
-            back.onerror = function() { checkIn(nextIdx); };
-          }
-        });
-
-        // Restart the carousel after swap settles
-        safeTimeout(function() {
-          restartAllCells();
-        }, FADE_MS + cells.length * 120 + 200);
-      }
-
-      // Listen for mode-change events dispatched by the main script
-      document.addEventListener('shop-mode-change', function(e) {
-        swapPool(e.detail.mode);
-      });
-
-      // Check initial mode from hash/localStorage (in case picks is default)
-      try {
-        var savedMode = localStorage.getItem('shop-mode');
-        var hash = location.hash;
-        if (hash === '#curated-picks' || hash === '#ltk-picks') savedMode = 'picks';
-        if (savedMode === 'picks') swapPool('picks');
-      } catch(e) {}
-    }
-  }
-</script>
 
 <script>
   document.addEventListener('astro:page-load', () => {

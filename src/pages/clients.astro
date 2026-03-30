@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
-import { readdirSync } from 'fs';
-import { join } from 'path';
 
 const allTestimonials = await getCollection('testimonials');
 const testimonials = allTestimonials.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -20,86 +18,31 @@ const rendered = await Promise.all(
   })
 );
 
-// Scan ALL banner directories for mosaic hero pool
-let clientBannerImages: string[] = [];
-try {
-  const dirs = [
-    { path: 'public/images/hero-banners', prefix: '/images/hero-banners/' },
-    { path: 'public/images/service-banners', prefix: '/images/service-banners/' },
-    { path: 'public/images/about-banners', prefix: '/images/about-banners/' },
-  ];
-  for (const { path: dir, prefix } of dirs) {
-    try {
-      const full = join(process.cwd(), dir);
-      clientBannerImages.push(...readdirSync(full).filter(f => f.endsWith('.webp')).map(f => prefix + f));
-    } catch {}
-  }
-} catch {}
-
-function sampleUnique(arr: string[], n: number): string[] {
-  const shuffled = [...arr];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled.slice(0, n);
-}
-
-const hasMosaic = clientBannerImages.length >= 2;
-const heroStart = hasMosaic
-  ? sampleUnique(clientBannerImages, 6)
-  : [];
 ---
 
 <BaseLayout
   title="Client Experiences — Staples & Statements"
   description="Real results from real clients. Read testimonials from Danielle Marie's wardrobe styling clients and discover what a styling transformation looks like."
-  transparentNav={hasMosaic}
+  transparentNav={true}
 >
 
-  <!-- ── PAGE HEADER ────────────────────────────────────── -->
-  {hasMosaic ? (
+  <!-- ── HERO — Single static banner ── -->
   <section class="relative overflow-hidden bg-primary" aria-label="Clients header">
     <div class="relative min-h-[60svh] lg:min-h-[50vh] flex flex-col">
 
-      <div id="clients-hero-mosaic" class="absolute inset-0 grid grid-cols-2 grid-rows-2 lg:grid-cols-3 lg:grid-rows-2 gap-0.5 w-full h-full">
-        <div data-clients-cell="0" class="col-span-1 row-span-1 lg:row-span-2 relative overflow-hidden bg-secondary/30 img-frame-grid">
-          <img data-layer="a" src={heroStart[0]} alt="" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" />
-          <img data-layer="b" src="" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/60 pointer-events-none"></div>
-        </div>
-        <div data-clients-cell="1" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <img data-layer="a" src={heroStart[1]} alt="" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" />
-          <img data-layer="b" src="" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-        </div>
-        <div data-clients-cell="2" class="col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <img data-layer="a" src={heroStart[2] ?? heroStart[0]} alt="" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" />
-          <img data-layer="b" src="" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-        </div>
-        <div data-clients-cell="3" class="col-span-1 row-span-1 relative overflow-hidden bg-secondary/40 img-frame-grid">
-          <img data-layer="a" src={heroStart[3] ?? heroStart[1]} alt="" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="eager" />
-          <img data-layer="b" src="" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-        </div>
-        <div data-clients-cell="4" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-secondary/20 img-frame-grid">
-          <img data-layer="a" src={heroStart[4] ?? heroStart[0]} alt="" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" />
-          <img data-layer="b" src="" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-        </div>
-        <div data-clients-cell="5" class="hidden lg:block col-span-1 row-span-1 relative overflow-hidden bg-primary-light img-frame-grid">
-          <img data-layer="a" src={heroStart[5] ?? heroStart[1]} alt="" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 1" loading="lazy" />
-          <img data-layer="b" src="" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover" style="transition: opacity 1500ms ease-in-out; opacity: 0" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/40 pointer-events-none"></div>
-        </div>
-      </div>
+      <!-- Hero image -->
+      <img src="/images/service-banners/service-banner-8.webp" alt="Client experiences with Staples & Statements"
+           class="absolute inset-0 w-full h-full object-cover" loading="eager" width="1920" height="1080" />
 
+      <!-- Top scrim for nav legibility -->
       <div class="absolute top-0 left-0 right-0 h-24 lg:h-40 pointer-events-none z-[5]"
            style="background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"></div>
+
+      <!-- Bottom scrim for text legibility -->
       <div class="absolute bottom-0 left-0 right-0 h-[65%] lg:h-[55%] pointer-events-none z-[5]"
            style="background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.15) 65%, transparent 100%)"></div>
 
+      <!-- Hero text overlay -->
       <div class="absolute inset-0 flex items-end justify-start px-6 lg:px-20 pb-10 sm:pb-14 lg:pb-16 pt-20 z-10">
         <div class="max-w-xl">
           <div class="w-8 h-px bg-accent mb-4"></div>
@@ -108,188 +51,12 @@ const heroStart = hasMosaic
             Client Experiences
           </h1>
           <p class="mt-4 lg:mt-5 font-body text-white/80 text-base sm:text-lg max-w-xl leading-relaxed text-bloom-sm">
-            Style transformations don't show up in a single before-and-after photo. They show up in how you carry yourself. How you feel walking into a room.
+            Style transformations don&rsquo;t show up in a single before-and-after photo. They show up in how you carry yourself. How you feel walking into a room.
           </p>
         </div>
       </div>
     </div>
   </section>
-
-  <script define:vars={{ clientBannerImages }}>
-    const IMAGES   = clientBannerImages;
-    const HOLD_MS  = 12_000;
-    const FADE_MS  = 1500;
-    const STAGGER  = 2_200;
-    const KB_SCALE = 1.08;
-    const CELL_SEL = 'data-clients-cell';
-
-    if (IMAGES.length >= 2 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-
-      // ── Timer management ──
-      const timers = new Set();
-      function safeTimeout(fn, ms) {
-        const id = setTimeout(() => { timers.delete(id); fn(); }, ms);
-        timers.add(id);
-        return id;
-      }
-      function killAllTimers() {
-        timers.forEach(id => clearTimeout(id));
-        timers.clear();
-      }
-
-      // ── Index pool ──
-      const inUse = new Array(IMAGES.length).fill(false);
-      const fileIndex = {};
-      IMAGES.forEach((path, i) => { fileIndex[path.split('/').pop()] = i; fileIndex[path] = i; });
-      function srcToIndex(src) { if (!src) return -1; if (fileIndex[src] !== undefined) return fileIndex[src]; const n = src.split('/').pop(); return fileIndex[n] !== undefined ? fileIndex[n] : -1; }
-      function checkOut() { const free = []; for (let i = 0; i < IMAGES.length; i++) { if (!inUse[i]) free.push(i); } if (!free.length) return -1; const pick = free[Math.floor(Math.random() * free.length)]; inUse[pick] = true; return pick; }
-      function checkIn(idx) { if (idx >= 0 && idx < IMAGES.length) inUse[idx] = false; }
-
-      // ── Cell state ──
-      const cells = [...document.querySelectorAll(`[${CELL_SEL}]`)];
-      const cellIdx = [];
-      const frontIsA = [];
-
-      cells.forEach((cell, i) => {
-        const a = cell.querySelector('[data-layer="a"]');
-        const idx = srcToIndex(a?.getAttribute('src') ?? '');
-        if (idx >= 0) inUse[idx] = true;
-        cellIdx[i] = idx;
-        frontIsA[i] = true;
-      });
-
-      // ── Circuit breaker ──
-      let swapTimestamps = [];
-      const CB_THRESHOLD = 8;
-      const CB_WINDOW = 2000;
-      function recordSwap() {
-        const now = Date.now();
-        swapTimestamps.push(now);
-        swapTimestamps = swapTimestamps.filter(t => now - t < CB_WINDOW);
-        if (swapTimestamps.length > CB_THRESHOLD) {
-          killAllTimers();
-          swapTimestamps = [];
-          rebuildPoolFromDOM();
-          safeTimeout(() => restartAllCells(), 500);
-          return false;
-        }
-        return true;
-      }
-
-      // ── Rebuild pool from DOM (for recovery) ──
-      function rebuildPoolFromDOM() {
-        inUse.fill(false);
-        cells.forEach((cell, i) => {
-          const layer = frontIsA[i]
-            ? cell.querySelector('[data-layer="a"]')
-            : cell.querySelector('[data-layer="b"]');
-          const src = layer?.getAttribute('src') ?? '';
-          const idx = srcToIndex(src);
-          if (idx >= 0) { inUse[idx] = true; cellIdx[i] = idx; }
-        });
-      }
-
-      // ── Ken Burns ──
-      function applyKenBurns(img) {
-        img.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-        img.style.transform = `scale(${KB_SCALE})`;
-      }
-      function resetKenBurns(img) {
-        img.style.transition = 'none';
-        img.style.transform = 'scale(1)';
-        img.offsetHeight;
-      }
-
-      // ── Kick off Ken Burns on initial images ──
-      requestAnimationFrame(() => {
-        cells.forEach(cell => {
-          const a = cell.querySelector('[data-layer="a"]');
-          if (a) applyKenBurns(a);
-        });
-      });
-
-      // ── Cycle a single cell ──
-      function startCell(ci, startDelay) {
-        const cell = cells[ci];
-        const layerA = cell.querySelector('[data-layer="a"]');
-        const layerB = cell.querySelector('[data-layer="b"]');
-        if (!layerA || !layerB) return;
-
-        function nextImage() {
-          if (document.hidden) return;
-
-          const front = frontIsA[ci] ? layerA : layerB;
-          const back  = frontIsA[ci] ? layerB : layerA;
-
-          const nextIdx = checkOut();
-          if (nextIdx < 0) { safeTimeout(nextImage, HOLD_MS); return; }
-
-          resetKenBurns(back);
-          back.style.opacity = '0';
-          back.src = IMAGES[nextIdx];
-
-          const doFade = () => {
-            if (!back.naturalWidth) { checkIn(nextIdx); safeTimeout(nextImage, 500); return; }
-            if (!recordSwap()) return;
-
-            back.style.transition = `transform ${HOLD_MS}ms ease-in-out, opacity ${FADE_MS}ms ease-in-out`;
-            back.style.opacity = '1';
-            back.style.transform = `scale(${KB_SCALE})`;
-            front.style.opacity = '0';
-
-            checkIn(cellIdx[ci]);
-            cellIdx[ci] = nextIdx;
-            frontIsA[ci] = !frontIsA[ci];
-            safeTimeout(nextImage, HOLD_MS);
-          };
-
-          if (back.complete && back.naturalWidth > 0) doFade();
-          else { back.onload = doFade; back.onerror = () => { checkIn(nextIdx); safeTimeout(nextImage, 500); }; }
-        }
-
-        safeTimeout(nextImage, startDelay + HOLD_MS);
-      }
-
-      // ── Start/restart all cells ──
-      function restartAllCells() {
-        cells.forEach((cell, i) => {
-          const front = frontIsA[i]
-            ? cell.querySelector('[data-layer="a"]')
-            : cell.querySelector('[data-layer="b"]');
-          if (front) applyKenBurns(front);
-          startCell(i, i * STAGGER);
-        });
-      }
-
-      // ── Visibility change: pause when hidden, clean restart when visible ──
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          killAllTimers();
-        } else {
-          killAllTimers();
-          rebuildPoolFromDOM();
-          restartAllCells();
-        }
-      });
-
-      // ── Initial start ──
-      requestAnimationFrame(() => restartAllCells());
-    }
-  </script>
-  ) : (
-  <section class="pt-16 pb-16 px-6 bg-primary" aria-label="Clients header">
-    <div class="mx-auto max-w-7xl">
-      <div class="w-8 h-px bg-accent mb-4"></div>
-      <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Their Words, Not Ours</p>
-      <h1 class="font-heading text-white text-5xl md:text-6xl lg:text-7xl font-semibold max-w-2xl leading-tight">
-        Client Experiences
-      </h1>
-      <p class="mt-5 font-body text-white/60 text-lg max-w-xl leading-relaxed">
-        Style transformations don't show up in a single before-and-after photo. They show up in how you carry yourself. How you feel walking into a room. What clients say below.
-      </p>
-    </div>
-  </section>
-  )}
 
   <!-- ── STAT BAR ───────────────────────────────────────── -->
   <section class="py-10 px-6 bg-surface border-b border-surface-dark" aria-label="Credentials">
@@ -327,7 +94,7 @@ const heroStart = hasMosaic
 
         {/* Service image sliver — top banner */}
         <div class="h-[48px] w-full overflow-hidden relative bg-gradient-to-r from-accent/20 to-primary-light">
-          <img src={`/images/services/${t.data.service}.webp`} alt="" class="w-full h-full object-cover opacity-60" loading="lazy" onerror="this.style.display='none'" />
+          <img src="/images/services/vip.webp" alt="" class="w-full h-full object-cover opacity-60" loading="lazy" onerror="this.style.display='none'" />
         </div>
 
         <div class="p-8 sm:p-12 lg:p-16 relative">
@@ -386,7 +153,7 @@ const heroStart = hasMosaic
                 "h-[40px] w-full overflow-hidden relative",
                 isDark ? "bg-gradient-to-r from-accent/15 to-primary-light" : "bg-gradient-to-r from-surface-dark to-secondary/20",
               ]}>
-                <img src={`/images/services/${t.data.service}.webp`} alt="" class:list={["w-full h-full object-cover", isDark ? "opacity-40" : "opacity-50"]} loading="lazy" onerror="this.style.display='none'" />
+                <img src="/images/services/vip.webp" alt="" class:list={["w-full h-full object-cover", isDark ? "opacity-40" : "opacity-50"]} loading="lazy" onerror="this.style.display='none'" />
               </div>
             )}
 
