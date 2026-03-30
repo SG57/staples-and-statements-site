@@ -1,14 +1,9 @@
 /**
  * Single source of truth for all style guide product data.
  *
- * To add a direct Beacons purchase URL:
- *   1. Grab the product link from the Beacons dashboard
- *   2. Replace the BEACONS_SHOP fallback in the `link` field below
- *   3. That's it — every page that imports this file updates automatically.
+ * Each guide links directly to its Beacons purchase page.
+ * These are individual product links (not a storefront browse link).
  */
-
-/** Beacons storefront profile (fallback when no direct product link exists yet) */
-export const BEACONS_SHOP = 'https://shop.beacons.ai/staplesandstatementsss';
 
 export interface Guide {
   /** Matches public/images/guides/{slug}-cover.webp */
@@ -17,7 +12,7 @@ export interface Guide {
   price: string;
   description: string;
   tags: string[];
-  /** Direct Beacons product page — or BEACONS_SHOP until the link is available */
+  /** Direct Beacons product purchase page */
   link: string;
 }
 

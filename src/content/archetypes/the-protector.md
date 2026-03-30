@@ -6,7 +6,6 @@ order: 1
 gender: masculine
 icon: "◆"
 color: "#2c3e50"
-guideLink: "https://beacons.ai/staplesandstatementsss"
 ltkLink: "https://shopltk.com/explore/Staplesandstatementsss"
 ---
 

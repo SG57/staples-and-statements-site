@@ -1,10 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { guides, BEACONS_SHOP } from '../data/guides';
+import { guides } from '../data/guides';
 import { fetchLtkCollections } from '../data/ltk-api';
 
 const ltkProfileURL  = 'https://www.shopltk.com/explore/Staplesandstatementsss';
-const beaconsShopURL = BEACONS_SHOP;
 const calendlyURL    = '/contact';
 
 
@@ -172,16 +171,6 @@ const pickCollections = sortCollections(allCollections.filter((c) => c.displayab
 
             </div>
           ))}
-        </div>
-
-        <!-- Footer: Beacons shop link -->
-        <div class="mt-12 flex justify-end">
-          <a
-            href={beaconsShopURL}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="font-body text-sm tracking-widest uppercase text-accent hover:text-accent-light transition-colors border-b border-accent pb-0.5"
-          >Browse All Guides →</a>
         </div>
 
       </div>
