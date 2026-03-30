@@ -483,17 +483,16 @@
 
 .text-bloom {
   text-shadow:
-    0 0 40px rgba(0, 0, 0, 0.70),   /* wide outer bloom */
-    0 0 12px rgba(0, 0, 0, 0.60),   /* tight bloom */
-    0 2px 8px rgba(0, 0, 0, 0.85),  /* directional shadow */
-    0 1px 2px rgba(0, 0, 0, 1.00);  /* crisp near edge */
+    0 0 18px rgba(0, 0, 0, 0.45),   /* soft outer glow */
+    0 1px 4px rgba(0, 0, 0, 0.70),  /* directional shadow */
+    0 1px 1px rgba(0, 0, 0, 0.95);  /* crisp near edge */
 }
 
 .text-bloom-sm {
   text-shadow:
-    0 0 20px rgba(0, 0, 0, 0.65),
-    0 1px 4px rgba(0, 0, 0, 0.90),
-    0 1px 1px rgba(0, 0, 0, 1.00);
+    0 0 8px rgba(0, 0, 0, 0.40),    /* subtle outer glow */
+    0 1px 3px rgba(0, 0, 0, 0.70),  /* tight directional */
+    0 1px 1px rgba(0, 0, 0, 0.90);  /* crisp edge */
 }
 
 /* Nav links: maximum legibility over any image brightness.
