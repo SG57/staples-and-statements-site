@@ -1,7 +1,7 @@
 ---
 title: "VIP Styling"
 slug: "vip"
-price: "$3,600 per year"
+price: "$3,600/yr"
 duration: "Year-round, on-call access"
 perfectFor: "CEOs, executives, entrepreneurs, public figures, and high-achieving professionals for whom image is a strategic asset"
 shortDescription: "Year-round, on-call styling partnership — unlimited access to my eye, expertise, and editorial craft."

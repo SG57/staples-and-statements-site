@@ -1,7 +1,7 @@
 ---
 title: "Photoshoot Styling"
 slug: "photoshoot-styling"
-price: "$100 per hour"
+price: "$100/hr"
 duration: "Flexible — per shoot"
 perfectFor: "Models, photographers, entrepreneurs, and anyone building a visual brand who needs every outfit to perform on camera"
 shortDescription: "Expert on-set styling for photoshoots — so every look is camera-ready, cohesive, and communicates exactly what it needs to."
