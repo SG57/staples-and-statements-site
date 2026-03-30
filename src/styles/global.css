@@ -495,6 +495,12 @@
     0 1px 1px rgba(0, 0, 0, 0.90);  /* crisp edge */
 }
 
+.text-bloom-xs {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.80),  /* sharp directional */
+    0 0px 1px rgba(0, 0, 0, 0.95);  /* crisp edge */
+}
+
 /* Nav links: maximum legibility over any image brightness.
    Removed on scroll (solid nav background takes over). */
 .nav-transparent:not(.nav-scrolled) .nav-link,
