@@ -46,9 +46,9 @@ const calendlyURL = '/contact';
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start">
 
         <!-- Portrait -->
-        <div class="relative">
-          <!-- Add photo: public/images/about-danielle.webp — professional portrait -->
-          <div class="aspect-[3/4] relative overflow-hidden bg-surface-dark img-frame">
+        <div class="flex flex-col">
+          <!-- Photo frame -->
+          <div class="aspect-[3/4] relative overflow-hidden bg-surface-dark img-frame-card" style="border-radius: 0;">
             <img
               src="/images/about-danielle.webp"
               alt="Danielle Marie, wardrobe stylist and creative director"
@@ -58,10 +58,9 @@ const calendlyURL = '/contact';
               height="800"
               onerror="this.style.display='none'"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent pointer-events-none"></div>
           </div>
-          <!-- Credential badge -->
-          <div class="absolute bottom-6 left-6 right-6 bg-primary/90 backdrop-blur-sm p-5">
+          <!-- Credential card — appended below image -->
+          <div class="bg-primary p-6 sm:p-8 img-frame-card" style="border-radius: 0; margin-top: -1px;">
             <p class="font-heading text-white text-xl font-semibold">Danielle Marie Holman</p>
             <p class="font-body text-white/60 text-sm mt-1">Wardrobe Stylist & Creative Director</p>
             <div class="mt-4 flex flex-col gap-2.5">

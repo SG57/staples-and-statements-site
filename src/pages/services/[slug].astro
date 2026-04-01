@@ -59,12 +59,12 @@ const calendlyURL = '/contact';
             {service.data.title}
           </h1>
           <div class="mt-6">
-            <span class="font-heading text-3xl text-accent font-semibold uppercase">{service.data.price}</span>
+            <span class="font-heading text-3xl text-accent font-semibold">{service.data.price}</span>
             {service.data.priceNote && (
               <p class="font-body text-sm text-white/50 mt-1 italic">{service.data.priceNote}</p>
             )}
             {service.data.priceAlt && (
-              <span class="font-heading text-3xl text-accent font-semibold uppercase block">{service.data.priceAlt}</span>
+              <span class="font-heading text-3xl text-accent font-semibold block">{service.data.priceAlt}</span>
             )}
           </div>
 
@@ -122,12 +122,12 @@ const calendlyURL = '/contact';
             <dl class="space-y-4">
               <div>
                 <dt class="font-body text-xs tracking-widest uppercase text-accent-text mb-1">Price</dt>
-                <dd class="font-heading text-2xl font-semibold text-primary uppercase">{service.data.price}</dd>
+                <dd class="font-heading text-2xl font-semibold text-primary">{service.data.price}</dd>
                 {service.data.priceNote && (
                   <dd class="font-body text-xs text-text-light mt-1 italic">{service.data.priceNote}</dd>
                 )}
                 {service.data.priceAlt && (
-                  <dd class="font-heading text-2xl font-semibold text-primary uppercase">{service.data.priceAlt}</dd>
+                  <dd class="font-heading text-2xl font-semibold text-primary">{service.data.priceAlt}</dd>
                 )}
               </div>
               {service.data.duration && (
@@ -200,24 +200,93 @@ const calendlyURL = '/contact';
       <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">Related Services</p>
       <h2 class="font-heading text-primary text-3xl mb-10">You Might Also Consider</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {relatedServices.map((related) => (
-          <a
-            href={`/services/${related.data.slug}`}
-            class="group flex flex-col bg-surface hover:bg-surface-dark transition-colors p-8 img-frame-card"
-          >
-            <p class="font-body text-xs tracking-widest uppercase text-accent-text mb-3">{related.data.price}</p>
-            <h3 class="font-heading text-2xl font-semibold text-primary mb-3 group-hover:text-accent transition-colors">
-              {related.data.title}
-            </h3>
-            <p class="font-body text-sm text-text-muted leading-relaxed flex-1">
-              {related.data.shortDescription ?? related.data.perfectFor}
-            </p>
-            <div class="mt-5 flex items-center gap-2 font-body text-xs tracking-widest uppercase text-accent-text">
-              <span>View Service Details</span>
-              <span class="group-hover:translate-x-1 transition-transform">→</span>
-            </div>
-          </a>
-        ))}
+        {relatedServices.map((related, idx) => {
+          const isDark = idx % 2 !== 0;
+          return (
+            <a
+              href={`/services/${related.data.slug}`}
+              class:list={[
+                "group flex flex-col img-frame-card overflow-hidden transition-colors duration-200",
+                isDark ? "bg-primary text-white" : "bg-background",
+              ]}
+            >
+              {/* Top image banner */}
+              <div class:list={[
+                "h-[60px] w-full overflow-hidden relative",
+                isDark ? "bg-gradient-to-r from-secondary/40 to-primary-light" : "bg-gradient-to-r from-surface-dark to-secondary/20",
+              ]}>
+                <img
+                  src="/images/services/vip.webp"
+                  alt=""
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  onerror="this.style.display='none'"
+                />
+              </div>
+
+              <div class="flex flex-col flex-1 p-8">
+                {/* Price badge */}
+                <div class="flex items-start justify-between mb-5">
+                  <div>
+                    <span class:list={[
+                      "font-body text-xs tracking-widest uppercase font-medium",
+                      isDark ? "text-accent" : "text-accent-text",
+                    ]}>
+                      {related.data.price}
+                    </span>
+                    {related.data.priceNote && (
+                      <p class:list={[
+                        "font-body text-[11px] mt-1 italic normal-case tracking-normal",
+                        isDark ? "text-white/50" : "text-primary/50",
+                      ]}>{related.data.priceNote}</p>
+                    )}
+                    {related.data.priceAlt && (
+                      <span class:list={[
+                        "font-body text-xs tracking-widest uppercase font-medium block mt-0.5",
+                        isDark ? "text-accent" : "text-accent-text",
+                      ]}>
+                        {related.data.priceAlt}
+                      </span>
+                    )}
+                  </div>
+                  {related.data.featured && (
+                    <span class:list={[
+                      "font-body text-xs tracking-widest uppercase px-2 py-1",
+                      isDark ? "text-white/40 bg-white/10" : "text-primary/40 bg-surface-dark",
+                    ]}>
+                      Popular
+                    </span>
+                  )}
+                </div>
+
+                {/* Title */}
+                <h3 class:list={[
+                  "font-heading text-2xl font-semibold mb-3 group-hover:text-accent transition-colors",
+                  isDark ? "text-white" : "text-primary",
+                ]}>
+                  {related.data.title}
+                </h3>
+
+                {/* Description */}
+                <p class:list={[
+                  "font-body text-sm leading-relaxed flex-1 mb-6",
+                  isDark ? "text-white/60" : "text-text-muted",
+                ]}>
+                  {related.data.shortDescription ?? related.data.perfectFor}
+                </p>
+
+                {/* CTA */}
+                <div class:list={[
+                  "flex items-center gap-2 font-body text-xs tracking-widest uppercase",
+                  isDark ? "text-accent" : "text-accent-text",
+                ]}>
+                  <span>View Details</span>
+                  <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
       </div>
     </div>
   </section>

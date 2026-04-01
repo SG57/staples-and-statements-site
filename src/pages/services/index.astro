@@ -164,7 +164,9 @@ const tier3 = activeServices.filter(s => tier3Slugs.includes(s.data.slug)).sort(
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {tier2.map((service, idx) => {
-          const isDark = idx % 2 !== 0;
+          const row = Math.floor(idx / 2);
+          const col = idx % 2;
+          const isDark = (row + col) % 2 !== 0;
           return (
             <a
               href={`/services/${service.data.slug}`}
