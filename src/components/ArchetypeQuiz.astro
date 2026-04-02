@@ -350,47 +350,49 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
               {q.text}
             </h3>
 
-            <div
-              class:list={[
-                'quiz-options grid gap-1.5 md:gap-2',
-                q.options.length <= 5
-                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2'
-                  : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
-              ]}
-              role="group"
-              aria-label={`Answer options for question ${q.id}`}
-            >
-              {q.options.map((opt) => (
-                <button
-                  type="button"
-                  class="quiz-chip group/chip relative flex flex-col items-center justify-center text-center
-                         px-2 py-2 md:px-3 md:py-3 min-h-[44px] md:min-h-[56px]
-                         bg-white/5 backdrop-blur-sm border border-white/10
-                         hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]
-                         transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
-                         focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
-                         cursor-pointer select-none"
-                  role="checkbox"
-                  aria-checked="false"
-                  data-letter={opt.letter}
-                  data-q={i}
-                >
-                  <!-- Checkmark indicator (top-right, shown when selected) -->
-                  <span class="quiz-chip-check absolute top-1.5 right-1.5 w-4 h-4 flex items-center justify-center
-                               rounded-full bg-accent/0 text-white/0 text-[10px] leading-none
-                               transition-all duration-200">
-                    &#10003;
-                  </span>
-                  <span class="font-heading text-xl md:text-2xl leading-none text-accent/70 mb-1.5
-                               group-hover/chip:text-accent transition-colors duration-200">
-                    {opt.letter}
-                  </span>
-                  <span class="font-body text-xs md:text-sm text-white/70 leading-snug
-                               group-hover/chip:text-white/90 transition-colors duration-200">
-                    {opt.text}
-                  </span>
-                </button>
-              ))}
+            <div class="quiz-options-scroll">
+              <div
+                class:list={[
+                  'quiz-options grid gap-1.5 md:gap-2',
+                  q.options.length <= 5
+                    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2'
+                    : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+                ]}
+                role="group"
+                aria-label={`Answer options for question ${q.id}`}
+              >
+                {q.options.map((opt) => (
+                  <button
+                    type="button"
+                    class="quiz-chip group/chip relative flex flex-col items-center justify-center text-center
+                           px-2 py-2 md:px-3 md:py-3 min-h-[44px] md:min-h-[56px]
+                           bg-white/5 backdrop-blur-sm border border-white/10
+                           hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]
+                           transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+                           focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
+                           cursor-pointer select-none"
+                    role="checkbox"
+                    aria-checked="false"
+                    data-letter={opt.letter}
+                    data-q={i}
+                  >
+                    <!-- Checkmark indicator (top-right, shown when selected) -->
+                    <span class="quiz-chip-check absolute top-1.5 right-1.5 w-4 h-4 flex items-center justify-center
+                                 rounded-full bg-accent/0 text-white/0 text-[10px] leading-none
+                                 transition-all duration-200">
+                      &#10003;
+                    </span>
+                    <span class="font-heading text-xl md:text-2xl leading-none text-accent/70 mb-1.5
+                                 group-hover/chip:text-accent transition-colors duration-200">
+                      {opt.letter}
+                    </span>
+                    <span class="font-body text-xs md:text-sm text-white/70 leading-snug
+                                 group-hover/chip:text-white/90 transition-colors duration-200">
+                      {opt.text}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         ))}
@@ -922,6 +924,53 @@ const archetypesMeta = isFeminine ? feminineArchetypesMeta : masculineArchetypes
   }
   .quiz-hide-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
+  }
+
+  /* ── Mobile: fixed header/footer, scrollable options only ── */
+  @media (max-width: 767px) {
+    .quiz-content-panel {
+      overflow: hidden;
+    }
+
+    .quiz-slides {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .quiz-slide {
+      overflow: hidden;
+    }
+
+    /* Scroll wrapper: fills remaining slide space, scrolls vertically */
+    .quiz-options-scroll {
+      flex: 1 1 0%;
+      overflow-y: auto;
+      min-height: 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .quiz-options-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Bottom fade hint to indicate more content below */
+    .quiz-options-scroll {
+      mask-image: linear-gradient(to bottom, black calc(100% - 1.5rem), transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.5rem), transparent 100%);
+    }
+
+    /* Grid keeps its natural height inside the scroll wrapper */
+    .quiz-options {
+      padding-bottom: 1.5rem;
+    }
+
+    .quiz-nav {
+      background: var(--color-primary, #1a1613);
+      position: relative;
+      z-index: 5;
+      flex-shrink: 0;
+    }
   }
 
   /* ── Reduced motion ───────────────────────────────────────── */
