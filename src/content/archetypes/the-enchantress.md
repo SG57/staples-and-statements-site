@@ -14,6 +14,6 @@ Your style says: *There's more than meets the eye. Come closer.*
 
 **Signature pieces:** Draped or asymmetrical pieces, lace elements, dramatic sleeve details, sheer overlays, smoky-toned midi skirts, layered and gemstone jewelry, boots with presence.
 
-**Your palette:** Plum, burgundy, wine, black, smoke, midnight blue, deep forest greens, iridescent or opal-like accents.
+**Your palette:** Plum, burgundy, black, smoky gray, midnight blue, deep forest green, opal
 
 **Enchantress icons:** Winona Ryder, Dita Von Teese, Lana Del Rey.

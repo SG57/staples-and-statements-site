@@ -14,6 +14,6 @@ Your style says: *I am prepared for whatever the day brings.*
 
 **Signature pieces:** Structured blazers, tailored trousers, crisp white shirts, sleek trench coats, minimal statement jewelry, strong-shouldered dresses, clean leather pieces, pointed toe shoes.
 
-**Your palette:** Black, white, tan, navy, charcoal, emerald or electric cobalt (as accents), metallic silver
+**Your palette:** Black, white, tan, silver, navy, charcoal, cobalt blue
 
 **Warrior icons:** Tilda Swinton, Lupita Nyong'o, Christy Turlington.

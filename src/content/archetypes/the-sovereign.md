@@ -16,6 +16,6 @@ Your style says: *This is me. It always has been.*
 
 **Signature pieces:** Perfectly fitted basics, cashmere, quality denim, clean leather goods, understated watches, elevated luxe basics, timeless outerwear, pieces that feel like a second skin.
 
-**Your palette:** Refined and effortless — cream, ivory, camel, charcoal, soft black, soft taupe, muted monochrome palettes.
+**Your palette:** White, cream, camel, chocolate brown, moss green
 
 **Sovereign icons:** Bradley Cooper, Ryan Gosling, Jake Gyllenhaal.

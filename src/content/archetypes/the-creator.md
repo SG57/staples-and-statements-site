@@ -14,6 +14,6 @@ Your style says: *I make the rules I live by. You're welcome to look.*
 
 **Signature pieces:** Mixed-print combinations, experimental cuts, bold accessories as punctuation, artist-adjacent textures, unexpected color combinations, hand-crafted or artisan pieces and oversized and fitted combos.
 
-**Your palette:** Bright primaries, fun color-blocking, unexpected combinations and pops of neon or saturated hues.
+**Your palette:** Cherry red, green, orange, neon yellow, electric green, bright blue, hot pink
 
 **Creator icons:** Iris Apfel, Solange Knowles, Erykah Badu.

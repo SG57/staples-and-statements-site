@@ -16,6 +16,6 @@ Your style says: *I'm becoming. Watch closely.*
 
 **Signature pieces:** Textured layers, mood-driven accessories, vintage and thrifted finds, statement rings, pieces with sentimental value and history, draped silhouettes.
 
-**Your palette:** Mood-dependent — deep burgundy, midnight, forest green, aged gold, storm grey, burnt umber, plum.
+**Your palette:** Plum, burgundy, forest green, midnight blue, smoky turquoise
 
 **Alchemist icons:** Donald Glover, Jared Leto, Lenny Kravitz.

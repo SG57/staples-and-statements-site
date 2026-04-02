@@ -14,6 +14,6 @@ Your style says: *I know who I am. You should too.*
 
 **Signature pieces:** Bodycon dresses, wrap silhouettes, form-flattering bodysuits, high-slit skirts, plunging necklines done with confidence, rich jewel-toned satins, form-fitting bottoms, statement heels.
 
-**Your palette:** Power reds, deep wine, black, obsidian, metallic gold, saturated jewel tones
+**Your palette:** Power red, black, deep wine, obsidian, gold, emerald, sapphire
 
 **Siren icons:** Sofia Vergara, Salma Hayek, Kim Kardashian.

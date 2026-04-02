@@ -16,6 +16,6 @@ Your style says: *I am here, grounded, and abundant.*
 
 **Signature pieces:** Silk blouses, gold jewelry, tailored yet comfortable trousers, cashmere wraps, elevated knitwear, structured handbags, quality loafers, luxe staples, rich fabrics.
 
-**Your palette:** Warm earthy colors — olive, sage, warm neutrals (caramel, taupe), terracotta, soft gold, rich browns.
+**Your palette:** Olive, sage, caramel, taupe, soft gold, terracotta, chocolate brown
 
 **Empress icons:** Meghan Markle, Amal Clooney, Oprah Winfrey.

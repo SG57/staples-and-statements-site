@@ -14,6 +14,6 @@ Your style says: *I am exactly where I belong, and I am at peace.*
 
 **Signature pieces:** Flowy sun dresses, simple silk pieces, soft-knit cardigans, ballet flats, pearl jewelry, sheer layers, light wash denim, linen basics in cloud-soft tones.
 
-**Your palette:** Ivory, cream, powder pink, baby blue, butter yellow, warm white, pale gold, soft champagne, silver.
+**Your palette:** Baby pink, powder blue, butter yellow, white, silver, soft gold, cream
 
 **Angelic icons:** Lily-Rose Depp, Grace Kelly, Elle Fanning

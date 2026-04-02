@@ -14,6 +14,6 @@ Your style says: *I see beauty everywhere I go, and I wear it.*
 
 **Signature pieces:** Flowy midi dresses, romantic blouses, feminine jewelry, statement accessories, floral prints, ethereal layering.
 
-**Your palette:** Dusty rose, sage green, lavender, ivory, antique gold, muted periwinkle, bright pops of color (usually used for accents)
+**Your palette:** Blush pink, peach, lavender, champagne, ivory, sage green, misty blue
 
 **Muse icons:** Carrie Bradshaw, Alexa Chung, Zooey Deschanel.

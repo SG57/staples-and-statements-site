@@ -16,6 +16,6 @@ Your style says: *I'm steady. I'm here. I'm not going anywhere.*
 
 **Signature pieces:** Heavyweight chore jackets, quality leather boots, well-fitted dark denim, classic crew-neck sweatshirt, military-inspired outerwear, dependable field watches.
 
-**Your palette:** Deep earth tones — olive, forest green, charcoal, slate, camel, chocolate brown, muted burgundy or rust accents
+**Your palette:** Olive, forest green, camel, chocolate brown, warm gray
 
 **Protector icons:** Steve McQueen, Idris Elba, David Beckham (off-duty).

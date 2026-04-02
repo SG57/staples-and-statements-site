@@ -16,6 +16,6 @@ Your style says: *You've never seen this before. And you won't again.*
 
 **Signature pieces:** Oversized statement outerwear, graphic tees, mixed-era layering, bold accessories, unexpected footwear choices, one-of-a-kind finds.
 
-**Your palette:** High-contrast with unexpected pops — black and white base with electric blue, cherry red, emerald, bright orange or neon accents.
+**Your palette:** Electric blue, cherry red, electric green, bright orange, black
 
 **Maverick icons:** Tyler, The Creator, Harry Styles, Kid Cudi.
