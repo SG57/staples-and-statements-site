@@ -27,13 +27,13 @@ export const guides: Guide[] = [
     link: 'https://shop.beacons.ai/staplesandstatementsss/209b235a-3af0-46ae-a2a7-962abe1310fb',
   },
   {
-    slug: 'single-moms',
-    title: "The Ultimate Single Mom's Style Guide 40+",
-    price: '$27',
+    slug: 'single-story-outfit-rule',
+    title: 'The Single Story Outfit Rule',
+    price: '$15',
     description:
-      "Style that works for your real life. Practical, polished, and always put-together — for the mom who doesn't have time to overthink it.",
-    tags: ['Lifestyle'],
-    link: 'https://shop.beacons.ai/staplesandstatementsss/3fc52a60-e677-44fe-b35a-7e07a9eb4aa9',
+      'Learn the single rule that makes every outfit feel intentional — align your pieces into one clear story and stop overthinking your closet.',
+    tags: ['Wardrobe', 'Starter'],
+    link: 'https://shop.beacons.ai/staplesandstatementsss/9024ba0c-33c7-4bd5-8dab-95c7feeefd32',
   },
   {
     slug: 'ultimate-style-edit',
@@ -61,6 +61,15 @@ export const guides: Guide[] = [
       "Clean, powerful, intentional dressing for men. Wardrobe fundamentals, silhouette principles, and the system behind a truly effortless wardrobe.",
     tags: ["Men's"],
     link: 'https://shop.beacons.ai/staplesandstatementsss/efc026d5-197a-43d0-bdcb-b9fac22958ce',
+  },
+  {
+    slug: 'single-moms',
+    title: "The Ultimate Single Mom's Style Guide 40+",
+    price: '$27',
+    description:
+      "Style that works for your real life. Practical, polished, and always put-together — for the mom who doesn't have time to overthink it.",
+    tags: ['Lifestyle'],
+    link: 'https://shop.beacons.ai/staplesandstatementsss/3fc52a60-e677-44fe-b35a-7e07a9eb4aa9',
   },
   {
     slug: 'no-overpacking',
