@@ -207,7 +207,7 @@ const GA4_ID = 'G-PZNX8QZHDJ';
       <!-- Quick-menu panel (hidden by default, opens above FABs) -->
       <div id="fab-menu-panel"
            class="mb-2 bg-primary/85 backdrop-blur-md border border-white/15 rounded-sm shadow-lg overflow-hidden"
-           style="opacity: 0; transform: translateY(8px) scale(0.95); pointer-events: none;
+           style="display: none; opacity: 0; transform: translateY(8px) scale(0.95); pointer-events: none;
                   transition: opacity calc(var(--dur) * 0.6) var(--ease),
                               transform calc(var(--dur) * 0.6) var(--ease);">
         <nav class="py-2 px-1" aria-label="Quick navigation">
@@ -544,6 +544,8 @@ const GA4_ID = 'G-PZNX8QZHDJ';
     function openMenu(): void {
       menuOpen = true;
       menuBtn.setAttribute('aria-expanded', 'true');
+      menuPanel.style.display       = '';           // enter render tree
+      void menuPanel.offsetHeight;                  // force reflow so transition starts from 0
       menuPanel.style.opacity       = '1';
       menuPanel.style.transform     = 'translateY(0) scale(1)';
       menuPanel.style.pointerEvents = 'auto';
@@ -558,6 +560,9 @@ const GA4_ID = 'G-PZNX8QZHDJ';
       menuPanel.style.opacity       = '0';
       menuPanel.style.transform     = 'translateY(8px) scale(0.95)';
       menuPanel.style.pointerEvents = 'none';
+      // Remove from render tree after fade-out to prevent backdrop-filter
+      // compositing layer from intercepting touch events (mobile WebKit bug)
+      setTimeout(() => { if (!menuOpen) menuPanel.style.display = 'none'; }, 500);
       overlay.style.display         = 'none';
       if (iconOpen)  iconOpen.classList.remove('hidden');
       if (iconClose) iconClose.classList.add('hidden');
