@@ -80,6 +80,15 @@ export const guides: Guide[] = [
     tags: ['Travel', 'Starter'],
     link: 'https://shop.beacons.ai/staplesandstatementsss/636ff908-8476-4d63-8234-5a1131de3ff4',
   },
+  {
+    slug: '5-masculine-archetypes',
+    title: 'The 5 Masculine Archetypes Style Guide',
+    price: '$20',
+    description:
+      'Discover your masculine style archetype and dress with clarity, intention, and confidence. Signature silhouettes, outfit formulas, brand picks, and a step-by-step closet cleanse.',
+    tags: ['Archetypes', "Men's"],
+    link: 'https://shop.beacons.ai/staplesandstatementsss/3d423773-1e63-4f76-85c0-4432af9aaed6',
+  },
 ];
 
 /**
