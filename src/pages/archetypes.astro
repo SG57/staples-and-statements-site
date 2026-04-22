@@ -4,6 +4,7 @@ import ArchetypeQuiz from '../components/ArchetypeQuiz.astro';
 import { getCollection } from 'astro:content';
 import { getCardImages } from '../data/archetype-images';
 import { fetchLtkCollections, getCollectionsForArchetype } from '../data/ltk-api';
+import { guides } from '../data/guides';
 
 const _ltkAll = await fetchLtkCollections();
 const LTK_PROFILE = 'https://www.shopltk.com/explore/Staplesandstatementsss';
@@ -26,6 +27,9 @@ const masculineArchetypes = await getCollection('archetypes', ({ data }) => data
 const masculineSorted = masculineArchetypes.sort((a, b) => a.data.order - b.data.order);
 
 const calendlyURL = '/contact';
+
+const feminineGuide = guides.find((g) => g.slug === '7-feminine-archetypes');
+const masculineGuide = guides.find((g) => g.slug === '5-masculine-archetypes');
 
 // Pre-compute icon arc data for quiz CTA cards
 // (Avoids inline `<` comparisons in JSX which confuse the Astro compiler)
@@ -511,41 +515,113 @@ const mascIconArc = buildIconArc(masculineSorted);
 
   </div><!-- /archetypes-page -->
 
-  <!-- ── STYLE GUIDES CTA ──────────────────────────────── -->
-  <section class="py-20 px-6 bg-primary" aria-label="Style guides" data-compact-super="Digital Guides" data-compact-title="Take Your Archetype Home" data-compact-tagline="In-depth style guides for your archetype — from $15." data-compact-theme="dark">
-    <div class="mx-auto max-w-7xl">
-      <!-- FULL header -->
-      <div class="section-header-full transition-opacity duration-500" data-section-full="guides">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 py-10 border-t border-b border-white/10">
-          <div>
+  <!-- ── STYLE GUIDE CTA — gender-aware ───────────────── -->
+
+  {feminineGuide && (
+    <section
+      class="py-20 px-6 bg-primary guide-cta-block"
+      aria-label="Feminine archetypes style guide"
+      data-guide-gender="feminine"
+      data-compact-super="Digital Guide"
+      data-compact-title="Take Your Archetype Home"
+      data-compact-tagline={`${feminineGuide.title} — ${feminineGuide.price}.`}
+      data-compact-theme="dark"
+    >
+      <div class="mx-auto max-w-7xl">
+        <div class="flex flex-col md:flex-row md:items-center gap-8 md:gap-12 py-10 border-t border-b border-white/10">
+          <div class="shrink-0 w-36 md:w-44 aspect-[3/4] overflow-hidden border border-white/10">
+            <img
+              src={`/images/guides/${feminineGuide.slug}-cover.webp`}
+              alt={feminineGuide.title}
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="176"
+              height="235"
+            />
+          </div>
+          <div class="flex-1">
             <div class="w-8 h-px bg-accent mb-4"></div>
-            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">Digital Guides</p>
-            <h2 class="font-heading text-white text-3xl font-semibold">Take Your Archetype Home</h2>
-            <p class="mt-2 font-body text-white/55 text-base max-w-md leading-relaxed">
-              In-depth style guides for your archetype — from $15. Instant download.
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">
+              Digital Guide · {feminineGuide.price}
             </p>
+            <h2 class="font-heading text-white text-3xl font-semibold">{feminineGuide.title}</h2>
+            <p class="mt-3 font-body text-white/55 text-base max-w-md leading-relaxed">
+              {feminineGuide.description}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 mt-6">
+              <a
+                href={feminineGuide.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center px-4 sm:px-8 py-4 bg-accent text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200"
+              >
+                Get This Guide
+              </a>
+              <a
+                href={calendlyURL}
+                class="inline-flex items-center justify-center px-4 sm:px-8 py-4 border border-white/25 text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:border-white hover:bg-white/8 transition-colors duration-200"
+              >
+                Book Personalized Styling
+              </a>
+            </div>
           </div>
         </div>
       </div>
+    </section>
+  )}
 
-      <div class="flex flex-col sm:flex-row gap-3 shrink-0 py-6">
-        <div class="flex flex-col sm:flex-row gap-3 shrink-0">
-          <a
-            href="/shop"
-            class="inline-flex items-center justify-center px-4 sm:px-8 py-4 bg-accent text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200"
-          >
-            Shop Style Guides
-          </a>
-          <a
-            href={calendlyURL}
-            class="inline-flex items-center justify-center px-4 sm:px-8 py-4 border border-white/25 text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:border-white hover:bg-white/8 transition-colors duration-200"
-          >
-            Book Personalized Styling
-          </a>
+  {masculineGuide && (
+    <section
+      class="py-20 px-6 bg-primary guide-cta-block"
+      aria-label="Masculine archetypes style guide"
+      data-guide-gender="masculine"
+      data-compact-super="Digital Guide"
+      data-compact-title="Take Your Archetype Home"
+      data-compact-tagline={`${masculineGuide.title} — ${masculineGuide.price}.`}
+      data-compact-theme="dark"
+    >
+      <div class="mx-auto max-w-7xl">
+        <div class="flex flex-col md:flex-row md:items-center gap-8 md:gap-12 py-10 border-t border-b border-white/10">
+          <div class="shrink-0 w-36 md:w-44 aspect-[3/4] overflow-hidden border border-white/10">
+            <img
+              src={`/images/guides/${masculineGuide.slug}-cover.webp`}
+              alt={masculineGuide.title}
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="176"
+              height="235"
+            />
+          </div>
+          <div class="flex-1">
+            <div class="w-8 h-px bg-accent mb-4"></div>
+            <p class="font-body text-xs tracking-widest uppercase text-accent mb-3">
+              Digital Guide · {masculineGuide.price}
+            </p>
+            <h2 class="font-heading text-white text-3xl font-semibold">{masculineGuide.title}</h2>
+            <p class="mt-3 font-body text-white/55 text-base max-w-md leading-relaxed">
+              {masculineGuide.description}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 mt-6">
+              <a
+                href={masculineGuide.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center px-4 sm:px-8 py-4 bg-accent text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:bg-accent-light transition-colors duration-200"
+              >
+                Get This Guide
+              </a>
+              <a
+                href={calendlyURL}
+                class="inline-flex items-center justify-center px-4 sm:px-8 py-4 border border-white/25 text-white font-body text-xs sm:text-sm font-medium tracking-widest uppercase text-center hover:border-white hover:bg-white/8 transition-colors duration-200"
+              >
+                Book Personalized Styling
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
 </BaseLayout>
 
@@ -560,6 +636,11 @@ const mascIconArc = buildIconArc(masculineSorted);
    * Opacity + transform transitions are applied via the Web Animations API in JS
    * to allow async await on their completion (display/position can't be transitioned).
    */
+
+  /* Guide CTA sections (outside #archetypes-page): hide masculine by default */
+  .guide-cta-block[data-guide-gender="masculine"] {
+    display: none;
+  }
 
   /* Active blocks: normal flow */
   #archetypes-page[data-active-gender="feminine"] .gender-block[data-gender="feminine"],
@@ -912,6 +993,14 @@ const mascIconArc = buildIconArc(masculineSorted);
       }
     }
 
+    // Sync guide CTA sections (outside #archetypes-page) with gender toggle
+    function syncGuideCta(gender: string) {
+      document.querySelectorAll<HTMLElement>('.guide-cta-block').forEach((el) => {
+        const match = el.getAttribute('data-guide-gender') === gender;
+        el.style.display = match ? '' : 'none';
+      });
+    }
+
     async function switchGender(targetGender: string) {
       if (switching) return;
       const current = page!.getAttribute('data-active-gender') ?? DEFAULT_GENDER;
@@ -939,6 +1028,7 @@ const mascIconArc = buildIconArc(masculineSorted);
 
       // Swap the data attribute
       page!.setAttribute('data-active-gender', targetGender);
+      syncGuideCta(targetGender);
 
       // Scroll to the top if user has scrolled past the hero
       if (window.scrollY > window.innerHeight * 0.5) {
@@ -982,6 +1072,7 @@ const mascIconArc = buildIconArc(masculineSorted);
       const gender = (saved === 'masculine' || saved === 'feminine') ? saved : DEFAULT_GENDER;
 
       page!.setAttribute('data-active-gender', gender);
+      syncGuideCta(gender);
 
       if (gender === 'masculine') {
         setButtonState(btnMas!, true);
