@@ -997,7 +997,7 @@ const mascIconArc = buildIconArc(masculineSorted);
     function syncGuideCta(gender: string) {
       document.querySelectorAll<HTMLElement>('.guide-cta-block').forEach((el) => {
         const match = el.getAttribute('data-guide-gender') === gender;
-        el.style.display = match ? '' : 'none';
+        el.style.display = match ? 'block' : 'none';
       });
     }
 
