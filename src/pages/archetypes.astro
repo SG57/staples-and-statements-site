@@ -1098,8 +1098,7 @@ const mascIconArc = buildIconArc(masculineSorted);
   // re-initializes on fresh DOM elements after every VT navigation.
   //
   // With ViewTransitions, DOM elements are NEW each navigation, so
-  // _carouselStarted is never set on them — carousel naturally
-  // re-initializes on fresh DOM.
+  // _cardInit is never set on them — cards naturally re-initialize on fresh DOM.
 
   document.addEventListener('astro:page-load', () => {
     if (!document.getElementById('archetypes-page')) return;
@@ -1108,7 +1107,13 @@ const mascIconArc = buildIconArc(masculineSorted);
     const FADE_MS         = 1_000;
     const LOAD_TIMEOUT_MS = 6_000;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Do NOT early-return under reduced-motion. The click/keyboard navigation
+    // handlers below live in this same callback, and the cards are plain <div>s
+    // (not <a>), so bailing out here leaves them completely dead — the exact
+    // symptom seen on iOS, where "Reduce Motion" is a common OS-level setting
+    // that both Safari and Chrome respect. Only the image carousel + ripple are
+    // motion effects; gate those on this flag, never the navigation.
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // ── Shared registry: no two cards ever show the same image ────
     const activeImages = new Map<string, number>();
@@ -1215,11 +1220,15 @@ const mascIconArc = buildIconArc(masculineSorted);
     requestAnimationFrame(() => {
       let i = 0;
       document.querySelectorAll<HTMLElement>('.archetype-card').forEach((card) => {
-        if ((card as any)._carouselStarted) return;
-        (card as any)._carouselStarted = true;
+        if ((card as any)._cardInit) return;
+        (card as any)._cardInit = true;
 
-        startCard(card, i * 350);
-        i++;
+        // Image carousel is a motion effect — skip under reduced-motion.
+        // The navigation handlers below stay unconditional.
+        if (!prefersReducedMotion) {
+          startCard(card, i * 350);
+          i++;
+        }
 
         // Keyboard accessibility: make card focusable and navigable via Enter/Space
         const heading = card.querySelector<HTMLElement>('h3');
@@ -1236,7 +1245,7 @@ const mascIconArc = buildIconArc(masculineSorted);
 
         card.addEventListener('click', (e: MouseEvent) => {
           if ((e.target as Element).closest('a, button')) return;
-          spawnRipple(card, e);
+          if (!prefersReducedMotion) spawnRipple(card, e);
           const slug = card.dataset.slug;
           if (slug) window.location.href = `/archetypes/${slug}`;
         });
