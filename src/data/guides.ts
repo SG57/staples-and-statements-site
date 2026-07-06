@@ -89,6 +89,24 @@ export const guides: Guide[] = [
     tags: ['Archetypes', "Men's"],
     link: 'https://shop.beacons.ai/staplesandstatementsss/3d423773-1e63-4f76-85c0-4432af9aaed6',
   },
+  {
+    slug: 'warrior-subtype',
+    title: 'The Warrior — A Style Subtype Guide',
+    price: '$15',
+    description:
+      'Discover which version of the Warrior you truly are — from strategic and refined to rebellious and commanding — and translate that energy into a wardrobe that feels powerful and intentional.',
+    tags: ['Archetypes', 'Subtype'],
+    link: 'https://shop.beacons.ai/staplesandstatementsss/943d3868-d196-492c-ab53-16563cffff51',
+  },
+  {
+    slug: 'enchantress-subtype',
+    title: 'The Enchantress — A Style Subtype Guide',
+    price: '$15',
+    description:
+      'Discover which version of the Enchantress you truly are — from soft and romantic to dark and magnetic — and build a style that feels effortless, beautiful, and completely you.',
+    tags: ['Archetypes', 'Subtype'],
+    link: 'https://shop.beacons.ai/staplesandstatementsss/22642144-6f48-411c-b6b1-7e2fc404700e',
+  },
 ];
 
 /**

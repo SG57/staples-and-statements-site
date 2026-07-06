@@ -81,6 +81,19 @@ const isFeminine = data.gender === 'feminine';
 const genderGuide = isFeminine
   ? guides.find((g) => g.slug === '7-feminine-archetypes')
   : guides.find((g) => g.slug === '5-masculine-archetypes');
+
+/* Archetype-specific subtype deep-dive guide (Warrior, Enchantress, …), when one exists.
+ * Feature it as the primary guide here — a visitor this deep on the page has already
+ * self-identified, so the subtype guide is the natural next step. Keep the flagship
+ * gender guide as a secondary link so we never bury the funnel entry product. */
+const subtypeGuide = data.subtypeGuide
+  ? guides.find((g) => g.slug === data.subtypeGuide)
+  : undefined;
+const primaryGuide = subtypeGuide ?? genderGuide;
+const secondaryGuide =
+  subtypeGuide && genderGuide && subtypeGuide.slug !== genderGuide.slug
+    ? genderGuide
+    : undefined;
 ---
 
 <BaseLayout
@@ -363,38 +376,57 @@ const genderGuide = isFeminine
               </div>
 
               <!-- Style Guide card — lives here so the teaser is immediately adjacent -->
-              {genderGuide && (
+              {primaryGuide && (
                 <div class="bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] rounded-sm p-4
                             hover:bg-white/[0.05] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
                   <div class="flex gap-4 items-start">
                     <div class="shrink-0 w-14 aspect-[3/4] overflow-hidden rounded-sm border border-white/10">
                       <img
-                        src={`/images/guides/${genderGuide.slug}-cover.webp`}
-                        alt={genderGuide.title}
+                        src={`/images/guides/${primaryGuide.slug}-cover.webp`}
+                        alt={primaryGuide.title}
                         class="w-full h-full object-cover"
                         loading="lazy"
                       />
                     </div>
                     <div class="flex-1 min-w-0">
                       <p class="font-body text-[10px] tracking-widest uppercase text-accent mb-1">
-                        Style Guide
+                        {subtypeGuide ? 'Go Deeper' : 'Style Guide'}
                       </p>
                       <h3 class="font-heading text-white text-base md:text-lg font-semibold leading-snug mb-2">
-                        {genderGuide.title}
+                        {primaryGuide.title}
                       </h3>
                       <a
-                        href={genderGuide.link}
+                        href={primaryGuide.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         class="inline-flex items-center gap-1.5 text-accent/70 hover:text-accent transition-colors duration-200 group"
                       >
-                        <span class="font-body text-[10px] tracking-widest uppercase">Get the full guide</span>
+                        <span class="font-body text-[10px] tracking-widest uppercase">
+                          {subtypeGuide ? `Get the ${data.name.replace(/^The\s+/i, '')} guide` : 'Get the full guide'}
+                        </span>
                         <svg class="w-2.5 h-2.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                       </a>
                     </div>
                   </div>
+
+                  {/* Secondary link to the flagship gender guide — never buried behind the subtype upsell */}
+                  {secondaryGuide && (
+                    <a
+                      href={secondaryGuide.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="mt-4 pt-3 border-t border-white/[0.07] flex items-center gap-1.5 text-white/45 hover:text-white/75 transition-colors duration-200 group"
+                    >
+                      <span class="font-body text-[10px] tracking-wide leading-snug">
+                        New to archetypes? Start with <span class="text-white/70 group-hover:text-white">{secondaryGuide.title}</span>
+                      </span>
+                      <svg class="w-2.5 h-2.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </a>
+                  )}
                 </div>
               )}
 

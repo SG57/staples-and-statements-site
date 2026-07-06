@@ -6,6 +6,7 @@ order: 3
 gender: "feminine"
 icon: "▲"
 color: "#5a5a5a"
+subtypeGuide: "warrior-subtype"
 ---
 
 The Warrior's style is armor — beautiful, powerful, and built to move through the world with confidence. You're drawn to strong shoulders, structured silhouettes, sharp tailoring, and a palette of high-contrast neutrals. Your look is minimal in decoration and maximal in impact. You don't need embellishment — your presence is enough.

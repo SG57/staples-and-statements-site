@@ -40,6 +40,11 @@ const archetypes = defineCollection({
     color: z.string().optional(),
 
     image: z.string().optional(),
+
+    /** Optional slug (from src/data/guides.ts) of an archetype-specific
+     *  subtype deep-dive guide to feature on this archetype's detail page,
+     *  alongside the general gender archetype guide. */
+    subtypeGuide: z.string().optional(),
   }),
 });
 
