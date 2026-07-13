@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import VipSeats from '../../components/VipSeats.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -160,6 +161,9 @@ const calendlyURL = '/contact';
       </div>
     </div>
   </section>
+
+  <!-- ── VIP MEMBERSHIP SEATS ──────────────────────────── -->
+  {service.data.slug === 'vip' && <VipSeats />}
 
   <!-- ── TESTIMONIAL ───────────────────────────────────── -->
   {relatedTestimonial && (
