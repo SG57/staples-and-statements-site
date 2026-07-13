@@ -103,7 +103,7 @@ staplesandstatements.com/
 │   ├── /services/photoshoot-styling   $55/hr Photoshoot Styling
 │   ├── /services/master-style-moodboard   ~$99 Master Style Moodboard
 │   ├── /services/sourcing         ~15% Sourcing/Personal Shopping
-│   └── /services/vip              $3,000/yr VIP Styling
+│   └── /services/vip              $3,600/mo VIP Styling (monthly membership, 3-seat cap)
 ├── /style-quiz                    Archetype quiz landing (Phase 1: video embeds + archetype cards)
 ├── /shop                          Style Guides + LTK picks (organized by archetype)
 ├── /clients                       Testimonials (file-based content collections)
@@ -140,7 +140,7 @@ This gives us **12+ keyword-targeted pages** from day one.
 | **Photoshoot Styling** | $55/hr | Flexible (+range fee 30+ mi) | Models, photographers | Book Your Free Consultation |
 | **Master Style Moodboard** | ~$99 (TBC) | Per session | Clients wanting a style vision document | Book Your Free Consultation |
 | **Sourcing** | ~15% finder's fee (TBC) | Ongoing/ad-hoc | Clients wanting curated finds | Book Your Free Consultation |
-| **VIP Styling** | $3,000/yr | On-call, year-round | CEOs, busy entrepreneurs, event-heavy lifestyles | Book Your Free Consultation |
+| **VIP Styling** | $3,600/mo | Monthly membership, on-call, capped at 3 concurrent clients | CEOs, busy entrepreneurs, event-heavy lifestyles | Book Your Free Consultation |
 
 **Note:** Every CTA funnels to the same Calendly booking link. The consultation is the universal entry point. Danielle qualifies and routes from there.
 
