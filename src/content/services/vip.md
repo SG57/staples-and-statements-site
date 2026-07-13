@@ -1,33 +1,37 @@
 ---
 title: "VIP Styling"
 slug: "vip"
-price: "$3,600 per month"
-duration: "Monthly membership — on-call access"
-perfectFor: "CEOs, executives, entrepreneurs, public figures, and high-achieving professionals for whom image is a strategic asset"
-shortDescription: "An ongoing monthly styling membership — unlimited access to my eye, expertise, and editorial craft."
+price: "From $900 per month"
+duration: "Retained engagement — scoped to you"
+perfectFor: "Executives, public figures, productions, and organizations for whom image is a strategic asset — and who want it handled on retainer"
+shortDescription: "A retained styling partnership scoped to your world — personal executive styling, productions, events, and teams."
 order: 8
 status: "active"
 featured: true
 ---
 
-For the client who wants their style handled — completely, consistently, and at the highest level.
+For the client who wants their image handled — completely, discreetly, and at the highest level.
 
-The VIP Styling membership is my most comprehensive offering: an ongoing partnership that places me on call for the wardrobe decisions that shape how you show up. New job presentation? Covered. Last-minute gala? Handled. Building out a capsule wardrobe for a multi-city speaking tour? Done before you land.
+VIP Styling is not a package. It is a retained seat. I hold three concurrent engagements at any time, and each one is contracted around its client. A CEO preparing for a board season. A production styling a television series. A household managing a public family's presence. An organization outfitting its leadership. No two seats have ever held the same work — they're not supposed to.
 
-This is styling as a strategic tool — not fashion for fashion's sake, but a thoughtful, sustained investment in how you present yourself to the world. Because how you look influences how you're perceived, how you carry yourself and the opportunities that follow.
+No two agreements look alike, either. Yours is composed in negotiation, drawing on services such as:
 
-**What You'll Receive With VIP:**
-- Unlimited Zoom or FaceTime styling calls throughout your membership
-- Full Color and Body Analysis during onboarding
-- A Master Style Moodboard created and maintained as your life evolves
-- A Closet Clean Out session at the beginning of the engagement
-- Ongoing sourcing and personal shopping (finder's fees apply to one-off purchases)
-- Priority response for urgent styling needs
-- Seasonal wardrobe reviews and updates
-- Pre-event and occasion styling as needed
+- Ongoing personal styling — color and body analysis, closet architecture, and seasonal wardrobe reviews
+- Sourcing and personal shopping, from a single statement piece to a full wardrobe build
+- A Master Style Moodboard, created and maintained as your life evolves
+- Pre-event and occasion styling — red carpet, press, galas, and speaking engagements
+- Production styling for television, editorial, and campaign work
+- Team and organizational styling for leadership, on-air talent, and client-facing staff
+- Priority on-call access and standing styling calls
 
-VIP clients form a genuine partnership with me. Over time, I learn your schedule, your upcoming events, your career trajectory and the evolution of your personal aesthetic. The result is a wardrobe — and a presence — that becomes more intentional, more refined and more powerful with every season.
+**How an engagement begins:**
+- Inquire — directly, or through your assistant or representative
+- A private consultation — your needs, cadence, and expectations
+- A scoped proposal and agreement — deliverables, access, and terms in writing
+- Your seat is reserved, and work begins
 
-**$3,600 per month, billed monthly.** Your membership begins the day you join — you're billed at the start of each cycle, and I spend the rest of it working for you. For context, one powerful first impression in the right room can return that investment many times over.
+**Engagements begin at $900 per month**, retained monthly and billed at the start of each cycle. Scope, term, and investment are set in your agreement — as your needs grow, the engagement grows with them.
 
-VIP membership is capped at three clients at a time. When the seats are full, they're full. Contact me to inquire about current availability.
+Discretion is absolute. NDAs are welcomed, and engagements are routinely arranged through assistants, agents, and household staff.
+
+Three seats. Larger engagements may retain more than one. When they're full, they're full.
